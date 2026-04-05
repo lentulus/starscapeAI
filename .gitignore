@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[oc]
+*.egg-info/
+build/
+dist/
+wheels/
+
+# Virtual environments
+.venv/
+
+# uv lock (commit if you want reproducible installs, otherwise ignore)
+# uv.lock
+
+# Data / local database
+data/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
