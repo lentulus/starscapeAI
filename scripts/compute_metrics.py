@@ -52,12 +52,12 @@ def main() -> None:
     conn.row_factory = sqlite3.Row
 
     try:
-        # Fetch all stars not yet in the target table
+        # Fetch all stars not yet processed, or previously failed (mass = -1)
         pending = conn.execute(
             f"SELECT i.star_id, i.ci, i.absmag"
             f" FROM {SOURCE_TABLE} i"
             f" LEFT JOIN {TARGET_TABLE} e ON i.star_id = e.star_id"
-            f" WHERE e.star_id IS NULL"
+            f" WHERE e.star_id IS NULL OR e.mass = -1"
             f" ORDER BY i.star_id"
         ).fetchall()
 
@@ -86,7 +86,7 @@ def main() -> None:
             try:
                 m = compute_metrics(ci, absmag)
                 conn.execute(
-                    f"INSERT INTO {TARGET_TABLE}"
+                    f"INSERT OR REPLACE INTO {TARGET_TABLE}"
                     f" (star_id, mass, temperature, radius, luminosity, age)"
                     f" VALUES (?, ?, ?, ?, ?, ?)",
                     (star_id, m["mass"], m["temperature"],
@@ -95,7 +95,7 @@ def main() -> None:
             except MetricsError as exc:
                 log.error("star_id=%s: %s", star_id, exc)
                 conn.execute(
-                    f"INSERT INTO {TARGET_TABLE}"
+                    f"INSERT OR REPLACE INTO {TARGET_TABLE}"
                     f" (star_id, mass, temperature, radius, luminosity, age)"
                     f" VALUES (?, -1, NULL, NULL, NULL, NULL)",
                     (star_id,),

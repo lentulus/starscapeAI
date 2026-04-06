@@ -11,7 +11,11 @@ K, radius in R☉, luminosity in L☉, age in years.
 - Every `star_id` in `IndexedIntegerDistinctStars` must have a row in `DistinctStarsExtended`.
 - If a metric cannot be calculated (missing inputs, unphysical result), insert the row with
   `mass = -1` and log `star_id` plus reason; do not abort the run.
-- Skip rows already present in `DistinctStarsExtended` (resume support).
+- On re-run, rows with `mass = -1` (previous failures) are retried alongside missing rows; use
+  `INSERT OR REPLACE` to overwrite the error sentinel if computation now succeeds.
+- Skip rows already present in `DistinctStarsExtended` with `mass != -1` (resume support).
+- If `temperature_from_bv` yields a non-positive result (pathological B-V), fall back to the
+  mass-based estimate (`5778 × M^0.505`) rather than raising an error.
 - Commit every `--batch-size` rows (default 1000).
 - Stop cleanly after `--max-minutes` elapsed wall-clock time (default 60); progress is preserved
   and the next run resumes where it left off.
@@ -140,12 +144,12 @@ FOR each (star_id, ci, absmag) in pending:
 
     TRY:
         m = compute_metrics(ci, absmag)
-        INSERT INTO DistinctStarsExtended
+        INSERT OR REPLACE INTO DistinctStarsExtended
             (star_id, mass, temperature, radius, luminosity, age)
             VALUES (star_id, m.mass, m.temperature, m.radius, m.luminosity, m.age)
     CATCH MetricsError as e:
         LOG ERROR "star_id={star_id}: {e}"
-        INSERT INTO DistinctStarsExtended
+        INSERT OR REPLACE INTO DistinctStarsExtended
             (star_id, mass, temperature, radius, luminosity, age)
             VALUES (star_id, -1, NULL, NULL, NULL, NULL)
         errors += 1
@@ -158,6 +162,13 @@ FOR each (star_id, ci, absmag) in pending:
 COMMIT
 LOG "Done. Processed {processed}, errors: {errors}"
 CLOSE database
+
+## Defects Found
+
+| # | Where | Description | Fix |
+|---|-------|-------------|-----|
+| 1 | `metrics.py` `compute_metrics` | `temperature_from_bv` can yield a non-positive temperature for pathological B-V values; code raised `MetricsError` instead of recovering | Fall back to mass-based estimate (`5778 × M^0.505`) when B-V temperature ≤ 0, same as the no-ci path |
+| 2 | `scripts/compute_metrics.py` | Re-running the script after errors left `mass = -1` rows permanently unretried; SELECT excluded existing rows regardless of sentinel value | Changed SELECT to also include `e.mass = -1`; changed INSERT to `INSERT OR REPLACE` |
 ```
 
 ## Scripts

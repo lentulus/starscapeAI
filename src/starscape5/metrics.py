@@ -90,6 +90,10 @@ def compute_metrics(ci_raw, absmag: float | None) -> dict[str, float]:
 
     if ci is not None:
         temp = temperature_from_bv(ci)
+        if temp <= 0.0:
+            # B-V gave unphysical result; fall back to mass-based estimate
+            mass_est = mass_from_luminosity(lum)
+            temp = 5778.0 * (mass_est ** 0.505)
     else:
         # Fallback: estimate T from mass via rough MS T ~ 5778 * M^0.505
         mass_est = mass_from_luminosity(lum)
