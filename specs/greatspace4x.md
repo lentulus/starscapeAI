@@ -69,6 +69,7 @@ TBD
 
 | File | Subject |
 |------|---------|
+| `worldgeneration/fillstars.md` | Synthetic catalog completion to galactic disk density model |
 | `worldgeneration/fillspectral.md` | Deriving spectral types from B-V/magnitude; companion star generation |
 | `worldgeneration/orbits.md` | Orbital mechanics computation per star system |
 | `worldgeneration/computemetrics.md` | Deriving physical stellar parameters (mass, temperature, radius, luminosity, age) from B-V and absolute magnitude into `DistinctStarsExtended` |
