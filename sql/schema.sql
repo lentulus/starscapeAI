@@ -34,6 +34,13 @@ CREATE TABLE IF NOT EXISTS "Bodies" (
     "epoch"            INTEGER NOT NULL DEFAULT 0,
     "in_hz"            INTEGER,            -- 1 if in host star HZ, 0 if not, NULL for moons
     "possible_tidal_lock" INTEGER,         -- 1 if within tidal-lock zone, 0 if not, NULL for belts/planetoids
+    "planet_class"     TEXT,               -- 'rocky'|'small_gg'|'medium_gg'|'large_gg'; NULL for moons/belts/planetoids
+    "has_rings"        INTEGER,            -- 1 if planet has rings, 0 if not; NULL for non-planets
+    "comp_metallic"    REAL,               -- fraction of belt mass that is metallic; NULL for non-belts
+    "comp_carbonaceous" REAL,              -- fraction of belt mass that is carbonaceous/icy; NULL for non-belts
+    "comp_stony"       REAL,               -- fraction of belt mass that is stony/silicate; NULL for non-belts
+    "span_inner_au"    REAL,               -- inner edge of 80%-mass belt span (AU); NULL for non-belts
+    "span_outer_au"    REAL,               -- outer edge of 80%-mass belt span (AU); NULL for non-belts
     CHECK (
         (orbit_star_id IS NOT NULL AND orbit_body_id IS NULL) OR
         (orbit_star_id IS NULL     AND orbit_body_id IS NOT NULL)

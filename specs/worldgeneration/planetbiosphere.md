@@ -15,6 +15,8 @@ For later
 Unk
 
 ## Interface Contracts
+Fields describing biosphere
+-  
 
 
 ## Key Decisions

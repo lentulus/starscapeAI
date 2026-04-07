@@ -57,6 +57,13 @@ CREATE TABLE IF NOT EXISTS "Bodies" (
     "epoch"            INTEGER NOT NULL DEFAULT 0,
     "in_hz"            INTEGER,  -- 1/0 for planets & planetoids; NULL for moons
     "possible_tidal_lock" INTEGER, -- 1/0 for planets/moons; NULL for belts/planetoids
+    "planet_class"     TEXT,      -- 'rocky'|'small_gg'|'medium_gg'|'large_gg'; NULL for moons/belts/planetoids
+    "has_rings"        INTEGER,   -- 1/0 for planets; NULL for moons/belts/planetoids
+    "comp_metallic"    REAL,      -- belt composition fraction; NULL for non-belts
+    "comp_carbonaceous" REAL,     -- belt composition fraction; NULL for non-belts
+    "comp_stony"       REAL,      -- belt composition fraction; NULL for non-belts
+    "span_inner_au"    REAL,      -- inner edge of 80%-mass belt span; NULL for non-belts
+    "span_outer_au"    REAL,      -- outer edge of 80%-mass belt span; NULL for non-belts
     CHECK (
         (orbit_star_id IS NOT NULL AND orbit_body_id IS NULL) OR
         (orbit_star_id IS NULL     AND orbit_body_id IS NOT NULL)
@@ -75,10 +82,12 @@ CREATE TABLE IF NOT EXISTS "Bodies" (
 - `planet_semi_major_axis_au(star_luminosity)` — log-uniform draw within habitable-zone-anchored
   range [0.01, 50] AU; log-normal μ = log₁₀(sqrt(star_luminosity)) (habitable zone centre)
 - `hz_bounds(star_luminosity)` — returns (inner_au, outer_au) = (0.95√L, 1.67√L)
+- `planet_class(mass_earth)` — `'rocky'` (< 10 Mₑ), `'small_gg'` (10–40 Mₑ), `'medium_gg'` (40–350 Mₑ), `'large_gg'` (≥ 350 Mₑ)
+- `world_size_code(radius_re, planet_cls)` — Traveller-style size code: gas giants → `'GS'`/`'GM'`/`'GL'`; rocky → `'S'` (< 1200 km) or hex digit `'1'`–`'F'` (round(diam_km/1600)); None for belts/planetoids
 - `moon_count(planet_mass_earth)` — Poisson(λ): λ=0 for M<0.1, λ=1 for 0.1–10, λ=3 for >10
 - `moon_mass_earth(planet_mass_earth)` — log-uniform in [1e-5, planet_mass * 0.01]
 - `generate_planet(star_id, star_luminosity)` → dict of all planet fields (including `in_hz`,
-  `possible_tidal_lock`)
+  `possible_tidal_lock`, `planet_class`, `has_rings`; comp/span fields are NULL)
 - `generate_moon(planet_body_id, planet_mass_earth)` → dict; `possible_tidal_lock=1` always
 - `belt_positions(sorted_planets, star_luminosity)` → list of (center_au, ecc) for belt placement
 - `belt_mass_earth()` — log-normal μ=−3 dex, σ=1.0 dex, clamped to [1e-6, 0.10] Mₑ
@@ -86,7 +95,8 @@ CREATE TABLE IF NOT EXISTS "Bodies" (
 - `planetoid_mass_pareto(belt_mass)` — Dohnanyi Pareto draw, α=1.83, capped at min(0.01 Mₑ,
   0.5 × belt_mass)
 - `planetoid_semi_major_axis_au(belt_center_au, belt_ecc)` — uniform in belt zone
-- `generate_belt(star_id, center_au, ecc, mass, hz_inner, hz_outer)` → dict
+- `generate_belt(star_id, center_au, ecc, mass, hz_inner, hz_outer, star_luminosity)` → dict;
+  includes `comp_metallic`, `comp_carbonaceous`, `comp_stony`, `span_inner_au`, `span_outer_au`
 - `generate_planetoid(star_id, belt_center_au, belt_ecc, belt_mass, hz_inner, hz_outer)` → dict
 
 Reuses from `src/starscape5/orbits.py`:
@@ -143,7 +153,11 @@ function generate_planet(star_id, star_luminosity):
              longitude_ascending_node:Ω, argument_periapsis:ω,
              mean_anomaly:M0, epoch:0,
              in_hz: 1 if hz_inner <= a <= hz_outer else 0,
-             possible_tidal_lock: 1 if a < 0.5*sqrt(star_luminosity) else 0 }
+             possible_tidal_lock: 1 if a < 0.5*sqrt(star_luminosity) else 0,
+             planet_class: planet_class(mass),
+             has_rings: 1 if random() < RING_PROB[planet_class(mass)] else 0,
+             comp_metallic: NULL, comp_carbonaceous: NULL, comp_stony: NULL,
+             span_inner_au: NULL, span_outer_au: NULL }
 
 function generate_moon(planet_body_id, planet_mass_earth):
     mass   = moon_mass_earth(planet_mass_earth)
@@ -157,7 +171,10 @@ function generate_moon(planet_body_id, planet_mass_earth):
              semi_major_axis:a, eccentricity:e, inclination:i,
              longitude_ascending_node:Ω, argument_periapsis:ω,
              mean_anomaly:M0, epoch:0,
-             in_hz: NULL, possible_tidal_lock: 1 }
+             in_hz: NULL, possible_tidal_lock: 1,
+             planet_class: NULL, has_rings: NULL,
+             comp_metallic: NULL, comp_carbonaceous: NULL, comp_stony: NULL,
+             span_inner_au: NULL, span_outer_au: NULL }
 
 // --- Main loop ---
 

@@ -33,6 +33,7 @@ from starscape5.planets import (
     moon_count,
     planet_count,
     planetoid_count,
+    world_size_code,
 )
 
 DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
@@ -54,10 +55,14 @@ INSERT_SQL = (
     f"INSERT INTO {TARGET_TABLE}"
     " (body_type, mass, radius, orbit_star_id, orbit_body_id,"
     " semi_major_axis, eccentricity, inclination,"
-    " longitude_ascending_node, argument_periapsis, mean_anomaly, epoch, in_hz, possible_tidal_lock)"
+    " longitude_ascending_node, argument_periapsis, mean_anomaly, epoch,"
+    " in_hz, possible_tidal_lock, planet_class, has_rings,"
+    " comp_metallic, comp_carbonaceous, comp_stony, span_inner_au, span_outer_au)"
     " VALUES (:body_type, :mass, :radius, :orbit_star_id, :orbit_body_id,"
     " :semi_major_axis, :eccentricity, :inclination,"
-    " :longitude_ascending_node, :argument_periapsis, :mean_anomaly, :epoch, :in_hz, :possible_tidal_lock)"
+    " :longitude_ascending_node, :argument_periapsis, :mean_anomaly, :epoch,"
+    " :in_hz, :possible_tidal_lock, :planet_class, :has_rings,"
+    " :comp_metallic, :comp_carbonaceous, :comp_stony, :span_inner_au, :span_outer_au)"
 )
 
 
@@ -98,6 +103,13 @@ def main() -> None:
             "  epoch            INTEGER NOT NULL DEFAULT 0,"
             "  in_hz            INTEGER,"
             "  possible_tidal_lock INTEGER,"
+            "  planet_class     TEXT,"
+            "  has_rings        INTEGER,"
+            "  comp_metallic    REAL,"
+            "  comp_carbonaceous REAL,"
+            "  comp_stony       REAL,"
+            "  span_inner_au    REAL,"
+            "  span_outer_au    REAL,"
             "  CHECK ("
             "    (orbit_star_id IS NOT NULL AND orbit_body_id IS NULL) OR"
             "    (orbit_star_id IS NULL     AND orbit_body_id IS NOT NULL)"
@@ -209,7 +221,7 @@ def main() -> None:
                     continue
                 bmass = belt_mass_earth()
                 conn.execute(INSERT_SQL, generate_belt(
-                    star_id, center_au, belt_ecc, bmass, hz_inner, hz_outer))
+                    star_id, center_au, belt_ecc, bmass, hz_inner, hz_outer, lum))
                 for _ in range(planetoid_count()):
                     conn.execute(INSERT_SQL, generate_planetoid(
                         star_id, center_au, belt_ecc, bmass, hz_inner, hz_outer))

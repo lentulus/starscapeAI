@@ -62,6 +62,83 @@ def hz_bounds(star_luminosity: float) -> tuple[float, float]:
     return 0.95 * sqrt_l, 1.67 * sqrt_l
 
 
+def planet_class(mass_earth: float) -> str:
+    """Classify a planet by mass: rocky / small_gg / medium_gg / large_gg."""
+    if mass_earth < 10.0:
+        return "rocky"
+    if mass_earth < 40.0:
+        return "small_gg"
+    if mass_earth < 350.0:
+        return "medium_gg"
+    return "large_gg"
+
+
+_RING_PROB: dict[str, float] = {
+    "rocky":     0.00,
+    "small_gg":  0.10,
+    "medium_gg": 0.20,
+    "large_gg":  0.30,
+}
+
+
+def _has_rings(cls: str) -> int:
+    """Draw 1/0 ring flag for a planet given its class."""
+    return 1 if random.random() < _RING_PROB.get(cls, 0.0) else 0
+
+
+def _snow_line_au(star_luminosity: float) -> float:
+    """Frost/snow line in AU: 2.7 * sqrt(L)."""
+    return 2.7 * math.sqrt(max(star_luminosity, 1e-4))
+
+
+def _belt_composition(center_au: float, star_luminosity: float) -> tuple[float, float, float]:
+    """Return (metallic, carbonaceous, stony) fractions summing to 1.0.
+
+    Inside the snow line: stony-dominant.  Outside: carbonaceous-dominant.
+    """
+    snow = _snow_line_au(star_luminosity)
+    if center_au < snow:
+        # Inner belt: metallic 10-40%, stony 40-70%, carbonaceous = remainder
+        metallic  = random.uniform(0.10, 0.40)
+        stony     = random.uniform(0.40, min(0.70, 1.0 - metallic))
+        carb      = max(0.0, 1.0 - metallic - stony)
+    else:
+        # Outer belt: carbonaceous 50-80%, stony 10-30%, metallic = remainder
+        carb      = random.uniform(0.50, 0.80)
+        stony     = random.uniform(0.10, min(0.30, 1.0 - carb))
+        metallic  = max(0.0, 1.0 - carb - stony)
+    # Normalise to guard against floating-point drift
+    total = metallic + carb + stony
+    return metallic / total, carb / total, stony / total
+
+
+def _belt_span(center_au: float, ecc: float) -> tuple[float, float]:
+    """Return (inner_au, outer_au) for the 80%-mass belt span.
+
+    Model: span = ±27% of the eccentricity-scaled half-width around center.
+    """
+    half = 0.27 * ecc * center_au
+    return center_au - half, center_au + half
+
+
+def world_size_code(radius_re: float | None, planet_cls: str | None) -> str | None:
+    """Return the Traveller-style world size code for a planet or moon.
+
+    Gas giants → 'GS', 'GM', 'GL' based on planet_cls.
+    Rocky/moons → hex digit '0'..'F' derived from diameter; 'S' for < 1200 km.
+    Returns None for belts, planetoids, or unknown input.
+    """
+    if planet_cls in ("small_gg", "medium_gg", "large_gg"):
+        return {"small_gg": "GS", "medium_gg": "GM", "large_gg": "GL"}[planet_cls]
+    if planet_cls == "rocky" and radius_re is not None:
+        diam_km = radius_re * 12_742.0  # 1 Rₑ = 12,742 km
+        if diam_km < 1_200.0:
+            return "S"
+        code = min(15, round(diam_km / 1_600.0))
+        return format(code, 'X')  # uppercase hex, no prefix
+    return None
+
+
 def moon_count(planet_mass_earth: float) -> int:
     """Draw moon count conditioned on planet mass."""
     if planet_mass_earth < 0.1:
@@ -112,6 +189,13 @@ def generate_planet(star_id: int, star_luminosity: float) -> dict:
         "epoch": 0,
         "in_hz": 1 if hz_inner <= a <= hz_outer else 0,
         "possible_tidal_lock": 1 if a < 0.5 * math.sqrt(max(star_luminosity, 1e-4)) else 0,
+        "planet_class": planet_class(mass),
+        "has_rings": _has_rings(planet_class(mass)),
+        "comp_metallic": None,
+        "comp_carbonaceous": None,
+        "comp_stony": None,
+        "span_inner_au": None,
+        "span_outer_au": None,
     }
 
 
@@ -139,6 +223,13 @@ def generate_moon(planet_body_id: int, planet_mass: float) -> dict:
         "epoch": 0,
         "in_hz": None,  # moons don't orbit stars; HZ not applicable
         "possible_tidal_lock": 1,  # nearly all moons at generated distances are tidally locked
+        "planet_class": None,
+        "has_rings": None,
+        "comp_metallic": None,
+        "comp_carbonaceous": None,
+        "comp_stony": None,
+        "span_inner_au": None,
+        "span_outer_au": None,
     }
 
 
@@ -239,10 +330,12 @@ def planetoid_semi_major_axis_au(belt_center_au: float, belt_ecc: float) -> floa
 
 
 def generate_belt(star_id: int, center_au: float, ecc: float, mass: float,
-                  hz_inner: float, hz_outer: float) -> dict:
+                  hz_inner: float, hz_outer: float, star_luminosity: float = 1.0) -> dict:
     """Generate a belt row — a statistical entity representing the diffuse belt."""
     from starscape5.orbits import random_angles
     i, omega_big, omega, _m0 = random_angles()
+    metallic, carb, stony = _belt_composition(center_au, star_luminosity)
+    span_inner, span_outer = _belt_span(center_au, ecc)
     return {
         "body_type": "belt",
         "mass": mass,
@@ -258,6 +351,13 @@ def generate_belt(star_id: int, center_au: float, ecc: float, mass: float,
         "epoch": 0,
         "in_hz": 1 if hz_inner <= center_au <= hz_outer else 0,
         "possible_tidal_lock": None,
+        "planet_class": None,
+        "has_rings": None,
+        "comp_metallic": metallic,
+        "comp_carbonaceous": carb,
+        "comp_stony": stony,
+        "span_inner_au": span_inner,
+        "span_outer_au": span_outer,
     }
 
 
@@ -285,4 +385,11 @@ def generate_planetoid(star_id: int, belt_center_au: float, belt_ecc: float,
         "epoch": 0,
         "in_hz": 1 if hz_inner <= a <= hz_outer else 0,
         "possible_tidal_lock": None,
+        "planet_class": None,
+        "has_rings": None,
+        "comp_metallic": None,
+        "comp_carbonaceous": None,
+        "comp_stony": None,
+        "span_inner_au": None,
+        "span_outer_au": None,
     }

@@ -18,6 +18,9 @@ import math
 import sqlite3
 from pathlib import Path
 
+from starscape5.planets import planet_class as _planet_class
+from starscape5.planets import _belt_composition, _belt_span
+
 DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
 SOL_STAR_ID = 1
 
@@ -73,6 +76,9 @@ MOONS = [
 ]
 
 
+# Real-world ring systems
+_SOL_RINGS = {"Jupiter", "Saturn", "Uranus", "Neptune"}
+
 # Sol L = 1.0 solar luminosities → HZ = [0.95, 1.67] AU; tidal lock radius = 0.5√L AU
 _SOL_HZ_INNER = 0.95
 _SOL_HZ_OUTER = 1.67
@@ -83,8 +89,10 @@ INSERT_SQL = """
         (body_type, mass, radius, orbit_star_id, orbit_body_id,
          semi_major_axis, eccentricity, inclination,
          longitude_ascending_node, argument_periapsis, mean_anomaly, epoch,
-         in_hz, possible_tidal_lock)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)
+         in_hz, possible_tidal_lock, planet_class,
+         has_rings, comp_metallic, comp_carbonaceous, comp_stony,
+         span_inner_au, span_outer_au)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
 
 
@@ -127,10 +135,12 @@ def main() -> None:
         for (name, mass, radius, a, e, i, omega_big, omega, m0) in PLANETS:
             in_hz = 1 if _SOL_HZ_INNER <= a <= _SOL_HZ_OUTER else 0
             tidal_lock = 1 if a < _SOL_TIDAL_LOCK_AU else 0
+            has_rings = 1 if name in _SOL_RINGS else 0
             cur = conn.execute(
                 INSERT_SQL,
                 ("planet", mass, radius, SOL_STAR_ID, None, a, e, i, omega_big, omega, m0,
-                 in_hz, tidal_lock)
+                 in_hz, tidal_lock, _planet_class(mass),
+                 has_rings, None, None, None, None, None)
             )
             planet_ids[name] = cur.lastrowid
             log.info("Inserted planet %s (body_id=%d, in_hz=%d, tidal_lock=%d)",
@@ -140,15 +150,20 @@ def main() -> None:
             parent_id = planet_ids[planet_name]
             cur = conn.execute(
                 INSERT_SQL,
-                ("moon", mass, radius, None, parent_id, a, e, i, omega_big, omega, m0, None, 1)
+                ("moon", mass, radius, None, parent_id, a, e, i, omega_big, omega, m0,
+                 None, 1, None, None, None, None, None, None, None)
             )
             log.info("  Inserted moon %s → %s (body_id=%d)", moon_name, planet_name, cur.lastrowid)
 
         # Asteroid belt — representative statistical row for the Sol main belt
+        _belt_a, _belt_ecc = 2.70, 0.17
+        _bm, _bc, _bs = _belt_composition(_belt_a, 1.0)  # Sol L=1.0
+        _si, _so = _belt_span(_belt_a, _belt_ecc)
         conn.execute(INSERT_SQL, (
             "belt", 4.5e-4, None, SOL_STAR_ID, None,
-            2.70, 0.17, 0.0927, 0.0, 0.0, 0.0,  # a=2.70 AU, e, i, Ω, ω, M0
-            0, None,  # in_hz=0, possible_tidal_lock=NULL
+            _belt_a, _belt_ecc, 0.0927, 0.0, 0.0, 0.0,  # a, e, i, Ω, ω, M0
+            0, None, None,  # in_hz=0, possible_tidal_lock=NULL, planet_class=NULL
+            None, _bm, _bc, _bs, _si, _so,  # has_rings=NULL, composition, span
         ))
         log.info("Inserted Sol asteroid belt (center=2.70 AU)")
 
@@ -156,7 +171,8 @@ def main() -> None:
         conn.execute(INSERT_SQL, (
             "planetoid", 1.57e-4, 0.074, SOL_STAR_ID, None,
             2.7691, 0.0760, 0.1849, 1.4024, 1.2780, 0.0,
-            0, None,  # in_hz=0, possible_tidal_lock=NULL
+            0, None, None,  # in_hz=0, possible_tidal_lock=NULL, planet_class=NULL
+            None, None, None, None, None, None,  # has_rings=NULL, comp/span=NULL
         ))
         log.info("Inserted Ceres (a=2.77 AU)")
 

@@ -11,8 +11,12 @@ unless otherwise noted. Ordered alphabetically by field name.
 | `body_id` | — | `Bodies` | Unique integer identifier for a planet or moon |
 | `body_type` | — | `Bodies` | `'planet'` (orbits a star) or `'moon'` (orbits a planet) |
 | `ci` | mag (B−V) | `IndexedIntegerDistinctStars` | B−V color index; stored as TEXT, parsed to float at read time |
+| `comp_carbonaceous` | fraction | `Bodies` | Fraction of belt mass that is carbonaceous/icy (0–1); NULL for non-belt rows. Dominant outside the snow line (2.7√L AU) |
+| `comp_metallic` | fraction | `Bodies` | Fraction of belt mass that is metallic (0–1); NULL for non-belt rows. Higher inside the snow line |
+| `comp_stony` | fraction | `Bodies` | Fraction of belt mass that is stony/silicate (0–1); NULL for non-belt rows. `comp_metallic + comp_carbonaceous + comp_stony = 1.0` |
 | `eccentricity` | — | `StarOrbits`, `Bodies` | Orbital eccentricity e ∈ [0, 0.97); drawn from thermal distribution f(e)=2e |
 | `epoch` | game ticks (weeks) | `StarOrbits`, `Bodies` | Game time at which `mean_anomaly` is defined; 0 = game start |
+| `has_rings` | — | `Bodies` | 1 if the planet has a ring system, 0 if not; NULL for moons, belts, and planetoids. Probabilities: `rocky`=0, `small_gg`=0.10, `medium_gg`=0.20, `large_gg`=0.30 |
 | `hip` | — | `IndexedIntegerDistinctStars` | Hipparcos catalogue identifier; may be NULL for generated companion stars |
 | `inclination` | radians | `StarOrbits`, `Bodies` | Orbital inclination i ∈ [0, π); drawn from isotropic sphere: i = arccos(uniform(−1,1)) |
 | `in_hz` | — | `Bodies` | 1 if planet's semi-major axis falls within the host star's HZ (0.95–1.67 × √L AU); 0 outside; NULL for moons |
@@ -23,9 +27,12 @@ unless otherwise noted. Ordered alphabetically by field name.
 | `orbit_body_id` | — | `Bodies` | FK → `Bodies.body_id`; parent planet for moons; NULL for planets |
 | `orbit_star_id` | — | `Bodies` | FK → `IndexedIntegerDistinctStars.star_id`; host star for planets; NULL for moons |
 | `possible_tidal_lock` | — | `Bodies` | 1 if planet/moon is within the estimated tidal-lock zone of its host star or parent planet; 0 if not; NULL for belts and planetoids |
+| `planet_class` | — | `Bodies` | Planet size classification: `'rocky'` (< 10 Mₑ), `'small_gg'` (10–40 Mₑ), `'medium_gg'` (40–350 Mₑ), `'large_gg'` (≥ 350 Mₑ); NULL for moons, belts, planetoids |
 | `primary_star_id` | — | `StarOrbits` | `star_id` of the most massive star in the system; the reference frame for orbital calculations |
 | `radius` | R☉ (stars), Rₑ (bodies) | `DistinctStarsExtended`, `Bodies` | Stellar radius via Stefan-Boltzmann; planet/moon radius in Earth radii |
 | `semi_major_axis` | AU | `StarOrbits`, `Bodies` | Semi-major axis a; AU for both stellar companions and planets/moons |
+| `span_inner_au` | AU | `Bodies` | Inner edge of the 80%-mass belt span; NULL for non-belt rows. Computed as center × (1 − 0.27 × e) |
+| `span_outer_au` | AU | `Bodies` | Outer edge of the 80%-mass belt span; NULL for non-belt rows. Computed as center × (1 + 0.27 × e) |
 | `source` | — | `IndexedIntegerDistinctStars` | Provenance tag for the spectral value (e.g. `'catalogue'`, `'derived'`) |
 | `spectral` | — | `IndexedIntegerDistinctStars` | Spectral type string (e.g. `G5V`, `K3III`); derived from B−V and Mv by `fill_spectral.py` |
 | `star_id` | — | `IndexedIntegerDistinctStars`, `DistinctStarsExtended`, `StarOrbits` | Unique integer identifier for a star; primary key in most tables |
