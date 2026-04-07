@@ -14,8 +14,7 @@ K, radius in R☉, luminosity in L☉, age in years.
 - On re-run, rows with `mass = -1` (previous failures) are retried alongside missing rows; use
   `INSERT OR REPLACE` to overwrite the error sentinel if computation now succeeds.
 - Skip rows already present in `DistinctStarsExtended` with `mass != -1` (resume support).
-- If `temperature_from_bv` yields a non-positive result (pathological B-V), fall back to the
-  mass-based estimate (`5778 × M^0.505`) rather than raising an error.
+- If `temperature_from_bv` yields a non-positive result (pathological B-V), or ci is absent, fall back in order to: spectral type interpolation via `temperature_from_spectral`, then mass-based estimate (`5778 × M^0.505`).
 - Commit every `--batch-size` rows (default 1000).
 - Stop cleanly after `--max-minutes` elapsed wall-clock time (default 60); progress is preserved
   and the next run resumes where it left off.
@@ -25,12 +24,13 @@ No new tables. `DistinctStarsExtended` already exists in the target DB.
 
 ```sql
 CREATE TABLE "DistinctStarsExtended" (
-    "star_id"     INTEGER,
-    "mass"        REAL,    -- solar masses; -1 signals error
-    "temperature" REAL,    -- Kelvin
-    "radius"      REAL,    -- solar radii
-    "luminosity"  REAL,    -- solar luminosities
-    "age"         REAL,    -- years
+    "star_id"      INTEGER,
+    "mass"         REAL,    -- solar masses; -1 signals error
+    "temperature"  REAL,    -- Kelvin
+    "radius"       REAL,    -- solar radii
+    "luminosity"   REAL,    -- solar luminosities
+    "age"          REAL,    -- years
+    "temp_source"  TEXT,    -- temperature provenance: 'bv', 'spectral:<type>', 'mass_est', or NULL on error
     PRIMARY KEY("star_id")
 )
 ```
@@ -38,11 +38,12 @@ CREATE TABLE "DistinctStarsExtended" (
 ## Shared Code
 `src/starscape5/metrics.py` — new module providing:
 - `temperature_from_bv(bv)` — Ballesteros (2012) formula: T = 4600 × (1/(0.92·BV+1.7) + 1/(0.92·BV+0.62))
+- `temperature_from_spectral(spectral)` — linear interpolation of T by class letter (O–M) and subtype digit (0–9); returns None if unparseable
 - `luminosity_from_absmag(absmag)` — L/L☉ = 10^((4.83 − Mv) / 2.5)
 - `radius_from_lum_temp(lum, temp)` — Stefan-Boltzmann: R/R☉ = √L × (5778/T)²
 - `mass_from_luminosity(lum)` — piecewise MS mass-luminosity relation (see Design)
 - `age_from_mass_lum(mass, lum)` — MS lifetime: t ≈ 10¹⁰ × M/L years
-- `compute_metrics(ci, absmag)` — orchestrates the above; returns dict or raises `MetricsError`
+- `compute_metrics(ci, absmag, spectral=None)` — orchestrates the above; returns dict or raises `MetricsError`
 - `sig3(x)` — round to 3 significant figures
 
 ## Design / Logic
@@ -53,6 +54,16 @@ CREATE TABLE "DistinctStarsExtended" (
 function temperature_from_bv(bv):
     // Ballesteros (2012) — valid ~O through M on main sequence
     return 4600 * (1/(0.92*bv + 1.7) + 1/(0.92*bv + 0.62))
+
+function temperature_from_spectral(spectral):
+    // Map class letter to (T at subtype 0, T at subtype 9)
+    table = { O:(50000,32000), B:(30000,10500), A:(9750,7440),
+              F:(7220,6160),   G:(5920,5340),   K:(5270,3910), M:(3850,2400) }
+    cls = first letter of spectral (uppercase)
+    if cls not in table: return NULL
+    subtype = first digit after cls, or 5 if absent
+    t0, t9 = table[cls]
+    return t0 + (t9 - t0) * subtype / 9
 
 function luminosity_from_absmag(absmag):
     // M_sun = 4.83
@@ -85,7 +96,7 @@ function sig3(x):
 
 // --- Per-star computation ---
 
-function compute_metrics(ci, absmag):
+function compute_metrics(ci, absmag, spectral):
     if ci is NULL and absmag is NULL:
         raise MetricsError("no ci or absmag")
 
@@ -94,16 +105,23 @@ function compute_metrics(ci, absmag):
 
     lum  = luminosity_from_absmag(absmag)
 
+    // Temperature fallback chain: B-V → spectral type → mass-based estimate
     if ci is not NULL:
         temp = temperature_from_bv(float(ci))
+        temp_source = 'bv'
     else:
-        // Fallback: estimate temp from lum via Stefan-Boltzmann assuming R ~ M^0.8
-        // Less accurate; flag source accordingly
-        mass_est = mass_from_luminosity(lum)
-        temp = 5778 * mass_est ^ 0.505   // rough MS fit
+        temp = 0
+        temp_source = NULL
 
-    if temp <= 0 or lum <= 0:
-        raise MetricsError("unphysical temp or lum")
+    if temp <= 0 and spectral is not NULL:
+        temp = temperature_from_spectral(spectral) or 0
+        if temp > 0: temp_source = 'spectral:' + spectral
+
+    if temp <= 0:
+        // Last resort: rough MS fit from luminosity
+        mass_est = mass_from_luminosity(lum)
+        temp = 5778 * mass_est ^ 0.505
+        temp_source = 'mass_est'
 
     radius = radius_from_lum_temp(lum, temp)
     mass   = mass_from_luminosity(lum)
@@ -112,6 +130,7 @@ function compute_metrics(ci, absmag):
     return {
         mass:        sig3(mass),
         temperature: sig3(temp),
+        temp_source: temp_source,   // 'bv' | 'spectral:<type>' | 'mass_est'
         radius:      sig3(radius),
         luminosity:  sig3(lum),
         age:         sig3(age),
@@ -122,11 +141,11 @@ function compute_metrics(ci, absmag):
 OPEN database
 deadline = now() + max_minutes * 60
 
-// Identify work: stars not yet in DistinctStarsExtended
-pending = SELECT i.star_id, i.ci, i.absmag
+// Identify work: stars not yet in DistinctStarsExtended, or previous failures (mass = -1)
+pending = SELECT i.star_id, i.ci, i.absmag, i.spectral
           FROM IndexedIntegerDistinctStars i
           LEFT JOIN DistinctStarsExtended e ON i.star_id = e.star_id
-          WHERE e.star_id IS NULL
+          WHERE e.star_id IS NULL OR e.mass = -1
           ORDER BY i.star_id
 
 total = len(pending)
@@ -135,7 +154,7 @@ LOG "Found {total} stars to process"
 processed = 0
 errors = 0
 
-FOR each (star_id, ci, absmag) in pending:
+FOR each (star_id, ci, absmag, spectral) in pending:
 
     if now() >= deadline:
         COMMIT
@@ -143,14 +162,14 @@ FOR each (star_id, ci, absmag) in pending:
         EXIT 0
 
     TRY:
-        m = compute_metrics(ci, absmag)
+        m = compute_metrics(ci, absmag, spectral)
         INSERT OR REPLACE INTO DistinctStarsExtended
-            (star_id, mass, temperature, radius, luminosity, age)
-            VALUES (star_id, m.mass, m.temperature, m.radius, m.luminosity, m.age)
+            (star_id, mass, temperature, radius, luminosity, age, temp_source)
+            VALUES (star_id, m.mass, m.temperature, m.radius, m.luminosity, m.age, m.temp_source)
     CATCH MetricsError as e:
-        LOG ERROR "star_id={star_id}: {e}"
+        LOG ERROR "star_id={star_id} ci={ci} spectral={spectral}: {e}"
         INSERT OR REPLACE INTO DistinctStarsExtended
-            (star_id, mass, temperature, radius, luminosity, age)
+            (star_id, mass, temperature, radius, luminosity, age, temp_source)
             VALUES (star_id, -1, NULL, NULL, NULL, NULL)
         errors += 1
 
@@ -167,8 +186,9 @@ CLOSE database
 
 | # | Where | Description | Fix |
 |---|-------|-------------|-----|
-| 1 | `metrics.py` `compute_metrics` | `temperature_from_bv` can yield a non-positive temperature for pathological B-V values; code raised `MetricsError` instead of recovering | Fall back to mass-based estimate (`5778 × M^0.505`) when B-V temperature ≤ 0, same as the no-ci path |
+| 1 | `metrics.py` `compute_metrics` | `temperature_from_bv` can yield a non-positive temperature for pathological B-V values; code raised `MetricsError` instead of recovering | Fall back to spectral-type interpolation, then mass-based estimate (`5778 × M^0.505`) when B-V temperature ≤ 0 |
 | 2 | `scripts/compute_metrics.py` | Re-running the script after errors left `mass = -1` rows permanently unretried; SELECT excluded existing rows regardless of sentinel value | Changed SELECT to also include `e.mass = -1`; changed INSERT to `INSERT OR REPLACE` |
+| 3 | `metrics.py` `compute_metrics` | When B-V was absent or unphysical, temperature fell back immediately to mass-based estimate, ignoring the available spectral type | Added `temperature_from_spectral()` (class-letter + subtype linear interpolation O–M); fallback chain is now: B-V → spectral type → mass-based estimate |
 ```
 
 ## Scripts

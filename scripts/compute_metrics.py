@@ -54,7 +54,7 @@ def main() -> None:
     try:
         # Fetch all stars not yet processed, or previously failed (mass = -1)
         pending = conn.execute(
-            f"SELECT i.star_id, i.ci, i.absmag"
+            f"SELECT i.star_id, i.ci, i.absmag, i.spectral"
             f" FROM {SOURCE_TABLE} i"
             f" LEFT JOIN {TARGET_TABLE} e ON i.star_id = e.star_id"
             f" WHERE e.star_id IS NULL OR e.mass = -1"
@@ -82,22 +82,23 @@ def main() -> None:
             star_id = row["star_id"]
             ci = row["ci"]
             absmag = row["absmag"]
+            spectral = row["spectral"]
 
             try:
-                m = compute_metrics(ci, absmag)
+                m = compute_metrics(ci, absmag, spectral)
                 conn.execute(
                     f"INSERT OR REPLACE INTO {TARGET_TABLE}"
-                    f" (star_id, mass, temperature, radius, luminosity, age)"
-                    f" VALUES (?, ?, ?, ?, ?, ?)",
+                    f" (star_id, mass, temperature, radius, luminosity, age, temp_source)"
+                    f" VALUES (?, ?, ?, ?, ?, ?, ?)",
                     (star_id, m["mass"], m["temperature"],
-                     m["radius"], m["luminosity"], m["age"]),
+                     m["radius"], m["luminosity"], m["age"], m["temp_source"]),
                 )
             except MetricsError as exc:
-                log.error("star_id=%s: %s", star_id, exc)
+                log.error("star_id=%s ci=%s spectral=%s: %s", star_id, ci, spectral, exc)
                 conn.execute(
                     f"INSERT OR REPLACE INTO {TARGET_TABLE}"
-                    f" (star_id, mass, temperature, radius, luminosity, age)"
-                    f" VALUES (?, -1, NULL, NULL, NULL, NULL)",
+                    f" (star_id, mass, temperature, radius, luminosity, age, temp_source)"
+                    f" VALUES (?, -1, NULL, NULL, NULL, NULL, NULL)",
                     (star_id,),
                 )
                 errors += 1
