@@ -8,20 +8,28 @@ each planet. Uses luminosity from DistinctStarsExtended (falls back to 1.0 L☉)
 Supports resuming: stars that already have planets in Bodies are skipped.
 Stops cleanly after --max-minutes elapsed time; re-run to continue.
 
+Spatial filtering: use --cx/--cy/--cz and --width to restrict generation to
+stars whose system falls within a cube of the given side length (parsecs),
+centred on (cx, cy, cz) in parsecs.  DB coordinates are milliparsecs (integer);
+the conversion is applied automatically.
+
 Usage:
     uv run scripts/generate_planets.py
     uv run scripts/generate_planets.py --db /path/to/other.db
     uv run scripts/generate_planets.py --batch-size 200 --max-minutes 120
+    uv run scripts/generate_planets.py --cx 10 --cy 20 --cz 20 --width 10
     caffeinate -i uv run scripts/generate_planets.py --max-minutes 600
 """
 
 import argparse
 import logging
+import math
+import random
 import sqlite3
 import time
 from pathlib import Path
 
-from starscape5.orbits import enforce_stability
+from starscape5.orbits import enforce_stability, random_angles, thermal_eccentricity
 from starscape5.planets import (
     belt_mass_earth,
     belt_positions,
@@ -33,6 +41,7 @@ from starscape5.planets import (
     moon_count,
     planet_count,
     planetoid_count,
+    radius_from_mass,
     world_size_code,
 )
 
@@ -43,6 +52,8 @@ TARGET_TABLE = "Bodies"
 DEFAULT_BATCH = 500
 DEFAULT_MAX_MINUTES = 60
 PLANET_HILL_AU = 50.0
+SYSTEMS_TABLE = "IndexedIntegerDistinctSystems"
+PARSEC_TO_MPC = 1000  # DB stores coordinates as integer milliparsecs
 # S-type stability: planet a must be < S_TYPE_FRACTION * companion a
 S_TYPE_FRACTION = 0.3
 # Minimum stable zone to bother generating planets (AU)
@@ -74,7 +85,19 @@ def main() -> None:
                         help="Stars between commits (default: %(default)s)")
     parser.add_argument("--max-minutes", type=float, default=DEFAULT_MAX_MINUTES,
                         help="Stop after this many elapsed minutes (default: %(default)s)")
+    parser.add_argument("--cx", type=float, default=None,
+                        help="Box centre X coordinate in parsecs (requires --cy, --cz, --width)")
+    parser.add_argument("--cy", type=float, default=None,
+                        help="Box centre Y coordinate in parsecs")
+    parser.add_argument("--cz", type=float, default=None,
+                        help="Box centre Z coordinate in parsecs")
+    parser.add_argument("--width", type=float, default=None,
+                        help="Cube side length in parsecs (half-width applied to each axis)")
     args = parser.parse_args()
+
+    spatial_filter = all(v is not None for v in (args.cx, args.cy, args.cz, args.width))
+    if any(v is not None for v in (args.cx, args.cy, args.cz, args.width)) and not spatial_filter:
+        raise SystemExit("--cx, --cy, --cz, and --width must all be provided together")
 
     if not args.db.exists():
         raise SystemExit(f"Database not found: {args.db}")
@@ -110,6 +133,9 @@ def main() -> None:
             "  comp_stony       REAL,"
             "  span_inner_au    REAL,"
             "  span_outer_au    REAL,"
+            "  surface_gravity  REAL,"
+            "  escape_velocity_kms REAL,"
+            "  t_eq_k           REAL,"
             "  CHECK ("
             "    (orbit_star_id IS NOT NULL AND orbit_body_id IS NULL) OR"
             "    (orbit_star_id IS NULL     AND orbit_body_id IS NOT NULL)"
@@ -146,16 +172,47 @@ def main() -> None:
             len(binary_cap), len(binary_cap),
         )
 
-        # Stars not yet having any planet
-        pending = conn.execute(
-            f"SELECT i.star_id, i.spectral, e.luminosity"
-            f" FROM {SOURCE_TABLE} i"
-            f" LEFT JOIN {EXTENDED_TABLE} e ON i.star_id = e.star_id"
-            f" WHERE i.star_id NOT IN"
-            f"   (SELECT DISTINCT orbit_star_id FROM {TARGET_TABLE}"
-            f"    WHERE orbit_star_id IS NOT NULL)"
-            f" ORDER BY i.star_id"
-        ).fetchall()
+        # Stars not yet having any planet, optionally restricted to a spatial box.
+        # Coordinates in DB are integer milliparsecs; convert parsec params.
+        if spatial_filter:
+            half_mpc = int((args.width / 2) * PARSEC_TO_MPC)
+            cx_mpc   = int(args.cx * PARSEC_TO_MPC)
+            cy_mpc   = int(args.cy * PARSEC_TO_MPC)
+            cz_mpc   = int(args.cz * PARSEC_TO_MPC)
+            log.info(
+                "Spatial filter: box centre (%g, %g, %g) pc, width %g pc "
+                "→ (%d±%d, %d±%d, %d±%d) mpc",
+                args.cx, args.cy, args.cz, args.width,
+                cx_mpc, half_mpc, cy_mpc, half_mpc, cz_mpc, half_mpc,
+            )
+            pending = conn.execute(
+                f"SELECT i.star_id, i.spectral, e.luminosity"
+                f" FROM {SOURCE_TABLE} i"
+                f" JOIN {SYSTEMS_TABLE} sys USING (system_id)"
+                f" LEFT JOIN {EXTENDED_TABLE} e ON i.star_id = e.star_id"
+                f" WHERE sys.x BETWEEN ? AND ?"
+                f"   AND sys.y BETWEEN ? AND ?"
+                f"   AND sys.z BETWEEN ? AND ?"
+                f"   AND i.star_id NOT IN"
+                f"     (SELECT DISTINCT orbit_star_id FROM {TARGET_TABLE}"
+                f"      WHERE orbit_star_id IS NOT NULL)"
+                f" ORDER BY i.star_id",
+                (
+                    cx_mpc - half_mpc, cx_mpc + half_mpc,
+                    cy_mpc - half_mpc, cy_mpc + half_mpc,
+                    cz_mpc - half_mpc, cz_mpc + half_mpc,
+                ),
+            ).fetchall()
+        else:
+            pending = conn.execute(
+                f"SELECT i.star_id, i.spectral, e.luminosity"
+                f" FROM {SOURCE_TABLE} i"
+                f" LEFT JOIN {EXTENDED_TABLE} e ON i.star_id = e.star_id"
+                f" WHERE i.star_id NOT IN"
+                f"   (SELECT DISTINCT orbit_star_id FROM {TARGET_TABLE}"
+                f"    WHERE orbit_star_id IS NOT NULL)"
+                f" ORDER BY i.star_id"
+            ).fetchall()
 
         total = len(pending)
         log.info("Found %d stars to process", total)
@@ -200,6 +257,48 @@ def main() -> None:
             planets.sort(key=lambda p: p["semi_major_axis"])
             planets = enforce_stability(planets, stable_cap_au)
 
+            # HZ rocky bias: solitary F/G/K stars are guaranteed ≥1 Earth-sized
+            # rocky planet (0.5–2.0 Mₑ) inside the habitable zone.
+            hz_inner, hz_outer = hz_bounds(lum)
+            if spectral_letter in "FGK" and star_id not in binary_cap:
+                hz_ceil = min(hz_outer, stable_cap_au)
+                has_hz_rocky = any(
+                    p["in_hz"] == 1
+                    and p["planet_class"] == "rocky"
+                    and 0.5 <= p["mass"] <= 2.0
+                    for p in planets
+                )
+                if not has_hz_rocky and hz_inner < hz_ceil:
+                    mass = random.uniform(0.5, 2.0)
+                    a = random.uniform(hz_inner, hz_ceil)
+                    i_ang, lan, aop, ma = random_angles()
+                    hz_rocky = {
+                        "body_type": "planet",
+                        "mass": mass,
+                        "radius": radius_from_mass(mass),
+                        "orbit_star_id": star_id,
+                        "orbit_body_id": None,
+                        "semi_major_axis": a,
+                        "eccentricity": thermal_eccentricity(),
+                        "inclination": i_ang,
+                        "longitude_ascending_node": lan,
+                        "argument_periapsis": aop,
+                        "mean_anomaly": ma,
+                        "epoch": 0,
+                        "in_hz": 1,
+                        "possible_tidal_lock": 1 if a < 0.5 * math.sqrt(lum) else 0,
+                        "planet_class": "rocky",
+                        "has_rings": 0,
+                        "comp_metallic": None,
+                        "comp_carbonaceous": None,
+                        "comp_stony": None,
+                        "span_inner_au": None,
+                        "span_outer_au": None,
+                    }
+                    planets.append(hz_rocky)
+                    planets.sort(key=lambda p: p["semi_major_axis"])
+                    planets = enforce_stability(planets, stable_cap_au)
+
             for planet in planets:
                 cur = conn.execute(INSERT_SQL, planet)
                 planet_body_id = cur.lastrowid
@@ -215,7 +314,6 @@ def main() -> None:
                         conn.execute(INSERT_SQL, moon)
 
             # Generate asteroid belts and significant planetoids
-            hz_inner, hz_outer = hz_bounds(lum)
             for center_au, belt_ecc in belt_positions(planets, lum):
                 if center_au > stable_cap_au:
                     continue

@@ -110,20 +110,23 @@ def main() -> None:
         tree = KDTree(positions) if len(positions) > 0 else None
         log.info("Loaded %d system positions", len(positions))
 
-        # Find multiple systems whose primaries are not yet in StarOrbits
-        done_primaries = {
-            row[0] for row in conn.execute(
-                f"SELECT DISTINCT primary_star_id FROM {ORBITS_TABLE}"
-            ).fetchall()
-        }
-
-        multiple_systems = conn.execute(
-            f"SELECT system_id FROM {STARS_TABLE}"
-            f" GROUP BY system_id HAVING COUNT(*) > 1"
-        ).fetchall()
-
-        pending = [r["system_id"] for r in multiple_systems
-                   if r["system_id"] not in done_primaries]
+        # Find multiple systems that still have at least one companion with no orbit row.
+        # A companion is "done" if its star_id appears in StarOrbits.star_id.
+        # A primary is recognised by appearing in StarOrbits.primary_star_id.
+        # Any star in a multi-star system that is neither a recorded companion nor a
+        # recorded primary is a missing companion — find its system_id for reprocessing.
+        # INSERT OR IGNORE below means already-present companions are skipped safely.
+        pending_rows = conn.execute(f"""
+            SELECT DISTINCT s.system_id
+            FROM {STARS_TABLE} s
+            WHERE s.system_id IN (
+                SELECT system_id FROM {STARS_TABLE}
+                GROUP BY system_id HAVING COUNT(*) > 1
+            )
+            AND s.star_id NOT IN (SELECT star_id         FROM {ORBITS_TABLE})
+            AND s.star_id NOT IN (SELECT primary_star_id FROM {ORBITS_TABLE})
+        """).fetchall()
+        pending = [r["system_id"] for r in pending_rows]
 
         total = len(pending)
         log.info("Found %d multiple systems to process", total)

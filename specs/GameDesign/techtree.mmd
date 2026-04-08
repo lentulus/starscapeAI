@@ -1,0 +1,126 @@
+%%{init: {'theme': 'default'}}%%
+flowchart TD
+
+    %% ── DOMAIN LEVEL NODES ──────────────────────────────────────────────
+    %% Each node labelled DOMAIN-Level: description
+
+    subgraph PWR["Power Domain (0–8)"]
+        P1["P-1: Chemical / fission"]
+        P2["P-2: Fusion (practical)"]
+        P3["P-3: Fusion (high-density)"]
+        P4["P-4: Antimatter / exotic tap"]
+    end∏
+
+    subgraph MAT["Materials Domain (0–8)"]
+        M1["M-1: Industrial alloys / composites"]
+        M2["M-2: Nanostructured materials"]
+        M3["M-3: Exotic matter detection & handling"]
+        M4["M-4: Active exotic matter production"]
+    end
+
+    subgraph CMP["Computing / Information Domain (0–8)"]
+        C1["C-1: Digital networks / basic AI"]
+        C2["C-2: High-bandwidth sensors / nav AI"]
+        C3["C-3: Predictive nav / quantum comm"]
+        C5["C-5: Substrate-independent cognition"]
+    end
+
+    subgraph LSH["Life Support / Habitat Domain (0–8)"]
+        L1["L-1: Closed-loop life support"]
+        L2["L-2: Long-duration cryo / generation ship"]
+        L3["L-3: Directed terraforming"]
+        L4["L-4: Full planetary engineering"]
+    end
+
+    subgraph BIO["Biotech Domain (0–8)"]
+        B1["B-1: Advanced medicine / gene therapy"]
+        B2["B-2: Somatic augmentation & implants"]
+        B3["B-3: Performance augmentation (military grade)"]
+        B4["B-4: Germline engineering (heritable)"]
+        B6["B-6: Neural interface / consciousness substrate"]
+    end
+
+    subgraph PRO["Propulsion Domain (0–8)"]
+        PR1["PR-1: Orbital rockets"]
+        PR2["PR-2: In-system drive (weeks between planets)"]
+        PR3["PR-3: High-thrust in-system / sublight capable"]
+        PR4["PR-4: Relativistic drives"]
+    end
+
+    %% ── MILESTONE NODES ─────────────────────────────────────────────────
+
+    ORB["🛰 Orbital Capability"]
+    SBT["🔭 Space-Based Telescopes"]
+    IPS["🚀 Interplanetary Travel"]
+    ISL["⭐ Interstellar Sublight"]
+    FTP["🔬 FTL Precursor (exotic matter theory)"]
+
+    subgraph JMP["Jump Drive (split tracks)"]
+        JR1["Jump Range-1 (1 pc)"]
+        JR3["Jump Range-3 (3 pc)"]
+        JT_SLOW["Transit: 3 weeks"]
+        JT_FAST["Transit: 5 days"]
+    end
+
+    %% ── PREREQUISITE EDGES ──────────────────────────────────────────────
+
+    P1 --> ORB
+    M1 --> ORB
+    ORB --> SBT
+    C1 --> SBT
+
+    P2 --> IPS
+    PR2 --> IPS
+    L1 --> IPS
+    IPS --> ISL
+
+    P3 --> ISL
+    PR3 --> ISL
+    M2 --> ISL
+    L2 --> ISL
+    C2 --> ISL
+
+    M3 --> FTP
+    C3 --> FTP
+
+    FTP --> JR1
+    P4 --> JR1
+    M4 --> JR1
+
+    JR1 --> JR3
+    P4 --> JR3
+    M4 --> JR3
+
+    JR1 --> JT_SLOW
+    C3 --> JT_FAST
+    JT_SLOW --> JT_FAST
+
+    %% ── BIOTECH CHAIN ───────────────────────────────────────────────────
+
+    C1 --> B1
+    L1 --> B1
+    B1 --> B2
+    C2 --> B2
+    B2 --> B3
+    B2 --> B4
+    L3 --> B4
+    B4 --> B6
+    C5 --> B6
+
+    %% ── NOTES ───────────────────────────────────────────────────────────
+    %% Species modifiers (not modelled in diagram — see species.md):
+    %%   adaptability  → rate of advancement per domain
+    %%   hierarchy_tolerance → who in the polity gets biotech
+    %%   social_cohesion → destabilisation risk of B4 germline fork
+    %%   faction_tendency → parallel-track divergence in high-faction species
+    %%
+    %% Kraathi: open-volume ship multiplier on all propulsion/habitat costs
+    %% Nakhavi: orbital habitats cheaper than planetary; B-tier follows inward path
+    %% Nhaveth: tech advances via court competition; polity-level not species-level
+    %% Kreeth:  no foreign tech adoption; single forced path; no internal competition
+    %% Vrekkai: germline B4 event is a civilisation-defining simulation trigger
+    %% Vardhek: B-tier (especially B6) treated as strategic intelligence asset
+    %%
+    %% Jump range  → driven by Power + Materials
+    %% Jump transit → driven by Computing
+    %% These are separate investment tracks within Propulsion domain

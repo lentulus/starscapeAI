@@ -36,6 +36,12 @@ stored in the `Bodies` table. Runs once as a pre-simulation world-building step.
   distribution (α=1.83, m_min=10⁻⁴ Mₑ).
 - Commit every `--batch-size` stars (default 500).
 - Stop cleanly after `--max-minutes` elapsed wall-clock time (default 60); re-run to continue.
+- **HZ rocky guarantee:** after stability enforcement, solitary (non-binary) F, G, or K stars
+  that have no Earth-sized rocky planet (`0.5–2.0 Mₑ`, `planet_class='rocky'`, `in_hz=1`) in
+  the stable zone receive one injected planet: mass drawn uniformly from [0.5, 2.0] Mₑ, SMA
+  drawn uniformly from [hz_inner, min(hz_outer, stable_cap_au)].  The full planet list is then
+  re-sorted and passed through `enforce_stability` once more.  Stars already having a qualifying
+  planet, or whose HZ falls entirely outside the stable zone, are unaffected.
 
 ## Data / Schema
 New table — see `sql/schema.sql`.
@@ -218,6 +224,23 @@ FOR each star in pending:
     sort planets by semi_major_axis ascending
     planets = enforce_stability(planets, stable_cap_au)   // use binary-aware cap
 
+    // HZ rocky guarantee for solitary F/G/K stars
+    hz_inner, hz_outer = hz_bounds(lum)
+    if spectral_letter in {F, G, K} and star.star_id not in binary_cap:
+        hz_ceil = min(hz_outer, stable_cap_au)
+        has_hz_rocky = any p in planets where
+            p.in_hz == 1 and p.planet_class == 'rocky' and 0.5 <= p.mass <= 2.0
+        if not has_hz_rocky and hz_inner < hz_ceil:
+            mass = uniform(0.5, 2.0)
+            a    = uniform(hz_inner, hz_ceil)
+            inject { body_type:'planet', mass, radius:radius_from_mass(mass),
+                     orbit_star_id:star_id, semi_major_axis:a,
+                     eccentricity:thermal_eccentricity(),
+                     i/Ω/ω/M0:random_angles(), in_hz:1, planet_class:'rocky',
+                     has_rings:0, all comp/span fields:NULL }
+            sort planets by semi_major_axis ascending
+            planets = enforce_stability(planets, stable_cap_au)
+
     for planet in planets:
         INSERT INTO Bodies (...) VALUES (...)
         planet_body_id = last inserted rowid
@@ -256,8 +279,21 @@ CLOSE database
 uv run scripts/generate_planets.py
 uv run scripts/generate_planets.py --db /path/to/other.db
 uv run scripts/generate_planets.py --batch-size 200 --max-minutes 120
+uv run scripts/generate_planets.py --cx 10 --cy 20 --cz 20 --width 10
 caffeinate -i uv run scripts/generate_planets.py --max-minutes 600
 ```
+
+| Flag | Type | Default | Description |
+|---|---|---|---|
+| `--db` | path | `DEFAULT_DB` | Path to SQLite database |
+| `--batch-size` | int | 500 | Commit every N stars |
+| `--max-minutes` | float | 60 | Stop after this many minutes; re-run to continue |
+| `--cx` | float | — | Box centre X in parsecs (requires `--cy`, `--cz`, `--width`) |
+| `--cy` | float | — | Box centre Y in parsecs |
+| `--cz` | float | — | Box centre Z in parsecs |
+| `--width` | float | — | Cube side length in parsecs; half-width applied per axis |
+
+Spatial filter joins `IndexedIntegerDistinctSystems` on `system_id` and filters by `x/y/z BETWEEN centre±half_width`; input parsecs are multiplied by 1000 before comparison (DB coordinates are integer milliparsecs).
 
 Recommended run order:
 1. `fill_spectral.py`

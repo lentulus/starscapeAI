@@ -41,6 +41,9 @@ CREATE TABLE IF NOT EXISTS "Bodies" (
     "comp_stony"       REAL,               -- fraction of belt mass that is stony/silicate; NULL for non-belts
     "span_inner_au"    REAL,               -- inner edge of 80%-mass belt span (AU); NULL for non-belts
     "span_outer_au"    REAL,               -- outer edge of 80%-mass belt span (AU); NULL for non-belts
+    "surface_gravity"  REAL,               -- g-units (1 = Earth); NULL until generate_atmosphere.py run
+    "escape_velocity_kms" REAL,            -- km/s; NULL until generate_atmosphere.py run
+    "t_eq_k"           REAL,               -- blackbody equilibrium temperature (K); NULL until generate_atmosphere.py run
     CHECK (
         (orbit_star_id IS NOT NULL AND orbit_body_id IS NULL) OR
         (orbit_star_id IS NULL     AND orbit_body_id IS NOT NULL)
@@ -61,4 +64,18 @@ CREATE TABLE IF NOT EXISTS "StarOrbits" (
     "argument_periapsis"       REAL    NOT NULL,     -- radians
     "mean_anomaly"             REAL    NOT NULL,     -- radians, defined at epoch
     "epoch"                    INTEGER NOT NULL DEFAULT 0  -- game time of mean_anomaly definition
+);
+
+-- Mutable atmospheric and hydrospheric state for planets and moons.
+-- One row per body; updated each tick as atmosphere/climate evolves or terraforming progresses.
+-- Only populated for rocky planets and moons (gas giants have no meaningful surface).
+-- Populated by generate_atmosphere.py; updated in-place by the simulation engine.
+CREATE TABLE IF NOT EXISTS "BodyMutable" (
+    "body_id"          INTEGER PRIMARY KEY REFERENCES "Bodies"("body_id"),
+    "atm_type"         TEXT,    -- 'none'|'trace'|'thin'|'standard'|'dense'|'corrosive'|'exotic'
+    "atm_pressure_atm" REAL,    -- surface pressure in Earth atmospheres; 0.0 for none
+    "atm_composition"  TEXT,    -- dominant gas tag: 'none'|'co2'|'n2o2'|'methane'|'h2so4'|'mixed'
+    "surface_temp_k"   REAL,    -- post-greenhouse surface temperature (K)
+    "hydrosphere"      REAL,    -- ocean/ice fraction 0.0–1.0; NULL if corrosive or no atmosphere
+    "epoch"            INTEGER NOT NULL DEFAULT 0  -- game tick of last update
 );
