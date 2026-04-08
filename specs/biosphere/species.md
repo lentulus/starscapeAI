@@ -245,65 +245,17 @@ is preserved in spec prose only.  Species marked *(original)* have no source.
 
 | # | Game name (`name`) | Source | Notes |
 |---|---|---|---|
-| 1 | `Vrekkai` | Motie — *The Mote in God's Eye* (Niven & Pournelle) | Cyclic over-breeders; asymmetric bilateral |
-| 2 | `Kreeth` | Arachnid — *Starship Troopers* (Heinlein) | Eusocial insectoid; hive-dependent |
-| 3 | `Vashori` | Osirian — *Viagens Interplanetarias* (de Camp) | Emotional reptiloid diplomats |
-| 4 | `Kraathi` | K'Kree — *Traveller* (GDW/Miller) | Obligate herbivore centauroids; G'naak crusade |
-| 5 | `Nakhavi` | Octopod — *Children of Ruin* (Tchaikovsky) | Cephalopod; distributed cognition; semelparous |
-| 6 | `Skharri` | Kzin — *Known Space* (Niven) | Felinoid carnivores; honour culture; scream-and-leap |
-| 7 | `Vaelkhi` | Ythrian — *Technic History* (Anderson) | Avian carnivores; choth clan; God of Ythri |
-| 8 | `Shekhari` | Cynthian — *Polesotechnic League* (Anderson) | Small arboreal felinoid traders |
-| 9 | `Golvhaan` | Wodenite — *Polesotechnic League* (Anderson) | Large draconic herbivore; high-gravity world |
-| 10 | `Nhaveth` | *(original)* | Vermiform neural parasites; Kethara hosts |
-| 11 | `Vardhek` | Merseian — *Technic History / Flandry Cycle* (Anderson) | Reptiloid empire; the Long View |
-
----
-
-### Motie *(The Mote in God's Eye — Niven & Pournelle)*
-
-> **Serial-number note**: The canonical source name is "Motie". The `name`
-> field in the table below and in all generated database rows, histories, and
-> simulation output uses the filed-off designation **Vrekkai**.
-
-The defining mechanic is the Cycles: compulsive over-breeding → resource
-exhaustion → civilisational collapse → rebuild, repeated across hundreds of
-iterations of recorded history.  High `expansionism` + low `social_cohesion` +
-high `faction_tendency` makes the Cycles an emergent outcome rather than a
-scripted event.  Their extraordinary `adaptability` (Engineers can reverse-engineer
-any technology at a glance) partially compensates.  The caste system (Masters,
-Mediators, Engineers, Warriors, Watchmakers) establishes rigid `hierarchy_tolerance`
-from birth.
-
-| Field | Value | Notes |
-|---|---|---|
-| `name` | `'Vrekkai'` | Filed-off in-game designation; source: Motie |
-| `body_plan` | `'bilateral'` | Asymmetric (two right arms, one left) but fundamentally bilateral |
-| `locomotion` | `'bipedal'` | |
-| `avg_mass_kg` | `55.0` | Caste-weighted average; Warriors heavier, Watchmakers tiny |
-| `avg_height_m` | `1.45` | |
-| `lifespan_years` | `45.0` | Compressed by hormonal reproductive stress |
-| `temp_min_k` | `275.0` | Mote Prime is warm; cold tolerance limited |
-| `temp_max_k` | `325.0` | |
-| `pressure_min_atm` | `0.7` | |
-| `pressure_max_atm` | `1.6` | |
-| `atm_req` | `'n2o2'` | Standard oxygen-nitrogen breathers |
-| `diet_type` | `'omnivore'` | |
-| `diet_flexibility` | `0.65` | Mediators ate human food readily |
-| `metabolic_rate` | `'high'` | Driven by reproductive cycling and caste demands |
-| `repro_strategy` | `'r_strategist'` | Compulsive re-conception after each birth; female dies without it |
-| `gestation_years` | `0.25` | ~3 months |
-| `maturity_years` | `8.0` | |
-| `offspring_per_cycle` | `1.5` | Usually 1, occasionally twins |
-| `repro_cycles_per_life` | `20.0` | ~40 reproductive years at ~2 year cycle |
-| `risk_appetite` | `0.75` | Resource pressure forces risk-taking; Warriors extreme |
-| `aggression` | `0.80` | Cycles are fundamentally resource wars; noble family conflict is vicious |
-| `expansionism` | `0.95` | Biologically compelled to breed beyond carrying capacity |
-| `xenophilia` | `0.55` | Mediators genuinely curious; Masters deceptive but intellectually fascinated |
-| `adaptability` | `0.95` | Engineers reverse-engineer any technology; fastest learners in the novel |
-| `social_cohesion` | `0.30` | Catastrophic fracture is their baseline, not an aberration |
-| `hierarchy_tolerance` | `0.85` | Rigid caste system accepted completely from birth |
-| `faction_tendency` | `0.90` | Noble family competition constant; entire history is factional warfare |
-| `grievance_memory` | `0.70` | Remember territorial losses and betrayals across generations |
+| 1 | `Kreeth` | Arachnid — *Starship Troopers* (Heinlein) | Eusocial insectoid; hive-dependent |
+| 2 | `Vashori` | Osirian — *Viagens Interplanetarias* (de Camp) | Emotional reptiloid diplomats |
+| 3 | `Kraathi` | K'Kree — *Traveller* (GDW/Miller) | Obligate herbivore centauroids; G'naak crusade |
+| 4 | `Nakhavi` | Octopod — *Children of Ruin* (Tchaikovsky) | Cephalopod; distributed cognition; semelparous |
+| 5 | `Skharri` | Kzin — *Known Space* (Niven) | Felinoid carnivores; honour culture; scream-and-leap |
+| 6 | `Vaelkhi` | Ythrian — *Technic History* (Anderson) | Avian carnivores; choth clan; God of Ythri |
+| 7 | `Shekhari` | Cynthian — *Polesotechnic League* (Anderson) | Small arboreal felinoid traders |
+| 8 | `Golvhaan` | Wodenite — *Polesotechnic League* (Anderson) | Large draconic herbivore; high-gravity world |
+| 9 | `Nhaveth` | *(original)* | Vermiform neural parasites; Kethara hosts |
+| 10 | `Vardhek` | Merseian — *Technic History / Flandry Cycle* (Anderson) | Reptiloid empire; the Long View |
+| 11 | `Human` | *(real — Homo sapiens)* | Fragmented omnivores; extreme faction tendency; highest adaptability |
 
 ---
 
@@ -953,3 +905,88 @@ the goal stays fixed.
 | `hierarchy_tolerance` | `0.88` | Roidhunate rank system; meritocratic layer within aristocracy; not purely absolute |
 | `faction_tendency` | `0.35` | Clan rivalry exists but systemically subordinated to Roidhunate unity |
 | `grievance_memory` | `0.85` | Long View includes long grievance; territorial losses are items on a centuries-long accounting ledger |
+
+---
+
+### Human *(Homo sapiens — real)*
+
+> **Serial-number note**: No filing required.  Humans are real.  The in-game
+> `name` field uses `'Human'` directly.  Sol is seeded manually via `seed_sol.py`
+> and Earth (`homeworld_body_id`) is populated from the canonical Bodies row.
+
+Bilaterally symmetrical, bipedal, endothermic omnivores.  Average mass and
+height among the hand-authored species; moderate lifespan; no unusual physical
+capabilities.  The defining trait of humans in this simulation is not biological
+but political: **they are the most internally fragmented starting civilisation
+in the catalogue**.
+
+Every other species enters the simulation with some unifying principle —
+neurological hierarchy (Kreeth), species-level competitive programme (Vardhek),
+herd-dependency (Kraathi), distributed consensus (Nakhavi).  Humans have none.
+They start with contested borders, competing ideologies, and incompatible
+definitions of legitimate authority.  `social_cohesion` is the lowest of any
+starting species; `faction_tendency` is the highest.  The simulation question for
+humans is not *when* they fracture but *how many polities did they field at tick 1*.
+
+`adaptability` is the highest of all species.  Humans reverse-engineer, copy,
+iterate, and discard doctrine with a speed that compensates for their
+fragmentation — a human polity that survives its own internal competition emerges
+lean and technically aggressive.  The selective pressure of inter-human conflict
+accelerates tech adoption where other species might stagnate.
+
+`expansionism` is high and structurally reinforced: competing polities each
+independently face resource pressure and each independently model expansion as
+the solution.  This produces a species-level push into space that does not require
+coordinated intent — it is the aggregate output of multiple groups each trying
+to outrun the others.
+
+`xenophilia` is genuinely variable.  The species average is moderate; individual
+polities range from actively hostile to genuinely curious.  This creates
+inconsistent first-contact outcomes — a species-level diplomatic profile is
+almost meaningless for humans.  An alien civilisation encountering humans for
+the first time may receive three different responses from three different
+human polities simultaneously.
+
+The short lifespan and fast generational turnover (relative to Vardhek,
+Golvhaan, or Vashori) means human cultural memory is shallow and doctrines
+rotate quickly.  Grievances that persist across decades tend to be institutional
+rather than personal — embedded in states and religions rather than individual
+recall.  `grievance_memory` is moderate as a result: humans remember, but
+imprecisely and selectively.
+
+**Simulation trigger:** The `faction_tendency` value means a unified-humanity
+starting scenario is mechanically implausible.  At initialisation, human
+presence should be seeded as multiple independent polities sharing Sol and
+possibly a handful of early colony systems, already in political competition.
+The first inter-human war is a likely early-simulation event, not an edge case.
+
+| Field | Value | Notes |
+|---|---|---|
+| `name` | `'Human'` | No filing required; real species |
+| `body_plan` | `'bilateral'` | Standard upright biped; two arms, two legs |
+| `locomotion` | `'bipedal'` | |
+| `avg_mass_kg` | `70.0` | Species-average adult; sex dimorphism present but moderate |
+| `avg_height_m` | `1.75` | |
+| `lifespan_years` | `80.0` | Pre-medical-intervention baseline; relatively short among starting species |
+| `temp_min_k` | `283.0` | Comfortable from ~10 °C; cold tolerance extended by clothing/tech |
+| `temp_max_k` | `313.0` | Upper comfort ~40 °C; heat stress beyond this |
+| `pressure_min_atm` | `0.5` | Altitude tolerance; low-pressure survivable short-term without suit |
+| `pressure_max_atm` | `2.0` | |
+| `atm_req` | `'n2o2'` | Nitrogen-oxygen breathable mix required |
+| `diet_type` | `'omnivore'` | Extremely broad dietary range across evolutionary history |
+| `diet_flexibility` | `0.85` | Adapts readily to local biochemistries; historically colonised extreme environments |
+| `metabolic_rate` | `'medium'` | |
+| `repro_strategy` | `'k_strategist'` | Low offspring count; high parental investment; sapient |
+| `gestation_years` | `0.75` | ~9 months |
+| `maturity_years` | `16.0` | Biological maturity; social maturity often later |
+| `offspring_per_cycle` | `1.0` | Singletons typical; twins ~3% |
+| `repro_cycles_per_life` | `20.0` | Potential; cultural and economic factors reduce actual rate |
+| `risk_appetite` | `0.65` | Historically exploratory and commercially speculative; accepts high-variance outcomes |
+| `aggression` | `0.55` | Inter-group conflict is endemic in the historical record; not a warlike species biologically but socially primed |
+| `expansionism` | `0.80` | Competing polities independently pursue expansion; aggregate pressure is very high |
+| `xenophilia` | `0.50` | Species average obscures extreme polity-level variance; some factions genuinely curious, others xenophobic |
+| `adaptability` | `0.90` | Fastest technology adoption and doctrine iteration of all starting species |
+| `social_cohesion` | `0.25` | Lowest of any starting species; no unifying biological or ideological principle at species level |
+| `hierarchy_tolerance` | `0.45` | Highly variable by polity; species average masks the full range from despotism to anarchism |
+| `faction_tendency` | `0.90` | Highest of any starting species; internal schism is the default state, not the exception |
+| `grievance_memory` | `0.60` | Institutionalised memory (states, religions) persists where individual recall fades; selective and politically instrumentalised |

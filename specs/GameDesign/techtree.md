@@ -129,10 +129,6 @@ upload) not yet designed in detail.
 
 ### Species notes for Biotech
 
-- **Vrekkai**: B-4 germline engineering is a civilisation-defining event —
-  different noble families will pursue incompatible solutions to the reproductive
-  compulsion, producing biologically divergent sub-populations within a generation.
-  This is a designed simulation trigger, not just a technology unlock.
 - **Kraathi**: augmentation of individuals threatens the herd-dependency bond.
   B-2 is likely to produce a religious-political schism before it reaches
   widespread adoption.  Full germline modification (B-4) may be culturally

@@ -43,7 +43,7 @@ scripts, DB tables, and current status.
 | Species table schema | `design` | `specs/biosphere/species.md` | — | `Species` | 11 hand-authored species data rows ready; vocab finalisation needed first |
 | Controlled vocab finalisation | `design` | `specs/biosphere/species.md` (Open Questions) | — | — | body_plan, locomotion, atm_req, metabolic_rate — new terms from hand-authored species |
 | Hand-authored species seed script | `design` | `specs/biosphere/species.md` | — | `Species` | Blocked on Species schema; data rows complete in spec |
-| SpeciesCaste child table | `design` | `specs/biosphere/species.md` (note) | — | `SpeciesCaste` | Deferred; needed for Vrekkai (Moties) and Kreeth (Bugs) |
+| SpeciesCaste child table | `design` | `specs/biosphere/species.md` (note) | — | `SpeciesCaste` | Deferred; needed for Kreeth (Bugs) |
 | SpeciesHost join table | `design` | `specs/biosphere/species.md` (note) | — | `SpeciesHost` | Deferred; needed for Nhaveth parasite/host operational stats |
 | Procedural species generation | `design` | `specs/biosphere/species.md` (Generation Notes) | `generate_species.py` (future) | `Species` | Blocked on hand-authored seed + homeworld seeding |
 
