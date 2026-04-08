@@ -1,0 +1,19 @@
+*There was no diplomatic overture. There has never been a diplomatic overture. That avenue is closed.*
+
+---
+
+You will not meet a Kreeth. Not in the sense that matters. What you will meet, if you are unlucky, is a Kreeth warrior unit — exoskeletal, six-limbed, low to the ground, built for tunnel warfare and open assault with equal indifference. It will not be curious about you. It will not be hostile toward you in any way that involves recognition. You are terrain. The distinction between a rock and a human, to a Kreeth warrior operating without Queen guidance, is roughly navigational.
+
+This is the thing that takes the longest for humans to accept about the Kreeth: they are not aggressive in the way we understand aggression. Aggression implies a decision, however quick. The Kreeth do not decide to attack. The Kreeth expand into available space. If you are in that space, the outcome is mechanical, not emotional.
+
+The intelligence in the system is not in the units you encounter. It is in the Brains — fixed, immobile strategic intelligences deep in the tunnel networks, never observed by any outside species, directing long-term resource and territorial planning with a patience and methodical precision that would be admirable in a different context. The Brains are not reckless. They do not throw units away carelessly. They simply do not assign any particular weight to the lives of other species when calculating what stands between the Kreeth and the stellar real estate they require.
+
+Queens are the reproductive hubs. A single Queen produces warriors and workers by the thousands across her life, and her life is far longer than the warriors she generates. Worker Kreeth, the plurality, excavate and farm and supply. Warrior Kreeth fight. Neither caste functions meaningfully if severed from the Queen's neurological direction — not because they go feral, but because the individual unit is not, in any practical sense, a complete organism. The intelligence is distributed across the system. A warrior alone is a component without a machine.
+
+The social cohesion this produces is absolute. There are no Kreeth factions. There are no Kreeth reformers, Kreeth dissenters, or Kreeth diplomatic moderates. There are no internal politics for outside parties to exploit. The only meaningful lever available is at the Queen-Brain level, and no outside species has ever successfully communicated with a Brain. They have tried.
+
+What this means in practice, for any civilisation that finds itself sharing a stellar neighbourhood with the Kreeth, is a problem with no diplomatic solution. The Kreeth are not pursuing a program that can be negotiated with, appeased, or redirected. They are pursuing territory. They require it to sustain population. The mathematics are simple and the conclusion is uncomfortable.
+
+The one genuine strategic constraint is that their tactical adaptability is limited. They do not adopt foreign technology. They do not change doctrine easily. The Brains are methodical but conservative — tactics evolve, but slowly. A sufficiently creative or technically advanced opponent can exploit this. The difficulty is that by the time you have identified a Kreeth tactical pattern clearly enough to exploit it, you are probably already deep into the kind of war that creative tactics cannot win alone.
+
+They are, in the cold assessment of every xenobiologist who has studied them from a safe distance, an extraordinary evolutionary achievement. A perfectly unified, endlessly reproductive, biologically hierarchical organism that has scaled from a single homeworld to a multi-system presence through sheer reproductive and military efficiency. They are also, in the cold assessment of every diplomat who has attempted contact, the most straightforwardly dangerous neighbour a species can have. These two facts are not in tension. They are the same fact.
