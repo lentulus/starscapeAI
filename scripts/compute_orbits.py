@@ -15,6 +15,12 @@ Usage:
     uv run scripts/compute_orbits.py --db /path/to/other.db
     uv run scripts/compute_orbits.py --batch-size 500 --max-minutes 120
     caffeinate -i uv run scripts/compute_orbits.py --max-minutes 600
+
+Spatial filter (optional) — process only systems within a cube of side --size parsecs
+centred at --center X Y Z (ICRS Cartesian parsecs).  Omit both to process everything.
+The KDTree for Hill sphere calculation is loaded from a 50%-larger cube so that
+nearest-neighbour distances at the boundary are accurate; edge systems may still
+slightly overestimate their Hill radius (see hill_radius_au docstring).
 """
 
 import argparse
@@ -47,16 +53,33 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 log = logging.getLogger(__name__)
 
 
-def _load_system_positions(conn: sqlite3.Connection) -> tuple[np.ndarray, dict[int, int]]:
-    """Load all system positions into a numpy array for KDTree construction.
+def _load_system_positions(
+    conn: sqlite3.Connection,
+    bounds_mpc: tuple[float, float, float, float] | None = None,
+) -> tuple[np.ndarray, dict[int, int]]:
+    """Load system positions into a numpy array for KDTree construction.
+
+    Args:
+        bounds_mpc: optional (cx, cy, cz, half_width) in milliparsecs.  When
+            supplied only systems within the axis-aligned cube are loaded.
+            Pass a half_width 50% larger than the calculation region so that
+            nearest-neighbour queries for boundary systems remain accurate.
 
     Returns:
         positions: (N, 3) float array of (x, y, z) in milliparsecs
         system_id_to_idx: mapping from system_id to row index in positions
     """
-    rows = conn.execute(
-        f"SELECT system_id, x, y, z FROM {SYSTEMS_TABLE}"
-    ).fetchall()
+    if bounds_mpc is not None:
+        cx, cy, cz, hw = bounds_mpc
+        rows = conn.execute(
+            f"SELECT system_id, x, y, z FROM {SYSTEMS_TABLE}"
+            f" WHERE x BETWEEN ? AND ? AND y BETWEEN ? AND ? AND z BETWEEN ? AND ?",
+            (cx - hw, cx + hw, cy - hw, cy + hw, cz - hw, cz + hw),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            f"SELECT system_id, x, y, z FROM {SYSTEMS_TABLE}"
+        ).fetchall()
     if not rows:
         return np.empty((0, 3), dtype=float), {}
     positions = np.array([[r["x"], r["y"], r["z"]] for r in rows], dtype=float)
@@ -93,7 +116,14 @@ def main() -> None:
                         help="Systems between commits (default: %(default)s)")
     parser.add_argument("--max-minutes", type=float, default=DEFAULT_MAX_MINUTES,
                         help="Stop after this many elapsed minutes (default: %(default)s)")
+    parser.add_argument("--center", type=float, nargs=3, metavar=("X", "Y", "Z"),
+                        help="Centre of spatial filter cube in parsecs (ICRS Cartesian)")
+    parser.add_argument("--size", type=float, metavar="PARSECS",
+                        help="Side length of spatial filter cube in parsecs")
     args = parser.parse_args()
+
+    if bool(args.center) != bool(args.size):
+        raise SystemExit("--center and --size must be supplied together")
 
     if not args.db.exists():
         raise SystemExit(f"Database not found: {args.db}")
@@ -104,9 +134,32 @@ def main() -> None:
     conn.row_factory = sqlite3.Row
 
     try:
-        # Pre-load all system positions for O(log n) nearest-neighbour queries
+        # Compute spatial bounds in milliparsecs if a filter was requested.
+        # The KDTree is loaded from a 50%-larger cube so edge-system Hill sphere
+        # calculations see their true nearest neighbours.
+        ktree_bounds_mpc: tuple[float, float, float, float] | None = None
+        spatial_params: list[float] = []
+        spatial_clause = ""
+        if args.center and args.size:
+            cx, cy, cz = [c * 1000.0 for c in args.center]    # parsecs → mpc
+            hw = (args.size / 2.0) * 1000.0                   # half-width in mpc
+            ktree_bounds_mpc = (cx, cy, cz, hw * 1.5)
+            spatial_clause = (
+                f" AND s.system_id IN ("
+                f"SELECT system_id FROM {SYSTEMS_TABLE}"
+                f" WHERE x BETWEEN ? AND ? AND y BETWEEN ? AND ? AND z BETWEEN ? AND ?)"
+            )
+            spatial_params = [cx - hw, cx + hw, cy - hw, cy + hw, cz - hw, cz + hw]
+            log.info(
+                "Spatial filter: centre=(%.1f, %.1f, %.1f) mpc, half-width=%.1f mpc"
+                " (KDTree loads 1.5× = %.1f mpc half-width)",
+                cx, cy, cz, hw, hw * 1.5,
+            )
+
+        # Pre-load system positions for O(log n) nearest-neighbour queries.
+        # Load the 50%-larger cube (or all positions when no filter is set).
         log.info("Loading system positions for Hill sphere calculation...")
-        positions, system_id_to_idx = _load_system_positions(conn)
+        positions, system_id_to_idx = _load_system_positions(conn, ktree_bounds_mpc)
         tree = KDTree(positions) if len(positions) > 0 else None
         log.info("Loaded %d system positions", len(positions))
 
@@ -116,7 +169,8 @@ def main() -> None:
         # Any star in a multi-star system that is neither a recorded companion nor a
         # recorded primary is a missing companion — find its system_id for reprocessing.
         # INSERT OR IGNORE below means already-present companions are skipped safely.
-        pending_rows = conn.execute(f"""
+        pending_rows = conn.execute(
+            f"""
             SELECT DISTINCT s.system_id
             FROM {STARS_TABLE} s
             WHERE s.system_id IN (
@@ -125,7 +179,10 @@ def main() -> None:
             )
             AND s.star_id NOT IN (SELECT star_id         FROM {ORBITS_TABLE})
             AND s.star_id NOT IN (SELECT primary_star_id FROM {ORBITS_TABLE})
-        """).fetchall()
+            {spatial_clause}
+            """,
+            spatial_params,
+        ).fetchall()
         pending = [r["system_id"] for r in pending_rows]
 
         total = len(pending)

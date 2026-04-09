@@ -93,6 +93,8 @@ def main() -> None:
                         help="Box centre Z coordinate in parsecs")
     parser.add_argument("--width", type=float, default=None,
                         help="Cube side length in parsecs (half-width applied to each axis)")
+    parser.add_argument("--solitary-stars-only", action="store_true", default=False,
+                        help="Skip stars in multiple systems (companions and their primaries)")
     args = parser.parse_args()
 
     spatial_filter = all(v is not None for v in (args.cx, args.cy, args.cz, args.width))
@@ -213,6 +215,14 @@ def main() -> None:
                 f"    WHERE orbit_star_id IS NOT NULL)"
                 f" ORDER BY i.star_id"
             ).fetchall()
+
+        if args.solitary_stars_only:
+            before = len(pending)
+            pending = [r for r in pending if r["star_id"] not in binary_cap]
+            log.info(
+                "Solitary-stars-only filter: %d → %d stars (removed %d in multiple systems)",
+                before, len(pending), before - len(pending),
+            )
 
         total = len(pending)
         log.info("Found %d stars to process", total)
