@@ -4,9 +4,11 @@
 
 **Scope and intent.** Version 1 is a pre-FTL fleet simulator modelled on *Fifth Frontier War*, designed to generate history rather than be played. The world-generation pipeline is complete; Version 1 picks up from there and runs the simulation clock until polities find each other and fight. Everything beyond that core loop — tech progression, diplomacy, trade, RPG events — is explicitly deferred.
 
-**Starting conditions.** All species begin simultaneously at interplanetary tech with a homeworld, a small fleet, a ground force, and a resource pool. Humans are the exception: their high `faction_tendency` means they start as multiple competing polities in the Sol system rather than a unified one. Jump drive is the first major milestone and is not available at start.
+**Starting conditions.** All species begin simultaneously at jump-capable interstellar tech with a homeworld, a small fleet, a ground force, and a resource pool. Any species with `faction_tendency` > 0.85 starts fractured into multiple competing polities — at launch this applies to Humans (0.90) and Nhaveth (0.90). Every other species starts unified. Extended jump range (J5+) is a future research milestone; standard drive ratings (J2–J4 by hull type) are available from tick 0.
 
 **Political actors: Polities.** A polity is the unit of agency — it owns assets, makes decisions, and prosecutes war. Each polity inherits disposition parameters (`expansionism`, `aggression`, `risk_appetite`) from its founding species, which drive all of its decision-making. Species and polity are not the same: a species can fracture into multiple polities over time.
+
+**System intelligence.** A polity knows only what it has visited or been told. Passive observation from a Controlled world within 20 parsecs reveals refuelling options only (gas giant or ocean present/absent) — enough for route planning, not enough to assess a world for colonisation. Full system data requires a physical visit. Two polities that make contact and remain at peace for 52 consecutive weeks exchange their complete explored maps; this is the primary intelligence incentive to delay war after first contact.
 
 **Contact.** Contact occurs the moment a scout or fleet physically enters a system occupied by another polity. Before contact, polities expand freely with no risk of war; after contact, war becomes possible every turn. Contact is a one-time, persistent event per polity pair and is always logged.
 
@@ -14,9 +16,11 @@
 
 **Admirals.** Admirals are generated on demand the first time a fleet without one enters a hostile system; starting polities receive one at initialisation. Seniority is determined by creation sequence, and when friendly fleets combine the most senior admiral commands all forces. Tactical ability is rolled at generation with the mean and variance biased by species parameters — `adaptability` raises the mean, `risk_appetite` widens the spread, `social_cohesion` narrows it.
 
-**System control and starport.** Systems progress through four control states — Outpost, Colony, Controlled, and Contested — aligned with Traveller starport types E through A/B. Advancement follows a 25-week growth cycle and requires RU investment, no active combat, and adequate garrison. Worlds incompatible with a species' environmental tolerances are capped at Outpost; no colony can be established without habitability.
+**System control and starport.** Systems progress through four control states — Outpost, Colony, Controlled, and Contested — aligned with Traveller starport types E through A/B. Advancing control state requires colonist unit deliveries by colony transports, RU investment, no active combat, and a 25-week growth cycle check. Worlds incompatible with a species' environmental tolerances are capped at Outpost; no colony can be established without habitability.
 
-**Ships and fleets.** Ships come in four hull classes — Capital, Escort, Transport, and Troop — each with fixed Attack, Bombardment, Defence, build cost, and maintenance ratings. Fleets are named groups that move together; scouts, couriers, and System Defence Boats (SDBs) are tracked individually. SDBs are fixed to a system and cannot retreat; they are destroyed in place if their system falls.
+**Ships and fleets.** Ships come in six hull classes — Capital, Old Capital, Cruiser, Escort, Transport, and Troop — each with fixed Attack, Bombardment, Defence, build cost, and maintenance ratings. Old Capitals are cheaper pre-dreadnoughts; outclassed by Capitals in fleet action but still useful for bombardment and garrisoning secondary systems. Fleets are named groups that move together; scouts, couriers, and System Defence Boats (SDBs) are tracked individually. SDBs are fixed to a system and cannot retreat; they are destroyed in place if their system falls.
+
+**Refuelling.** Fleets that go more than 8 ticks without resupply pay double maintenance; at 16 ticks combat ratings degrade. Sources are gas giant skimming (free, 1 stationary tick, no combat), ocean worlds (free, immediate), friendly starports (1 RU/hull), naval bases (free), and fuel tenders. Gas giants are the key strategic anchor: a fleet can sustain an indefinite blockade or occupation in any system that has one, without a local starport.
 
 **Ground forces.** Army units are the abstracted ground combat currency — raised on colonies, transported by Troop or Transport hulls, and expended in assaults. Naval superiority is a hard prerequisite before any ground action. Against a Controlled world, a bombardment phase must precede landing; ground combat then resolves as a 2d6 differential against combined defender and SDB strength.
 
@@ -26,7 +30,7 @@
 
 **Repair.** Damaged hulls are repaired at shipyard systems over a fixed number of ticks at a fraction of build cost. A hull in the repair queue contributes nothing to fleet ratings until complete. Hulls may be moved while damaged; repair begins only on arrival at a shipyard.
 
-**Economy.** A single resource — Resource Units — is produced each tick by controlled systems at a rate scaling with control state and population. RU are spent on ship construction, Army units, maintenance, shipyard establishment, and repair. Unmet maintenance degrades hull combat ratings. No trade, market, or inter-polity economics exist in Version 1.
+**Economy.** A single resource — Resource Units — is produced each tick per the formula `world_potential × control_multiplier × development_multiplier`. World potential is a fixed score derived from the DB's physical data (HZ status, atmosphere, hydrosphere, mass); control state and development level are the mutable factors that grow through investment and colonist deliveries. RU are spent on construction, forces, maintenance, shipyards, and repair; unmet maintenance degrades hull ratings.
 
 **Polity decision engine.** Each polity runs a parameterised behavioural model each tick — not a search or planning system. It draws a strategic posture (Expand, Consolidate, Prepare, Prosecute), scores all candidate actions using species disposition parameters and game state, then selects among top-scored actions with soft randomness. The result is species-consistent behaviour that generates distinct historical fingerprints without deterministic play.
 
@@ -61,14 +65,23 @@ turn.
 ## Starting conditions
 
 All six sophont species start simultaneously at the same tech level:
-interplanetary capability, no FTL. Jump drive is the first major milestone;
-reaching it is a simulation event, not a starting assumption.
+jump-capable interstellar travel at standard drive ratings (J2–J4 depending
+on hull type). Extended jump range — J5 and above — is a research milestone,
+not a starting capability.
 
-**Humans are the exception.** The species' `faction_tendency` value makes a
-unified starting polity mechanically implausible. Humans begin as multiple
-independent polities sharing the Sol system and a handful of early colony
-systems, already in political competition. The exact number is left to the
-initialisation script. Every other species starts as a single polity.
+**High faction-tendency species start fractured.** Any species with
+`faction_tendency` > 0.85 begins as multiple independent polities rather
+than a unified one. At Version 1 launch this applies to two species:
+
+- **Humans** (0.90) — multiple competing polities sharing Sol and early
+  colony systems, already in political tension. The exact number is left to
+  the initialisation script.
+- **Nhaveth** (0.90) — warring courts sharing the homeworld system, each
+  controlling a portion of the Kethara host population. The dominant court
+  is the largest but not unchallenged. The exact number of starting courts
+  is left to the initialisation script.
+
+Every other species starts as a single polity.
 
 Each starting polity has:
 - A homeworld (already seeded in the DB)
@@ -100,6 +113,48 @@ Polity disposition parameters used in Version 1:
 
 All three are read directly from the Species row at polity creation. Full
 drift mechanics are deferred.
+
+---
+
+## System intelligence
+
+A polity only knows what it has seen or been told. System knowledge has
+three tiers:
+
+| Knowledge tier | How acquired | What is known |
+|---|---|---|
+| **Passive** | Controlled world within 20 parsecs | Refuelling options only: gas giant present or absent; ocean world present or absent. Nothing else. |
+| **Visited** | Scout or fleet physically present in system at any point | Full system data: all bodies, atmospheres, habitability, world potential, current control state at time of visit |
+| **Unknown** | Neither of the above | System existence known from stellar catalogue; no operational data |
+
+**Passive range is refuelling intelligence only.** A polity can see that a
+system 15 parsecs away has a gas giant — enough to plan a route that skims
+there — but cannot determine habitability, world potential, or whether it
+is worth colonising without sending a scout.
+
+**Visited knowledge is permanent for physical data.** World parameters
+(gravity, atmosphere, hydrosphere) do not change. Control state and garrison
+data from a visit become stale immediately after the fleet leaves; a polity
+does not automatically know what has happened in a system since their last
+visit.
+
+**Intelligence sharing on sustained contact.** If two polities have made
+contact and remained at peace (no war declaration) for 52 consecutive weeks,
+they exchange full visited knowledge — each polity receives the other's
+complete explored system map, including world data for every system the
+other has visited. This transfer happens once at the 52-week mark and is
+not ongoing; subsequent visits by either party do not automatically propagate.
+
+The 52-week clause creates a strategic incentive to delay war after first
+contact. A polity with superior explored territory has something valuable to
+offer; a polity that makes war immediately forfeits that intelligence windfall.
+
+**Route planning implication.** Jump range is only useful if you know where
+to refuel. Scouts run ahead of expansion fleets specifically to establish the
+refuelling map. Old Capitals at J2 are particularly dependent on this — their
+shorter legs mean every hop must be pre-surveyed. A Cruiser or Scout at J4
+can range further into unknown space but still needs to know there is fuel
+at the other end before committing a fleet.
 
 ---
 
@@ -261,12 +316,14 @@ directly.
 ## Ships and fleets
 
 Ships are abstracted to **hull classes** at the fleet level. Version 1 has
-four fleet hull types plus individually-tracked light units:
+six fleet hull types plus individually-tracked light units:
 
 | Type | Role |
 |---|---|
-| **Capital** | Front-line combat; high attack, bombardment, and defence ratings; slow, expensive |
-| **Escort** | Screening and patrol; moderate ratings; fast |
+| **Capital** | Dreadnought-class battle line; highest attack, bombardment, and defence; slow, expensive |
+| **Old Capital** | Pre-dreadnought; outclassed by Capitals in fleet action but still decisive; cheaper |
+| **Cruiser** | Armoured cruiser; patrol, line escort, independent raids; good bombardment |
+| **Escort** | Destroyer/light cruiser; screening, picket, convoy |
 | **Transport** | Cargo and troop movement; no combat value; essential for logistics |
 | **Troop** | Dedicated ground-force carrier; light defence; assault operations |
 
@@ -276,8 +333,8 @@ Each hull class has fixed ratings for:
   surface defences; separate from Attack because attacking worlds requires
   dedicated firepower
 - **Defence** — defensive combat strength
-- **Jump range** — parsecs per jump (Version 1: all hulls are jump-0, i.e.
-  in-system only, until jump drive is researched)
+- **Jump range** — parsecs per jump at Version 1 tech level: Capital J3,
+  Old Capital J2, Cruiser/Escort/Scout J4, all Transports J3, SDB J0
 - **Cargo capacity** — in resource units (for transports) or troop units
 - **Build cost** — resource units
 - **Build time** — ticks to complete at a shipyard
@@ -292,12 +349,43 @@ information. For Version 1, all polities are assumed to have perfect
 positional information within their controlled space. Individual scout
 positions matter for contact detection (see Contact section).
 
-**System Defence Boats (SDBs)** are identifiable units assigned to a
-specific system. They do not move between systems. SDBs are tracked
-individually rather than as fleet elements — each has its own ID, ratings,
-and damage state. SDBs contribute their defence rating to the system defence
-total and their attack rating in space combat when hostile fleets enter
-their system.
+**System Defence Boats (SDBs)** have no jump drive and cannot move between
+systems under their own power. They are delivered by Transport hulls and
+require 1 tick to establish themselves on arrival before contributing to
+system defence. Once established they are fixed permanently. SDBs are tracked
+individually — each has its own ID, ratings, and damage state — and
+contribute their defence rating to the system total and attack rating in
+combat when hostile fleets enter their system.
+
+---
+
+## Refuelling
+
+All hulls require periodic resupply of reaction mass and consumables. In
+Version 1 (all hulls jump-0) this is an operational logistics concern rather
+than a per-jump cost. The question is whether a deployed fleet can sustain
+itself in a distant system.
+
+**Extended operations penalty:** A fleet that goes more than 8 ticks without
+a resupply source incurs double maintenance cost. At 16 ticks, combat ratings
+degrade by 1 (treated as partially damaged) until resupply is reached.
+
+Resupply sources, in order of strategic importance:
+
+| Source | Cost | Time | Constraint |
+|---|---|---|---|
+| **Gas giant skimming** | Free | 1 tick stationary | Fleet cannot conduct combat during skim tick; available in any system with a GG |
+| **Ocean world** | Free | Immediate on arrival | Any world with hydrosphere ≥ 0.5 under friendly or occupied control |
+| **Starport** (Colony+) | 1 RU/hull | Immediate | Friendly Colony or above |
+| **Naval base** | Free | Immediate | Flag on a Controlled system |
+| **Fuel tender** | — | Same tick | Designated Transport expends 10 RU cargo to resupply up to 4 hulls |
+
+**Gas giant as strategic anchor:** Any system with a gas giant is a
+potential indefinite operation point for any fleet willing to sacrifice one
+tick per eight to skim. A polity can maintain a blockade or occupation
+without a local starport as long as the system has a gas giant. Denying
+this requires keeping a hostile fleet in the system — which faces the same
+supply problem. This is the FFW refuelling mechanic preserved directly.
 
 ---
 
@@ -388,19 +476,98 @@ when it arrives at a system with an active shipyard.
 
 ## Economy
 
-Version 1 uses a single resource: **Resource Units (RU)**. Each controlled
-system produces RU per tick based on:
-- Presence of habitable or exploitable bodies (from BodyMutable)
-- Control state (Outpost < Colony < Controlled)
-- Population level (order-of-magnitude; grows on 25-week cycle)
+Version 1 uses a single resource: **Resource Units (RU)**.
+
+### World potential
+
+Each world has a **world potential** — a fixed integer derived once from
+physical data in the DB and never changed. It represents the raw extractive
+and productive value of the body regardless of who occupies it.
+
+Derivation from existing DB fields:
+
+| Condition | Points |
+|---|---|
+| `in_hz = 1` | +10 |
+| `atm_type` in `standard`, `dense` | +5 |
+| `hydrosphere` > 0.5 | +5 |
+| `hydrosphere` 0.1–0.5 | +2 |
+| `planet_class` rocky or terrestrial | +3 |
+| `mass` 0.5–2.0 Mₑ | +2 |
+| `atm_type = corrosive` | −8 |
+| `atm_type` in `none`, `trace` | −3 |
+| Minimum | 1 |
+
+Typical results: prime HZ earthlike ≈ 25; marginal HZ world ≈ 12–15;
+hostile rocky ≈ 3–5; airless rock ≈ 2. Any body has at least 1 (there is
+always something worth extracting).
+
+### Development level
+
+Each controlled system has a **development level** (integer 0–5) tracking
+accumulated investment — infrastructure, population, industrial capacity.
+Development starts at 0 for a newly-contacted system and advances via
+colonist unit deliveries and the 25-week growth cycle.
+
+Development level caps by control state:
+- Outpost: max development 1
+- Colony: max development 3
+- Controlled: max development 5
+
+### RU production formula
+
+```
+RU/tick = world_potential × control_multiplier × development_multiplier
+```
+
+| Control state | Control multiplier |
+|---|---|
+| Outpost | 0.10 |
+| Colony | 0.40 |
+| Controlled | 1.00 |
+
+| Development level | Development multiplier |
+|---|---|
+| 0 | 0.5 |
+| 1 | 0.7 |
+| 2 | 0.9 |
+| 3 | 1.0 |
+| 4 | 1.2 |
+| 5 | 1.5 |
+
+Example: a prime world (potential 25) at Controlled/dev-5 produces
+37 RU/tick. The same world as a new outpost (dev-0) produces 1.25 RU/tick —
+enough to justify holding it, not enough to fund a war from.
+
+The habitability cap is implicit: a species-incompatible world is capped at
+Outpost, which caps the control multiplier at 0.10 regardless of development.
+
+### Colonist units and development
+
+Development advances through **colonist unit deliveries** made by colony
+transports. Each delivery increments development level by 1 (subject to the
+control state cap). At Colony and Controlled level, natural population growth
+also provides slow development increments without transport — development
+can inch forward without resupply, but significantly slower.
+
+The colonist unit requirement to advance control state (subject to the
+25-week growth cycle check):
+
+| Transition | Colonist deliveries required |
+|---|---|
+| → Outpost (establish) | 1 |
+| Outpost → Colony | 3 |
+| Colony → Controlled | 5 |
+
+### RU expenditure
 
 RU are spent on:
 - Ship construction (full cost reserved at order placement)
 - Ground force raising (at any Colony or Controlled world)
 - Maintenance (flat per-hull cost per tick; unmet maintenance degrades combat
   rating)
-- Shipyard establishment
-- Repair
+- Shipyard establishment (Colony or above required)
+- Repair (25% of build cost, 4 ticks at a shipyard)
 
 There is no trade, no market, no inter-polity economic interaction in Version 1.
 Those are deferred.
@@ -572,8 +739,10 @@ forces rather than assaulting in the same tick naval superiority is established.
 One tick = one week of simulated time. Within each tick, phases resolve in
 order:
 
-1. **Intelligence** — scouts report; polity decision engine evaluates current
-   state; contact detection checks run
+1. **Intelligence** — scouts report full system data for newly visited systems;
+   passive 20-parsec scan updates refuelling map for all systems in range;
+   52-week peace clock checked for intelligence-sharing events; polity decision
+   engine evaluates current state including route options; contact detection runs
 2. **Decision** — each polity decision engine generates orders (move fleets,
    begin construction, assign Army units, war initiation roll if in contact)
 3. **Movement** — fleets execute one jump or in-system transit
@@ -608,7 +777,7 @@ monthly summary record is written instead of weekly entries.
 ## Deferred — explicitly out of scope for Version 1
 
 - Tech progression beyond starting level
-- Jump drive (researched as a milestone, not available at start)
+- Extended jump range (J5+; researched as a milestone)
 - Information lag and imperfect intelligence
 - Diplomatic state (treaties, alliances, non-aggression pacts, peace)
 - Trade and inter-polity economics
