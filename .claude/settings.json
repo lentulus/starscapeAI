@@ -2,6 +2,9 @@
   "permissions": {
     "additionalDirectories": [
       "/Users/lentulus/projects/starscape5/articles"
+    ],
+    "allow": [
+      "Bash(uv add:*)"
     ]
   }
 }

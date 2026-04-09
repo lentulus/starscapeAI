@@ -66,6 +66,64 @@ CREATE TABLE IF NOT EXISTS "StarOrbits" (
     "epoch"                    INTEGER NOT NULL DEFAULT 0  -- game time of mean_anomaly definition
 );
 
+-- Sophont species definitions.
+-- One row per species; static for the ~4×10⁴ year simulation horizon.
+-- Physical stats describe species averages; caste variation is not modelled here.
+-- homeworld_body_id is NULL until the homeworld body is seeded in Bodies.
+-- body_plan vocab extended beyond the original spec to cover hand-authored species.
+CREATE TABLE IF NOT EXISTS "Species" (
+    -- Identity
+    "species_id"          INTEGER PRIMARY KEY,
+    "name"                TEXT    NOT NULL UNIQUE,
+    "homeworld_body_id"   INTEGER REFERENCES "Bodies"("body_id"),
+
+    -- Physical description
+    "body_plan"           TEXT    CHECK(body_plan IN (
+                              'bilateral','radial','colonial','amorphous','exotic',
+                              'centauroid','cephalopod','avian','vermiform','draconic')),
+    "locomotion"          TEXT    CHECK(locomotion IN (
+                              'bipedal','quadrupedal','sessile','aquatic','aerial','mixed',
+                              'hexapedal','jet_aquatic','winged_flight','arboreal','vermiform')),
+    "avg_mass_kg"         REAL,
+    "avg_height_m"        REAL,
+    "lifespan_years"      REAL,
+
+    -- Environmental tolerances
+    "temp_min_k"          REAL,
+    "temp_max_k"          REAL,
+    "pressure_min_atm"    REAL,
+    "pressure_max_atm"    REAL,
+    "atm_req"             TEXT    CHECK(atm_req IN (
+                              'n2o2','co2','methane','any','vacuum','reducing','aquatic')),
+
+    -- Diet and metabolism
+    "diet_type"           TEXT    CHECK(diet_type IN (
+                              'herbivore','carnivore','omnivore','detritivore',
+                              'chemotroph','phototroph','parasitic','parasite')),
+    "diet_flexibility"    REAL    CHECK(diet_flexibility BETWEEN 0.0 AND 1.0),
+    "metabolic_rate"      TEXT    CHECK(metabolic_rate IN ('low','medium','high','very_high','variable')),
+
+    -- Reproduction
+    "repro_strategy"      TEXT    CHECK(repro_strategy IN ('r_strategist','k_strategist')),
+    "gestation_years"     REAL,
+    "maturity_years"      REAL,
+    "offspring_per_cycle" REAL,
+    "repro_cycles_per_life" REAL,
+
+    -- Behavioural disposition (0.0–1.0)
+    "risk_appetite"       REAL    CHECK(risk_appetite BETWEEN 0.0 AND 1.0),
+    "aggression"          REAL    CHECK(aggression BETWEEN 0.0 AND 1.0),
+    "expansionism"        REAL    CHECK(expansionism BETWEEN 0.0 AND 1.0),
+    "xenophilia"          REAL    CHECK(xenophilia BETWEEN 0.0 AND 1.0),
+    "adaptability"        REAL    CHECK(adaptability BETWEEN 0.0 AND 1.0),
+
+    -- Social cohesion and fracture risk (0.0–1.0)
+    "social_cohesion"     REAL    CHECK(social_cohesion BETWEEN 0.0 AND 1.0),
+    "hierarchy_tolerance" REAL    CHECK(hierarchy_tolerance BETWEEN 0.0 AND 1.0),
+    "faction_tendency"    REAL    CHECK(faction_tendency BETWEEN 0.0 AND 1.0),
+    "grievance_memory"    REAL    CHECK(grievance_memory BETWEEN 0.0 AND 1.0)
+);
+
 -- Mutable atmospheric and hydrospheric state for planets and moons.
 -- One row per body; updated each tick as atmosphere/climate evolves or terraforming progresses.
 -- Only populated for rocky planets and moons (gas giants have no meaningful surface).
