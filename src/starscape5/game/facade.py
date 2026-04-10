@@ -18,10 +18,13 @@ import sqlite3
 from dataclasses import dataclass, field
 from typing import Protocol, runtime_checkable
 
+from random import Random
+
+from starscape5.world.facade import WorldFacade
 from .economy import compute_ru_production
 from .polity import update_treasury, get_active_polities
 from .presence import get_presences_by_polity
-from .fleet import get_hulls_in_fleet, get_fleets_by_polity, mark_hull_active
+from .fleet import get_hulls_in_fleet, get_fleets_by_polity, mark_hull_active, FleetRow
 from .ground import get_ground_forces_by_polity
 from .constants import HULL_STATS, GROUND_STATS
 from .events import write_event
@@ -53,6 +56,61 @@ class GameFacade(Protocol):
 
     def apply_supply_degradation(self, polity_id: int, tick: int) -> None:
         """Double maintenance at 8+ supply_ticks; degrade ratings at 16+."""
+        ...
+
+    def update_passive_scan(
+        self, polity_id: int, world: WorldFacade, tick: int
+    ) -> int:
+        """Scan 20 pc radius; upsert passive SystemIntelligence rows."""
+        ...
+
+    def check_growth_cycles(
+        self, polity_id: int, tick: int, rng: Random
+    ) -> list:
+        """Roll development/state advancement at 25-week checkpoints."""
+        ...
+
+    def increment_peace_weeks(self) -> None:
+        """Increment peace_weeks on all non-war ContactRecord rows."""
+        ...
+
+    def check_map_sharing(self, tick: int) -> list[tuple[int, int]]:
+        """Fire intel exchange for pairs at peace >= 52 weeks."""
+        ...
+
+    def execute_jump(
+        self, fleet_id: int, destination_system_id: int, tick: int
+    ) -> None:
+        """Order fleet to jump; status→in_transit, destination_tick=tick+1."""
+        ...
+
+    def process_arrivals(self, tick: int) -> list[tuple[int, int, int]]:
+        """Settle all in-transit fleets with destination_tick==tick.
+
+        Returns list of (fleet_id, polity_id, system_id).
+        """
+        ...
+
+    def get_fleet(self, fleet_id: int) -> FleetRow:
+        """Fetch a single Fleet row."""
+        ...
+
+    def record_visit(
+        self, polity_id: int, system_id: int, world: WorldFacade, tick: int
+    ) -> None:
+        """Record a full-intel fleet visit to system_id."""
+        ...
+
+    def detect_contacts(
+        self, system_id: int, tick: int
+    ) -> list[tuple[int, int]]:
+        """Create ContactRecord rows for newly co-present polity pairs."""
+        ...
+
+    def generate_expand_orders(
+        self, polity_id: int, world: WorldFacade, tick: int
+    ) -> list[tuple[int, int]]:
+        """Return (fleet_id, dest_system_id) expand orders for polity."""
         ...
 
 
@@ -91,6 +149,55 @@ class GameFacadeStub:
 
     def apply_supply_degradation(self, polity_id: int, tick: int) -> None:
         self._record("apply_supply_degradation", polity_id, tick)
+
+    def update_passive_scan(
+        self, polity_id: int, world: WorldFacade, tick: int
+    ) -> int:
+        self._record("update_passive_scan", polity_id, tick)
+        return self.returns.get("update_passive_scan", 0)
+
+    def check_growth_cycles(
+        self, polity_id: int, tick: int, rng: Random
+    ) -> list:
+        self._record("check_growth_cycles", polity_id, tick)
+        return self.returns.get("check_growth_cycles", [])
+
+    def increment_peace_weeks(self) -> None:
+        self._record("increment_peace_weeks")
+
+    def check_map_sharing(self, tick: int) -> list[tuple[int, int]]:
+        self._record("check_map_sharing", tick)
+        return self.returns.get("check_map_sharing", [])
+
+    def execute_jump(
+        self, fleet_id: int, destination_system_id: int, tick: int
+    ) -> None:
+        self._record("execute_jump", fleet_id, destination_system_id, tick)
+
+    def process_arrivals(self, tick: int) -> list[tuple[int, int, int]]:
+        self._record("process_arrivals", tick)
+        return self.returns.get("process_arrivals", [])
+
+    def get_fleet(self, fleet_id: int) -> FleetRow:
+        self._record("get_fleet", fleet_id)
+        return self.returns["get_fleet"]  # must be configured; no sensible default
+
+    def record_visit(
+        self, polity_id: int, system_id: int, world: WorldFacade, tick: int
+    ) -> None:
+        self._record("record_visit", polity_id, system_id, tick)
+
+    def detect_contacts(
+        self, system_id: int, tick: int
+    ) -> list[tuple[int, int]]:
+        self._record("detect_contacts", system_id, tick)
+        return self.returns.get("detect_contacts", [])
+
+    def generate_expand_orders(
+        self, polity_id: int, world: WorldFacade, tick: int
+    ) -> list[tuple[int, int]]:
+        self._record("generate_expand_orders", polity_id, tick)
+        return self.returns.get("generate_expand_orders", [])
 
 
 # ---------------------------------------------------------------------------
@@ -254,6 +361,58 @@ class GameFacadeImpl:
             )
 
         return hull_ids
+
+    def update_passive_scan(
+        self, polity_id: int, world: WorldFacade, tick: int
+    ) -> int:
+        from .intelligence import update_passive_scan
+        return update_passive_scan(self._conn, polity_id, world, tick)
+
+    def check_growth_cycles(
+        self, polity_id: int, tick: int, rng: Random
+    ) -> list:
+        from .control import check_growth_cycles
+        return check_growth_cycles(self._conn, polity_id, tick, rng)
+
+    def increment_peace_weeks(self) -> None:
+        from .intelligence import increment_peace_weeks
+        increment_peace_weeks(self._conn)
+
+    def check_map_sharing(self, tick: int) -> list[tuple[int, int]]:
+        from .intelligence import check_map_sharing
+        return check_map_sharing(self._conn, tick)
+
+    def execute_jump(
+        self, fleet_id: int, destination_system_id: int, tick: int
+    ) -> None:
+        from .movement import execute_jump
+        execute_jump(self._conn, fleet_id, destination_system_id, tick)
+
+    def process_arrivals(self, tick: int) -> list[tuple[int, int, int]]:
+        from .movement import process_arrivals
+        return process_arrivals(self._conn, tick)
+
+    def get_fleet(self, fleet_id: int) -> FleetRow:
+        from .fleet import get_fleet
+        return get_fleet(self._conn, fleet_id)
+
+    def record_visit(
+        self, polity_id: int, system_id: int, world: WorldFacade, tick: int
+    ) -> None:
+        from .intelligence import record_visit
+        record_visit(self._conn, polity_id, system_id, world, tick)
+
+    def detect_contacts(
+        self, system_id: int, tick: int
+    ) -> list[tuple[int, int]]:
+        from .movement import detect_contacts
+        return detect_contacts(self._conn, system_id, tick)
+
+    def generate_expand_orders(
+        self, polity_id: int, world: WorldFacade, tick: int
+    ) -> list[tuple[int, int]]:
+        from .decision import generate_expand_orders
+        return generate_expand_orders(self._conn, polity_id, world, tick)
 
     def apply_supply_degradation(self, polity_id: int, tick: int) -> None:
         """Apply supply penalties to fleets that have gone too long without resupply.
