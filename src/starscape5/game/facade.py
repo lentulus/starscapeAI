@@ -123,6 +123,29 @@ class GameFacade(Protocol):
         """Resolve one combat round in system_id; return list[CombatResult]."""
         ...
 
+    def find_bombardment_candidates(self) -> list[tuple[int, int, int]]:
+        """Return (system_id, attacker_id, defender_id) where bombardment applies."""
+        ...
+
+    def run_bombardment_tick(
+        self, system_id: int, attacker_id: int, defender_id: int,
+        tick: int, rng: "Random"
+    ):
+        """Execute one tick of orbital bombardment; return BombardmentResult."""
+        ...
+
+    def find_assault_candidates(self) -> list[tuple[int, int, int, int]]:
+        """Return (system_id, body_id, attacker_id, defender_id) for pending assaults."""
+        ...
+
+    def run_ground_assault(
+        self, system_id: int, body_id: int,
+        attacker_id: int, defender_id: int,
+        tick: int, rng: "Random", first_round: bool = True
+    ):
+        """Resolve one tick of ground combat; return AssaultResult."""
+        ...
+
 
 # ---------------------------------------------------------------------------
 # Stub
@@ -218,6 +241,29 @@ class GameFacadeStub:
     ) -> list:
         self._record("resolve_space_combat", system_id, tick)
         return self.returns.get("resolve_space_combat", [])
+
+    def find_bombardment_candidates(self) -> list[tuple[int, int, int]]:
+        self._record("find_bombardment_candidates")
+        return self.returns.get("find_bombardment_candidates", [])
+
+    def run_bombardment_tick(
+        self, system_id: int, attacker_id: int, defender_id: int,
+        tick: int, rng: "Random"
+    ):
+        self._record("run_bombardment_tick", system_id, attacker_id, defender_id, tick)
+        return self.returns.get("run_bombardment_tick", None)
+
+    def find_assault_candidates(self) -> list[tuple[int, int, int, int]]:
+        self._record("find_assault_candidates")
+        return self.returns.get("find_assault_candidates", [])
+
+    def run_ground_assault(
+        self, system_id: int, body_id: int,
+        attacker_id: int, defender_id: int,
+        tick: int, rng: "Random", first_round: bool = True
+    ):
+        self._record("run_ground_assault", system_id, body_id, attacker_id, defender_id, tick)
+        return self.returns.get("run_ground_assault", None)
 
 
 # ---------------------------------------------------------------------------
@@ -443,6 +489,32 @@ class GameFacadeImpl:
     ) -> list:
         from .combat import resolve_space_combat
         return resolve_space_combat(self._conn, system_id, tick, rng)
+
+    def find_bombardment_candidates(self) -> list[tuple[int, int, int]]:
+        from .bombardment import find_bombardment_candidates
+        return find_bombardment_candidates(self._conn)
+
+    def run_bombardment_tick(
+        self, system_id: int, attacker_id: int, defender_id: int,
+        tick: int, rng: "Random"
+    ):
+        from .bombardment import run_bombardment_tick
+        return run_bombardment_tick(self._conn, system_id, attacker_id, defender_id, tick, rng)
+
+    def find_assault_candidates(self) -> list[tuple[int, int, int, int]]:
+        from .assault import find_assault_candidates
+        return find_assault_candidates(self._conn)
+
+    def run_ground_assault(
+        self, system_id: int, body_id: int,
+        attacker_id: int, defender_id: int,
+        tick: int, rng: "Random", first_round: bool = True
+    ):
+        from .assault import run_ground_assault
+        return run_ground_assault(
+            self._conn, system_id, body_id, attacker_id, defender_id,
+            tick, rng, first_round
+        )
 
     def apply_supply_degradation(self, polity_id: int, tick: int) -> None:
         """Apply supply penalties to fleets that have gone too long without resupply.
