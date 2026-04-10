@@ -113,6 +113,16 @@ class GameFacade(Protocol):
         """Return (fleet_id, dest_system_id) expand orders for polity."""
         ...
 
+    def find_contested_systems(self) -> list[int]:
+        """Return system_ids where at-war polity pairs both have active fleets."""
+        ...
+
+    def resolve_space_combat(
+        self, system_id: int, tick: int, rng: "Random"
+    ) -> list:
+        """Resolve one combat round in system_id; return list[CombatResult]."""
+        ...
+
 
 # ---------------------------------------------------------------------------
 # Stub
@@ -198,6 +208,16 @@ class GameFacadeStub:
     ) -> list[tuple[int, int]]:
         self._record("generate_expand_orders", polity_id, tick)
         return self.returns.get("generate_expand_orders", [])
+
+    def find_contested_systems(self) -> list[int]:
+        self._record("find_contested_systems")
+        return self.returns.get("find_contested_systems", [])
+
+    def resolve_space_combat(
+        self, system_id: int, tick: int, rng: "Random"
+    ) -> list:
+        self._record("resolve_space_combat", system_id, tick)
+        return self.returns.get("resolve_space_combat", [])
 
 
 # ---------------------------------------------------------------------------
@@ -413,6 +433,16 @@ class GameFacadeImpl:
     ) -> list[tuple[int, int]]:
         from .decision import generate_expand_orders
         return generate_expand_orders(self._conn, polity_id, world, tick)
+
+    def find_contested_systems(self) -> list[int]:
+        from .combat import find_contested_systems
+        return find_contested_systems(self._conn)
+
+    def resolve_space_combat(
+        self, system_id: int, tick: int, rng: "Random"
+    ) -> list:
+        from .combat import resolve_space_combat
+        return resolve_space_combat(self._conn, system_id, tick, rng)
 
     def apply_supply_degradation(self, polity_id: int, tick: int) -> None:
         """Apply supply penalties to fleets that have gone too long without resupply.
