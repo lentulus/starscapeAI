@@ -297,13 +297,11 @@ class TestRunDecisionPhase:
         assert any("jump" in s for s in summaries)
 
     def test_stub_calls_recorded(self):
-        stub = GameFacadeStub(returns={
-            "generate_expand_orders": [(99, 5)],
-        })
+        stub = GameFacadeStub()
         run_decision_phase(1, 2, [1], stub, WorldStub())
         method_names = [c[0] for c in stub.calls]
-        assert "generate_expand_orders" in method_names
-        assert "execute_jump" in method_names
+        assert "process_war_rolls" in method_names
+        assert "build_snapshot" in method_names
 
 
 # ---------------------------------------------------------------------------
@@ -378,13 +376,18 @@ class TestRunPartialTick:
             )
             _make_presence(conn, pid, sid, body_id=body_id)
 
-        # Mark s1 as visited for pid1 (homeworld) — scout won't try to "visit" it
+        # Mark s1 as visited for pid1 (homeworld) — scout won't try to "visit" it.
+        # Also mark all other neighbors of s1 as visited so s2 is the ONLY valid
+        # scout target (the new decision engine scores candidates, not nearest-first).
         record_visit(conn, pid1, s1, world, tick=0)
+        for other_sid in neighbors_of_1:
+            if other_sid != s2:
+                record_visit(conn, pid1, other_sid, world, tick=0)
 
         game = GameFacadeImpl(conn)
         order = [pid1, pid2]
 
-        # Tick 1: decision → scout jumps to s2 (nearest unvisited from s1)
+        # Tick 1: decision → scout jumps to s2 (only unvisited neighbor)
         # Tick 2: movement → scout arrives at s2 → detect_contacts fires
         for tick in range(1, 5):
             run_partial_tick(tick, order, game, world)

@@ -146,6 +146,20 @@ class GameFacade(Protocol):
         """Resolve one tick of ground combat; return AssaultResult."""
         ...
 
+    def build_snapshot(self, polity_id: int, tick: int):
+        """Return a GameStateSnapshot for polity_id."""
+        ...
+
+    def process_war_rolls(self, tick: int, rng: "Random") -> list:
+        """Roll war initiation for all in-contact non-war pairs; return WarDeclared list."""
+        ...
+
+    def execute_actions(
+        self, polity_id: int, actions: list, world, tick: int
+    ) -> list[str]:
+        """Execute a list of decided CandidateActions; return summary strings."""
+        ...
+
 
 # ---------------------------------------------------------------------------
 # Stub
@@ -264,6 +278,20 @@ class GameFacadeStub:
     ):
         self._record("run_ground_assault", system_id, body_id, attacker_id, defender_id, tick)
         return self.returns.get("run_ground_assault", None)
+
+    def build_snapshot(self, polity_id: int, tick: int):
+        self._record("build_snapshot", polity_id, tick)
+        return self.returns.get("build_snapshot", None)
+
+    def process_war_rolls(self, tick: int, rng: "Random") -> list:
+        self._record("process_war_rolls", tick)
+        return self.returns.get("process_war_rolls", [])
+
+    def execute_actions(
+        self, polity_id: int, actions: list, world, tick: int
+    ) -> list[str]:
+        self._record("execute_actions", polity_id, tick)
+        return self.returns.get("execute_actions", [])
 
 
 # ---------------------------------------------------------------------------
@@ -515,6 +543,20 @@ class GameFacadeImpl:
             self._conn, system_id, body_id, attacker_id, defender_id,
             tick, rng, first_round
         )
+
+    def build_snapshot(self, polity_id: int, tick: int):
+        from .snapshot import build_snapshot
+        return build_snapshot(self._conn, polity_id, tick)
+
+    def process_war_rolls(self, tick: int, rng: "Random") -> list:
+        from .war import process_war_rolls
+        return process_war_rolls(self._conn, tick, rng)
+
+    def execute_actions(
+        self, polity_id: int, actions: list, world, tick: int
+    ) -> list[str]:
+        from .action_executor import execute_actions
+        return execute_actions(self._conn, polity_id, actions, world, tick)
 
     def apply_supply_degradation(self, polity_id: int, tick: int) -> None:
         """Apply supply penalties to fleets that have gone too long without resupply.
