@@ -2,7 +2,20 @@
   "permissions": {
     "allow": [
       "Bash(uv add:*)",
-      "Bash(uv run:*)"
+      "Bash(uv run:*)",
+      "Bash(xargs ls:*)",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"PRAGMA table_info\\(IndexedIntegerDistinctSystems\\);\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"PRAGMA table_info\\(IndexedIntegerDistinctStars\\);\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"PRAGMA table_info\\(DistinctStarsExtended\\);\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"PRAGMA table_info\\(Species\\);\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"PRAGMA table_info\\(Bodies\\);\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"PRAGMA table_info\\(BodyMutable\\);\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"SELECT * FROM Bodies LIMIT 2;\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"SELECT * FROM BodyMutable LIMIT 2;\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \".indexes IndexedIntegerDistinctSystems\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"SELECT COUNT\\(*\\) FROM IndexedIntegerDistinctSystems;\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"SELECT * FROM IndexedIntegerDistinctSystems LIMIT 3;\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \".indexes\")"
     ],
     "additionalDirectories": [
       "/Users/lentulus/projects/starscape5/articles"
