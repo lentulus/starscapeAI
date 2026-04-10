@@ -55,24 +55,66 @@ build cost over 4 ticks.
 
 ## Ground unit types
 
-Ground units are raised at Colony or Controlled worlds. Garrison units
-cannot be embarked; they are defensive installations only.
+Ground formations are individually tracked. Strength is a rating 1–6; below
+2 the formation is combat-ineffective and must refit. A freshly-raised
+formation starts at strength 4 and reaches 6 after 8 ticks of consolidation
+on a non-combat world. A formation represents a combined-arms division-scale
+force: infantry, armour, artillery, and organic air assets integrated into a
+single strength figure.
 
-| Type | Strength | Embarkable | Build cost (RU) | Build time (ticks) | Maint (RU/tick) | Notes |
-|---|---|---|---|---|---|---|
-| **Garrison** | 2 | No | 3 | 2 | 0 | Defensive only; raised at any Outpost or above |
-| **Army** | 4 | Yes | 6 | 4 | 0.5 | Mobile assault and defence; Colony or above to raise |
+| Type | Starting str | Max str | Embarkable | Build cost (RU) | Build time (ticks) | Maint (RU/tick) | Notes |
+|---|---|---|---|---|---|---|---|
+| **Garrison** | 4 | 4 | No | 3 | 2 | 0 | Fixed; fights at ×1.5 in prepared positions |
+| **Army** | 4 | 6 | Yes | 6 | 4 | 0.5 | Mobile assault and defence; Colony or above to raise |
 
-**Garrison note:** Defends a specific world only. Cannot be loaded onto
-hulls. Destroyed or captured if their world falls; they do not retreat.
+**Strength scale:**
 
-**Army note:** Transported by Troop hulls (up to 4 units) or Transport
-hulls (up to 2 units, displacing 10 RU cargo). Can attack and defend. A
-retreating ground force with an available fleet may withdraw; otherwise
-destroyed.
+| Strength | State |
+|---|---|
+| 6 | Consolidated; full combat power |
+| 4–5 | Combat-effective |
+| 2–3 | Weakened but still fights |
+| 1 | Combat-ineffective; must refit |
+| 0 | Destroyed or captured |
 
-**Bombard interaction:** Each point of net Bombardment advantage reduces
-defending strength by 1 (minimum 1) before the ground combat roll.
+**Garrison note:** Fixed at the world where raised; cannot embark. Fights at
+effective strength ×1.5 in prepared positions (bunkers, fixed artillery,
+fortified lines). Destroyed in place if overrun; no retreat possible.
+Garrisons can be raised at any Outpost or above.
+
+**Army note:** Transported by Troop hulls (up to 4 formations) or Transport
+hulls (up to 2 formations, displacing 10 RU cargo). Can attack and defend.
+Any Army formation can be **marine-designated** at creation or by polity
+order — trained and equipped for orbital assault under fire. Non-designated
+formations take −1 strength penalty in the first ground combat round when
+landing from orbit onto a defended world.
+
+**Occupation duty:** An Army formation holding a conquered
+species-incompatible world pays maintenance ×1.5 until the world reaches
+Colony under a compatible species, or is abandoned. A system with no
+occupying Army formation and no Garrison reverts to Uncontrolled at the next
+Control update phase.
+
+**Bombard interaction:** Each tick of net Bombardment advantage reduces total
+defending strength (Army + Garrison) by 1, minimum 1. Bombardment can run
+for multiple ticks before the attacker commits to landing.
+
+**Assault sequence:**
+1. Naval superiority established (hard prerequisite)
+2. Bombardment phase (optional; 1+ ticks; reduces defender strength)
+3. Landing tick (non-marine Army −1 first-round strength)
+4. Ground combat resolves each tick until: attacker withdraws, defender
+   retreats or is destroyed
+
+**Ground combat result table (net 2d6 differential):**
+
+| Net | Outcome |
+|---|---|
+| 0–1 | No decision; both sides −1 strength; fight next tick |
+| 2–3 | Attacker advantage; defender −2, attacker −1 |
+| 4–5 | Decisive; defender −3, attacker −1; defender retreats or surrenders |
+| 6+ | Rout; defender destroyed/captured; attacker takes no losses |
+| Negative net | Table inverted; attacker takes losses |
 
 ---
 
