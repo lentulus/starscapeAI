@@ -27,6 +27,12 @@ skip_no_db = pytest.mark.skipif(
     not _db_available, reason="starscape.db not mounted"
 )
 
+# Sol's system_id in the real catalog (star_id=1 → system_id=1030192).
+# Use this for tests that need a system with pre-existing bodies.
+SOL_SYSTEM_ID = 1030192
+# A system with stars but no bodies generated yet (binary, system_id=1).
+UNGENERATED_SYSTEM_ID = 1
+
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -134,42 +140,45 @@ class TestNeighbors:
 @skip_no_db
 class TestBodies:
     def test_get_bodies_returns_list(self, world):
-        bodies = world.get_bodies(1)
+        bodies = world.get_bodies(SOL_SYSTEM_ID)
         assert isinstance(bodies, list)
 
     def test_bodies_are_body_data(self, world):
-        bodies = world.get_bodies(1)
+        bodies = world.get_bodies(SOL_SYSTEM_ID)
         for b in bodies:
             assert isinstance(b, BodyData)
 
     def test_bodies_have_positive_world_potential(self, world):
-        bodies = world.get_bodies(1)
-        # At least some bodies should exist for system 1 (Sol)
-        if bodies:
-            for b in bodies:
-                assert b.world_potential >= 1
+        bodies = world.get_bodies(SOL_SYSTEM_ID)
+        assert bodies, "Sol should have bodies in the DB"
+        for b in bodies:
+            assert b.world_potential >= 1
 
     def test_body_type_vocabulary(self, world):
-        bodies = world.get_bodies(1)
+        bodies = world.get_bodies(SOL_SYSTEM_ID)
         valid_types = {"gas_giant", "rocky", "belt", "terrestrial", "ice"}
         for b in bodies:
             assert b.body_type in valid_types, f"unexpected body_type={b.body_type!r}"
 
     def test_planet_class_vocabulary(self, world):
-        bodies = world.get_bodies(1)
+        bodies = world.get_bodies(SOL_SYSTEM_ID)
         valid_classes = {"gas_giant", "rocky", "terrestrial"}
         for b in bodies:
             assert b.planet_class in valid_classes, (
                 f"unexpected planet_class={b.planet_class!r}"
             )
 
-    def test_gas_giant_flag(self, world):
-        flag = world.get_gas_giant_flag(1)
-        # Sol has gas giants; flag may be True or None (if Bodies not yet populated)
-        assert flag is True or flag is None
+    def test_gas_giant_flag_sol(self, world):
+        flag = world.get_gas_giant_flag(SOL_SYSTEM_ID)
+        # Sol has Jupiter / Saturn → should be True
+        assert flag is True
+
+    def test_gas_giant_flag_ungenerated_is_none(self, world):
+        flag = world.get_gas_giant_flag(UNGENERATED_SYSTEM_ID)
+        assert flag is None
 
     def test_ocean_flag_is_bool_or_none(self, world):
-        flag = world.get_ocean_flag(1)
+        flag = world.get_ocean_flag(SOL_SYSTEM_ID)
         assert flag is True or flag is False or flag is None
 
 
@@ -180,19 +189,18 @@ class TestBodies:
 @skip_no_db
 class TestResolveSystem:
     def test_resolve_populates_world_potential(self, game_conn):
-        """resolve_system on a real system writes WorldPotential rows to game.db."""
+        """resolve_system on Sol writes WorldPotential rows to game.db."""
         ro_conn = open_world_ro(STARSCAPE_DB)
         world = WorldFacadeImpl(ro_conn)
         try:
-            bodies = world.resolve_system(1, game_conn)
+            bodies = world.resolve_system(SOL_SYSTEM_ID, game_conn)
         finally:
             ro_conn.close()
 
-        if not bodies:
-            pytest.skip("system 1 has no bodies in this DB build")
-
+        assert bodies, "Sol should have bodies in the DB"
         rows = game_conn.execute(
-            "SELECT * FROM WorldPotential WHERE system_id = 1"
+            "SELECT * FROM WorldPotential WHERE system_id = ?",
+            (SOL_SYSTEM_ID,),
         ).fetchall()
         assert len(rows) >= 1, "WorldPotential not populated after resolve_system"
         for r in rows:
@@ -203,27 +211,40 @@ class TestResolveSystem:
         ro_conn = open_world_ro(STARSCAPE_DB)
         world = WorldFacadeImpl(ro_conn)
         try:
-            world.resolve_system(1, game_conn)
-            world.resolve_system(1, game_conn)  # second call must be no-op
+            world.resolve_system(SOL_SYSTEM_ID, game_conn)
+            world.resolve_system(SOL_SYSTEM_ID, game_conn)  # must be no-op
         finally:
             ro_conn.close()
 
         rows = game_conn.execute(
-            "SELECT COUNT(*) AS cnt FROM WorldPotential WHERE system_id = 1"
+            "SELECT COUNT(*) AS cnt FROM WorldPotential WHERE system_id = ?",
+            (SOL_SYSTEM_ID,),
         ).fetchone()
-        # Idempotent: no duplicates (body_id is PK so upsert is safe)
         body_count = game_conn.execute(
-            "SELECT COUNT(DISTINCT body_id) AS cnt FROM WorldPotential WHERE system_id = 1"
+            "SELECT COUNT(DISTINCT body_id) AS cnt FROM WorldPotential WHERE system_id = ?",
+            (SOL_SYSTEM_ID,),
         ).fetchone()
+        # Idempotent: upsert means no duplicates
         assert rows["cnt"] == body_count["cnt"]
+
+    def test_resolve_ungenerated_returns_empty_without_rw(self, game_conn):
+        """resolve_system on a system with no bodies and no rw_conn returns []."""
+        ro_conn = open_world_ro(STARSCAPE_DB)
+        world = WorldFacadeImpl(ro_conn)  # no rw_conn
+        try:
+            bodies = world.resolve_system(UNGENERATED_SYSTEM_ID, game_conn)
+        finally:
+            ro_conn.close()
+        assert bodies == []
 
     def test_resolve_returns_body_data(self, game_conn):
         ro_conn = open_world_ro(STARSCAPE_DB)
         world = WorldFacadeImpl(ro_conn)
         try:
-            bodies = world.resolve_system(1, game_conn)
+            bodies = world.resolve_system(SOL_SYSTEM_ID, game_conn)
         finally:
             ro_conn.close()
+        assert bodies
         for b in bodies:
             assert isinstance(b, BodyData)
 
@@ -258,16 +279,17 @@ class TestSpecies:
 @skip_no_db
 class TestInitGameSmoke:
     def test_world_potential_rows_populated_for_homeworlds(self, game_conn):
-        """init_game assigns homeworlds starting at system 1001.
+        """init_game with WorldFacadeImpl.
 
-        The stubs use IDs 1001+ which are not in starscape.db, so resolve_system
-        returns [] and init_game falls back to a synthetic WorldPotential row.
-        This test verifies the fallback path works correctly.
+        Homeworld system IDs start at 1001.  These are real catalog IDs with
+        no bodies generated yet and no rw_conn, so resolve_system returns [].
+        init_game then creates synthetic WorldPotential rows via the fallback
+        path.  This test verifies that path works end-to-end.
         """
         from starscape5.game.init_game import init_game
 
         ro_conn = open_world_ro(STARSCAPE_DB)
-        world = WorldFacadeImpl(ro_conn)
+        world = WorldFacadeImpl(ro_conn)  # no rw_conn — triggers [] fallback
         try:
             init_game(game_conn, world)
         finally:
@@ -289,5 +311,5 @@ class TestInitGameSmoke:
             ro_conn.close()
 
         polities = game_conn.execute("SELECT * FROM Polity").fetchall()
-        # OB_DATA has 11 species; verify at least some polities were created
-        assert len(polities) >= 6, f"Expected ≥6 polities, got {len(polities)}"
+        # OB_DATA has 11 species with multiple polities; expect ≥ 11
+        assert len(polities) >= 11, f"Expected ≥11 polities, got {len(polities)}"

@@ -65,13 +65,6 @@ class WorldFacadeImpl:
     ) -> None:
         self._ro = ro_conn
         self._rw = rw_conn
-        if rw_conn is not None:
-            # Create spatial x-index once; idempotent
-            rw_conn.execute(
-                "CREATE INDEX IF NOT EXISTS idx_systems_x "
-                "ON IndexedIntegerDistinctSystems(x)"
-            )
-            rw_conn.commit()
 
     # ------------------------------------------------------------------
     # Positions
@@ -198,7 +191,14 @@ class WorldFacadeImpl:
         if not star_ids:
             return None
         ph = ",".join("?" * len(star_ids))
-        row = self._ro.execute(
+        # Check if any bodies exist at all for this system (proxy for "scanned")
+        total = self._ro.execute(
+            f"SELECT COUNT(*) AS cnt FROM Bodies WHERE orbit_star_id IN ({ph})",
+            star_ids,
+        ).fetchone()
+        if not total or not total["cnt"]:
+            return None  # Bodies not yet generated — treat as unknown
+        gg_row = self._ro.execute(
             f"""
             SELECT COUNT(*) AS cnt FROM Bodies
             WHERE  orbit_star_id IN ({ph})
@@ -207,13 +207,19 @@ class WorldFacadeImpl:
             """,
             star_ids,
         ).fetchone()
-        return bool(row["cnt"]) if row else None
+        return bool(gg_row["cnt"]) if gg_row else False
 
     def get_ocean_flag(self, system_id: int) -> bool | None:
         star_ids = self._get_star_ids(system_id)
         if not star_ids:
             return None
         ph = ",".join("?" * len(star_ids))
+        total = self._ro.execute(
+            f"SELECT COUNT(*) AS cnt FROM Bodies WHERE orbit_star_id IN ({ph})",
+            star_ids,
+        ).fetchone()
+        if not total or not total["cnt"]:
+            return None  # Bodies not yet generated — treat as unknown
         row = self._ro.execute(
             f"""
             SELECT COUNT(*) AS cnt
@@ -225,7 +231,7 @@ class WorldFacadeImpl:
             """,
             star_ids,
         ).fetchone()
-        return bool(row["cnt"]) if row else None
+        return bool(row["cnt"]) if row else False
 
     # ------------------------------------------------------------------
     # resolve_system — lazy on-demand planet + atmosphere generation
@@ -270,11 +276,9 @@ class WorldFacadeImpl:
         star_ids = self._get_star_ids(system_id)
 
         if star_ids and not self._has_bodies(star_ids):
-            if self._rw is None:
-                raise RuntimeError(
-                    "resolve_system needs rw_conn but none was provided"
-                )
-            self._generate_bodies_for_system(system_id, star_ids)
+            if self._rw is not None:
+                self._generate_bodies_for_system(system_id, star_ids)
+            # else: no rw_conn — bodies can't be generated; return what we have
 
         bodies = self.get_bodies(system_id)
         if bodies:
