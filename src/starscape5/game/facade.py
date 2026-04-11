@@ -160,6 +160,18 @@ class GameFacade(Protocol):
         """Execute a list of decided CandidateActions; return summary strings."""
         ...
 
+    def get_events_for_tick(self, tick: int) -> list:
+        """Return all GameEvent rows for the given tick."""
+        ...
+
+    def is_quiet_tick(self, events_this_tick: list) -> bool:
+        """Return True if tick has no significant events (combat/war/colony/control)."""
+        ...
+
+    def write_monthly_summary(self, tick: int, phase: int) -> str:
+        """Write a monthly_summary event; return summary string."""
+        ...
+
 
 # ---------------------------------------------------------------------------
 # Stub
@@ -292,6 +304,18 @@ class GameFacadeStub:
     ) -> list[str]:
         self._record("execute_actions", polity_id, tick)
         return self.returns.get("execute_actions", [])
+
+    def get_events_for_tick(self, tick: int) -> list:
+        self._record("get_events_for_tick", tick)
+        return self.returns.get("get_events_for_tick", [])
+
+    def is_quiet_tick(self, events_this_tick: list) -> bool:
+        self._record("is_quiet_tick")
+        return self.returns.get("is_quiet_tick", True)
+
+    def write_monthly_summary(self, tick: int, phase: int) -> str:
+        self._record("write_monthly_summary", tick, phase)
+        return self.returns.get("write_monthly_summary", "")
 
 
 # ---------------------------------------------------------------------------
@@ -557,6 +581,19 @@ class GameFacadeImpl:
     ) -> list[str]:
         from .action_executor import execute_actions
         return execute_actions(self._conn, polity_id, actions, world, tick)
+
+    def get_events_for_tick(self, tick: int) -> list:
+        from .events import get_events
+        return get_events(self._conn, tick=tick)
+
+    def is_quiet_tick(self, events_this_tick: list) -> bool:
+        from .log import is_quiet_tick
+        return is_quiet_tick(events_this_tick)
+
+    def write_monthly_summary(self, tick: int, phase: int) -> str:
+        from .log import write_monthly_summary
+        write_monthly_summary(self._conn, tick, phase)
+        return f"tick={tick} monthly_summary"
 
     def apply_supply_degradation(self, polity_id: int, tick: int) -> None:
         """Apply supply penalties to fleets that have gone too long without resupply.

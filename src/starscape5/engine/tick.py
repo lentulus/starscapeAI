@@ -1,16 +1,15 @@
-"""Partial tick runner — chains engine phases for early milestones.
+"""Partial tick runner — chains all 9 engine phases.
 
-Phase execution order (all 9 per game.md tick structure):
+Phase execution order (per game.md tick structure):
   1  Intelligence   — passive scan, peace-week increment, map sharing
-  2  Decision       — stub: expand orders → execute jumps
+  2  Decision       — war rolls, posture, candidate generation, action execution
   3  Movement       — settle arrivals, record visits, detect contacts
   4  Combat         — space combat in contested systems
   5  Bombardment    — orbital bombardment of ground targets
   6  Assault        — ground combat on contested bodies
   8  Economy        — collect RU, maintenance, build/repair queues
   7  Control        — 25-week growth cycles
-
-Phase 9 (Log/summary) is added at M13.
+  9  Log            — quiet-tick classifier, monthly summary (M13)
 """
 
 from __future__ import annotations
@@ -26,6 +25,7 @@ from .bombardment import run_bombardment_phase
 from .assault import run_assault_phase
 from .economy import run_economy_phase
 from .control import run_control_phase
+from .log import run_log_phase
 
 
 def run_partial_tick(
@@ -34,7 +34,10 @@ def run_partial_tick(
     game: GameFacade,
     world: WorldFacade,
 ) -> list[str]:
-    """Run phases 1–6, 8, 7 for a single tick.
+    """Run all 9 phases for a single tick without crash-safe advance/commit.
+
+    Used by tests and short scenarios.  For crash-safe production runs use
+    engine.simulation.run_tick() which wraps each phase with advance/commit.
 
     Returns all summary strings from all phases in chronological order.
     """
@@ -47,4 +50,5 @@ def run_partial_tick(
     summaries += run_assault_phase(tick, 6, polity_order, game, world)
     summaries += run_economy_phase(tick, 8, polity_order, game, world)
     summaries += run_control_phase(tick, 7, polity_order, game, world)
+    summaries += run_log_phase(tick, 9, polity_order, game, world)
     return summaries
