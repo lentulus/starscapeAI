@@ -15,7 +15,8 @@
       "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \".indexes IndexedIntegerDistinctSystems\")",
       "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"SELECT COUNT\\(*\\) FROM IndexedIntegerDistinctSystems;\")",
       "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"SELECT * FROM IndexedIntegerDistinctSystems LIMIT 3;\")",
-      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \".indexes\")"
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \".indexes\")",
+      "Bash(sqlite3 game.db \"SELECT current_tick, last_committed_tick FROM GameState WHERE state_id = 1;\")"
     ],
     "additionalDirectories": [
       "/Users/lentulus/projects/starscape5/articles"
