@@ -206,6 +206,10 @@ class WorldStub:
             atm_req="standard",
         )
 
+    def pick_homeworld_systems(self, n: int, seed: int = 0) -> list[int]:
+        """Return sequential IDs starting at 1001 (stub convention)."""
+        return list(range(1001, 1001 + n))
+
     def check_habitability(self, body_id: int, species_id: int) -> bool:
         """Return True if the species can inhabit the body without life support."""
         system_id = body_id // 10

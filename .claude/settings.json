@@ -16,7 +16,10 @@
       "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"SELECT COUNT\\(*\\) FROM IndexedIntegerDistinctSystems;\")",
       "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"SELECT * FROM IndexedIntegerDistinctSystems LIMIT 3;\")",
       "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \".indexes\")",
-      "Bash(sqlite3 game.db \"SELECT current_tick, last_committed_tick FROM GameState WHERE state_id = 1;\")"
+      "Bash(sqlite3 game.db \"SELECT current_tick, last_committed_tick FROM GameState WHERE state_id = 1;\")",
+      "Bash(sqlite3 game.db \"SELECT COUNT\\(*\\) FROM WorldPotential;\")",
+      "Bash(sqlite3 game.db \"SELECT system_id, COUNT\\(*\\) as bodies FROM WorldPotential GROUP BY system_id ORDER BY system_id;\")",
+      "Bash(sqlite3 /Volumes/Data/starscape4/sqllite_database/starscape.db \"SELECT COUNT\\(*\\) FROM Bodies WHERE orbit_star_id IN \\(SELECT star_id FROM IndexedIntegerDistinctStars WHERE system_id BETWEEN 1001 AND 1011\\);\")"
     ],
     "additionalDirectories": [
       "/Users/lentulus/projects/starscape5/articles"

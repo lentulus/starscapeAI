@@ -192,3 +192,11 @@ class WorldFacade(Protocol):
         Used for passive-scan radius (20 pc) and jump-range planning.
         """
         ...
+
+    def pick_homeworld_systems(self, n: int, seed: int = 0) -> list[int]:
+        """Return n system_ids suitable for use as starting homeworlds.
+
+        Real implementations should return spatially distributed systems.
+        Stub returns sequential IDs starting at 1001 (existing behaviour).
+        """
+        ...
