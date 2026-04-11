@@ -31,7 +31,7 @@ def run_movement_phase(
     summaries: list[str] = []
 
     arrivals = game.process_arrivals(tick)
-    for fleet_id, polity_id, system_id in arrivals:
+    for fleet_id, polity_id, system_id, prev_system_id in arrivals:
         game.record_visit(polity_id, system_id, world, tick)
         contacts = game.detect_contacts(system_id, tick)
         summaries.append(
@@ -41,5 +41,7 @@ def run_movement_phase(
             summaries.append(
                 f"tick={tick} contact polity_a={a} polity_b={b} system={system_id}"
             )
+        if prev_system_id is not None:
+            game.record_jump_route(prev_system_id, system_id, tick, world)
 
     return summaries

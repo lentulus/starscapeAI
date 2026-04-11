@@ -28,6 +28,7 @@ EXPECTED_TABLES = {
     "NamePool",
     "PlaceName",
     "GameEvent",
+    "JumpRoute",
 }
 
 EXPECTED_INDEXES = {
@@ -46,6 +47,8 @@ EXPECTED_INDEXES = {
     "idx_namepool_available",
     "idx_event_tick",
     "idx_event_type",
+    "idx_jumproute_from",
+    "idx_jumproute_to",
 }
 
 

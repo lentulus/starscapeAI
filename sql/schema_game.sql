@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS "GameState" (
     "started_at"            TEXT    NOT NULL,
     "last_committed_at"     TEXT    NOT NULL,
     "last_committed_tick"   INTEGER NOT NULL DEFAULT 0,
-    "last_committed_phase"  INTEGER NOT NULL DEFAULT 0
+    "last_committed_phase"  INTEGER NOT NULL DEFAULT 0,
+    "routes_complete"       INTEGER NOT NULL DEFAULT 0  -- 1 once all homeworlds linked
 );
 
 -- ---------------------------------------------------------------------------
@@ -137,6 +138,7 @@ CREATE TABLE IF NOT EXISTS "Fleet" (
     "polity_id"             INTEGER NOT NULL REFERENCES "Polity"("polity_id"),
     "name"                  TEXT    NOT NULL,
     "system_id"             INTEGER,
+    "prev_system_id"        INTEGER,   -- origin of last jump; set by execute_jump
     "destination_system_id" INTEGER,
     "destination_tick"      INTEGER,
     "admiral_id"            INTEGER REFERENCES "Admiral"("admiral_id"),
@@ -340,3 +342,30 @@ CREATE INDEX IF NOT EXISTS "idx_event_tick"
     ON "GameEvent"("tick");
 CREATE INDEX IF NOT EXISTS "idx_event_type"
     ON "GameEvent"("event_type");
+
+-- ---------------------------------------------------------------------------
+-- Jump route graph — deduped record of every (from, to) pair actually jumped.
+-- Canonical ordering: from_system_id < to_system_id eliminates A→B / B→A dupes.
+-- Recording stops once all polity homeworlds form a single connected component
+-- (GameState.routes_complete = 1).  Used to generate dot-file travel diagrams.
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS "JumpRoute" (
+    "route_id"       INTEGER PRIMARY KEY,
+    "from_system_id" INTEGER NOT NULL,
+    "to_system_id"   INTEGER NOT NULL,
+    "dist_pc"        REAL    NOT NULL,
+    "from_x_mpc"     REAL    NOT NULL,
+    "from_y_mpc"     REAL    NOT NULL,
+    "from_z_mpc"     REAL    NOT NULL,
+    "to_x_mpc"       REAL    NOT NULL,
+    "to_y_mpc"       REAL    NOT NULL,
+    "to_z_mpc"       REAL    NOT NULL,
+    "first_tick"     INTEGER NOT NULL,
+    UNIQUE(from_system_id, to_system_id)
+);
+
+CREATE INDEX IF NOT EXISTS "idx_jumproute_from"
+    ON "JumpRoute"("from_system_id");
+CREATE INDEX IF NOT EXISTS "idx_jumproute_to"
+    ON "JumpRoute"("to_system_id");

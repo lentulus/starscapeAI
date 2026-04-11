@@ -84,11 +84,18 @@ class GameFacade(Protocol):
         """Order fleet to jump; status→in_transit, destination_tick=tick+1."""
         ...
 
-    def process_arrivals(self, tick: int) -> list[tuple[int, int, int]]:
+    def process_arrivals(self, tick: int) -> list[tuple[int, int, int, int | None]]:
         """Settle all in-transit fleets with destination_tick==tick.
 
-        Returns list of (fleet_id, polity_id, system_id).
+        Returns list of (fleet_id, polity_id, system_id, prev_system_id).
+        prev_system_id is the jump origin (None if unknown).
         """
+        ...
+
+    def record_jump_route(
+        self, from_system_id: int, to_system_id: int, tick: int, world: WorldFacade
+    ) -> bool:
+        """Record a deduped jump route; returns True if a new row was inserted."""
         ...
 
     def get_fleet(self, fleet_id: int) -> FleetRow:
@@ -233,9 +240,15 @@ class GameFacadeStub:
     ) -> None:
         self._record("execute_jump", fleet_id, destination_system_id, tick)
 
-    def process_arrivals(self, tick: int) -> list[tuple[int, int, int]]:
+    def process_arrivals(self, tick: int) -> list[tuple[int, int, int, int | None]]:
         self._record("process_arrivals", tick)
         return self.returns.get("process_arrivals", [])
+
+    def record_jump_route(
+        self, from_system_id: int, to_system_id: int, tick: int, world: WorldFacade
+    ) -> bool:
+        self._record("record_jump_route", from_system_id, to_system_id, tick)
+        return False
 
     def get_fleet(self, fleet_id: int) -> FleetRow:
         self._record("get_fleet", fleet_id)
@@ -508,9 +521,15 @@ class GameFacadeImpl:
         from .movement import execute_jump
         execute_jump(self._conn, fleet_id, destination_system_id, tick)
 
-    def process_arrivals(self, tick: int) -> list[tuple[int, int, int]]:
+    def process_arrivals(self, tick: int) -> list[tuple[int, int, int, int | None]]:
         from .movement import process_arrivals
         return process_arrivals(self._conn, tick)
+
+    def record_jump_route(
+        self, from_system_id: int, to_system_id: int, tick: int, world: WorldFacade
+    ) -> bool:
+        from .routes import record_jump_route
+        return record_jump_route(self._conn, world, from_system_id, to_system_id, tick)
 
     def get_fleet(self, fleet_id: int) -> FleetRow:
         from .fleet import get_fleet

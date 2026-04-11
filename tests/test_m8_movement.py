@@ -160,7 +160,7 @@ class TestProcessArrivals:
         # Arrive at tick 2
         arrived = process_arrivals(conn, 2)
         assert len(arrived) == 1
-        fid, pid_ret, sid = arrived[0]
+        fid, pid_ret, sid, prev_sid = arrived[0]
         assert fid == fleet_id
         assert pid_ret == pid
         assert sid == 7

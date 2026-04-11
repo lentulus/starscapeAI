@@ -33,11 +33,13 @@ def execute_jump(
     """Order a fleet to jump; it arrives at destination_tick = tick + 1.
 
     Sets the fleet and all non-destroyed hulls to 'in_transit'.
+    Saves system_id → prev_system_id before nulling it.
     """
     conn.execute(
         """
         UPDATE Fleet
-        SET    destination_system_id = ?,
+        SET    prev_system_id        = system_id,
+               destination_system_id = ?,
                destination_tick      = ?,
                status                = 'in_transit',
                system_id             = NULL
@@ -85,26 +87,27 @@ def get_fleet_jump_range(
 
 def process_arrivals(
     conn: sqlite3.Connection, tick: int
-) -> list[tuple[int, int, int]]:
+) -> list[tuple[int, int, int, int | None]]:
     """Complete all fleet arrivals scheduled for this tick.
 
-    Returns list of (fleet_id, polity_id, system_id) for each arrived fleet.
+    Returns list of (fleet_id, polity_id, system_id, prev_system_id) for each
+    arrived fleet.  prev_system_id is the jump origin (may be None if unknown).
     """
     rows = conn.execute(
         """
-        SELECT fleet_id, polity_id, destination_system_id
+        SELECT fleet_id, polity_id, destination_system_id, prev_system_id
         FROM   Fleet
         WHERE  destination_tick = ? AND status = 'in_transit'
         """,
         (tick,),
     ).fetchall()
 
-    arrived: list[tuple[int, int, int]] = []
+    arrived: list[tuple[int, int, int, int | None]] = []
     for row in rows:
         fleet_id = row["fleet_id"]
         system_id = row["destination_system_id"]
         arrive_fleet(conn, fleet_id, system_id)
-        arrived.append((fleet_id, row["polity_id"], system_id))
+        arrived.append((fleet_id, row["polity_id"], system_id, row["prev_system_id"]))
     return arrived
 
 
