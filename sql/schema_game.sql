@@ -324,7 +324,7 @@ CREATE TABLE IF NOT EXISTS "GameEvent" (
     "event_type"    TEXT    NOT NULL CHECK(event_type IN (
                         'contact','war_declared','combat','control_change',
                         'fleet_destroyed','disengage','pursuit','bombardment',
-                        'colony_established','admiral_commissioned',
+                        'colony_established','hull_built','admiral_commissioned',
                         'map_shared','summary','monthly_summary')),
     "polity_a_id"   INTEGER REFERENCES "Polity"("polity_id"),
     "polity_b_id"   INTEGER REFERENCES "Polity"("polity_id"),

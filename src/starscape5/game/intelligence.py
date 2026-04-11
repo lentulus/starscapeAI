@@ -111,7 +111,7 @@ def record_visit(
 
     Idempotent: updates last_visit_tick on repeat visits.
     """
-    bodies = world.get_bodies(system_id)
+    bodies = world.resolve_system(system_id, conn)
 
     best = max(bodies, key=lambda b: b.world_potential) if bodies else None
     gg_flag = int(any(b.body_type == "gas_giant" for b in bodies))

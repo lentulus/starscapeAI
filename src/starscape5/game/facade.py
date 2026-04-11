@@ -446,7 +446,7 @@ class GameFacadeImpl:
 
             write_event(
                 self._conn, tick=tick, phase=8,
-                event_type="colony_established",  # reuse closest type; M13 adds hull_built
+                event_type="hull_built",
                 summary=f"{hull_type} completed at system {system_id}",
                 polity_a_id=polity_id, system_id=system_id,
             )

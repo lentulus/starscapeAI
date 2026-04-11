@@ -14,9 +14,11 @@ open so that get_systems_within_parsecs() runs in O(1) rather than O(8M).
 
 from __future__ import annotations
 
+import math
 import random as _rng_module
 import sqlite3
 from pathlib import Path
+from random import Random
 
 from .facade import (
     BodyData,
@@ -457,6 +459,70 @@ class WorldFacadeImpl:
             temp_max_k=row["temp_max_k"] or 320.0,
             atm_req=row["atm_req"] or "any",
         )
+
+    def pick_homeworld_systems(self, n: int, seed: int = 0) -> list[int]:
+        """Return n system_ids spread across 15–60 pc of Sol, at least 8 pc apart.
+
+        Uses a greedy random approach: shuffle candidates (seeded), then pick
+        each one that is at least _HW_MIN_SEP_PC from all already-picked systems.
+        """
+        _SOL_SYSTEM_ID = 1030192
+        _DIST_MIN_PC   = 15.0
+        _DIST_MAX_PC   = 60.0
+        _MIN_SEP_PC    = 8.0
+
+        sol = self.get_star_position(_SOL_SYSTEM_ID)
+        r_max_mpc = _DIST_MAX_PC * 1000.0
+
+        rows = self._ro.execute(
+            """
+            SELECT system_id, x, y, z
+            FROM   IndexedIntegerDistinctSystems
+            WHERE  system_id != ?
+              AND  x BETWEEN ? AND ?
+              AND  y BETWEEN ? AND ?
+              AND  z BETWEEN ? AND ?
+            """,
+            (
+                _SOL_SYSTEM_ID,
+                sol.x_mpc - r_max_mpc, sol.x_mpc + r_max_mpc,
+                sol.y_mpc - r_max_mpc, sol.y_mpc + r_max_mpc,
+                sol.z_mpc - r_max_mpc, sol.z_mpc + r_max_mpc,
+            ),
+        ).fetchall()
+
+        candidates: list[tuple[int, float, float, float]] = []
+        for r in rows:
+            dx = (r["x"] - sol.x_mpc) / 1000.0
+            dy = (r["y"] - sol.y_mpc) / 1000.0
+            dz = (r["z"] - sol.z_mpc) / 1000.0
+            dist_pc = math.sqrt(dx * dx + dy * dy + dz * dz)
+            if _DIST_MIN_PC <= dist_pc <= _DIST_MAX_PC:
+                candidates.append((r["system_id"], r["x"], r["y"], r["z"]))
+
+        rng = Random(seed)
+        rng.shuffle(candidates)
+
+        sep_mpc_sq = (_MIN_SEP_PC * 1000.0) ** 2
+        picked: list[tuple[int, float, float, float]] = []
+        for cand in candidates:
+            if len(picked) >= n:
+                break
+            cx, cy, cz = cand[1], cand[2], cand[3]
+            too_close = any(
+                (cx - p[1]) ** 2 + (cy - p[2]) ** 2 + (cz - p[3]) ** 2 < sep_mpc_sq
+                for p in picked
+            )
+            if not too_close:
+                picked.append(cand)
+
+        if len(picked) < n:
+            raise RuntimeError(
+                f"pick_homeworld_systems: only found {len(picked)} suitable systems "
+                f"(need {n}); try wider distance range or smaller separation"
+            )
+
+        return [p[0] for p in picked]
 
     def check_habitability(self, body_id: int, species_id: int) -> bool:
         """Return True if the species can inhabit the body without life support."""

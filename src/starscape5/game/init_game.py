@@ -29,11 +29,6 @@ from .events import write_event
 from .names import NameGenerator
 from .ob_data import OB_DATA
 
-# SDB squadrons are in-system only (no fleet_id).
-# Homeworld system IDs for stubs start here; adjusted at M12.
-_FIRST_HOMEWORLD_SYSTEM = 1001
-
-
 def init_game(
     game_conn: sqlite3.Connection,
     world: WorldFacade,
@@ -54,9 +49,12 @@ def init_game(
     create_gamestate(game_conn)
 
     rng = Random(rng_seed)
-    system_counter = _FIRST_HOMEWORLD_SYSTEM
 
-    for entry in ob_data:
+    # Pick spatially distributed homeworld systems (real impl) or sequential
+    # stub IDs — the facade decides which is appropriate.
+    homeworld_systems = world.pick_homeworld_systems(len(ob_data), seed=rng_seed)
+
+    for entry_idx, entry in enumerate(ob_data):
         species_id = entry["species_id"]
 
         # Determine per-polity hull/ground lists.
@@ -77,8 +75,7 @@ def init_game(
             garrisons_by_polity = [entry["garrisons"]] * n_polities
 
         # All polities of a species share one homeworld system.
-        homeworld_system = system_counter
-        system_counter += 1
+        homeworld_system = homeworld_systems[entry_idx]
 
         # Seed WorldPotential cache for the homeworld via resolve_system.
         world.resolve_system(homeworld_system, game_conn)
