@@ -72,6 +72,8 @@ class GameStateSnapshot:
     fleets: list[FleetSnapshot]       # only this polity's fleets
     known_systems: list[IntelSnapshot]
     enemy_systems: set[int]           # systems known to have hostile forces
+    n_scouts: int = 0                 # total non-destroyed scout hulls this polity owns
+    n_colonies: int = 0               # presences with control_state in (colony, controlled)
 
 
 # ---------------------------------------------------------------------------
@@ -201,6 +203,21 @@ def build_snapshot(
         ).fetchall()
         enemy_systems = {r["system_id"] for r in rows}
 
+    n_scouts = conn.execute(
+        """
+        SELECT COUNT(*) FROM Hull h
+        JOIN Fleet f ON f.fleet_id = h.fleet_id
+        WHERE f.polity_id = ? AND h.hull_type = 'scout'
+          AND h.status NOT IN ('destroyed')
+        """,
+        (polity_id,),
+    ).fetchone()[0]
+
+    n_colonies = sum(
+        1 for pr in presences
+        if pr.control_state in ("colony", "controlled")
+    )
+
     return GameStateSnapshot(
         tick=tick,
         polity=polity,
@@ -208,4 +225,6 @@ def build_snapshot(
         fleets=fleets,
         known_systems=known_systems,
         enemy_systems=enemy_systems,
+        n_scouts=n_scouts,
+        n_colonies=n_colonies,
     )

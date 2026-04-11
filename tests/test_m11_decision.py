@@ -185,9 +185,21 @@ class TestPosture:
         pid1 = _polity(conn, 1, aggression=0.9)
         pid2 = _polity(conn, 2)
         _contact(conn, pid1, pid2, at_war=0)
+        # Need 6 colonies before PREPARE is unlocked
+        for i in range(6):
+            _presence(conn, pid1, i + 1, i + 10, control_state="colony")
         snap = build_snapshot(conn, pid1, tick=1)
         weights = posture_weights(snap)
         assert weights[Posture.PREPARE] > 1.0  # meaningfully above base
+
+    def test_prepare_suppressed_without_colonies(self, conn):
+        """Young polities (< 6 colonies) cannot enter PREPARE."""
+        pid1 = _polity(conn, 1, aggression=0.9)
+        pid2 = _polity(conn, 2)
+        _contact(conn, pid1, pid2, at_war=0)
+        snap = build_snapshot(conn, pid1, tick=1)
+        weights = posture_weights(snap)
+        assert weights[Posture.PREPARE] == 0.0
 
     def test_draw_posture_reproducible(self, conn):
         snap = self._snap(conn, expansionism=0.5, aggression=0.5)
@@ -197,7 +209,12 @@ class TestPosture:
 
     def test_draw_posture_all_postures_reachable(self, conn):
         """Over many draws, all 4 postures appear at least once."""
-        snap = self._snap(conn, expansionism=0.5, aggression=0.5)
+        pid = _polity(conn, 1, expansionism=0.5, aggression=0.5)
+        pid2 = _polity(conn, 2)
+        _contact(conn, pid, pid2, at_war=0)
+        for i in range(6):
+            _presence(conn, pid, i + 1, i + 10, control_state="colony")
+        snap = build_snapshot(conn, pid, tick=1)
         seen = set()
         for i in range(200):
             seen.add(draw_posture(snap, Random(i)))
@@ -267,6 +284,9 @@ class TestCandidates:
         pid1 = _polity(conn, 1, aggression=0.9)
         pid2 = _polity(conn, 2)
         _contact(conn, pid1, pid2, at_war=0)
+        # Requires 6 colonies before war is unlocked
+        for i in range(6):
+            _presence(conn, pid1, i + 1, i + 10, control_state="colony")
         snap = build_snapshot(conn, pid1, tick=1)
         candidates = generate_candidates(snap, Posture.PREPARE,
                                          world.get_systems_within_parsecs)

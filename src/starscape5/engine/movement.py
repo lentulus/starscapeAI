@@ -43,5 +43,8 @@ def run_movement_phase(
             )
         if prev_system_id is not None:
             game.record_jump_route(prev_system_id, system_id, tick, world)
+        delivery = game.deliver_colonists(fleet_id, polity_id, system_id, world, tick)
+        if delivery:
+            summaries.append(delivery)
 
     return summaries

@@ -92,6 +92,18 @@ class GameFacade(Protocol):
         """
         ...
 
+    def deliver_colonists(
+        self, fleet_id: int, polity_id: int, system_id: int,
+        world: WorldFacade, tick: int,
+    ) -> str | None:
+        """If the fleet contains colony transports, establish or develop a presence.
+
+        - No presence yet: create an outpost on the best body, log colony_established.
+        - Presence exists as outpost/colony: record a colonist delivery.
+        Returns a summary string or None.
+        """
+        ...
+
     def record_jump_route(
         self, from_system_id: int, to_system_id: int, tick: int, world: WorldFacade
     ) -> bool:
@@ -243,6 +255,13 @@ class GameFacadeStub:
     def process_arrivals(self, tick: int) -> list[tuple[int, int, int, int | None]]:
         self._record("process_arrivals", tick)
         return self.returns.get("process_arrivals", [])
+
+    def deliver_colonists(
+        self, fleet_id: int, polity_id: int, system_id: int,
+        world: WorldFacade, tick: int,
+    ) -> str | None:
+        self._record("deliver_colonists", fleet_id, polity_id, system_id, tick)
+        return self.returns.get("deliver_colonists", None)
 
     def record_jump_route(
         self, from_system_id: int, to_system_id: int, tick: int, world: WorldFacade
@@ -520,6 +539,71 @@ class GameFacadeImpl:
     ) -> None:
         from .movement import execute_jump
         execute_jump(self._conn, fleet_id, destination_system_id, tick)
+
+    def deliver_colonists(
+        self, fleet_id: int, polity_id: int, system_id: int,
+        world: WorldFacade, tick: int,
+    ) -> str | None:
+        """Establish or develop a presence when a colony transport arrives.
+
+        Returns a summary string or None if the fleet has no colony transports.
+        """
+        has_ct = self._conn.execute(
+            """
+            SELECT 1 FROM Hull
+            WHERE fleet_id = ? AND hull_type = 'colony_transport'
+              AND status NOT IN ('destroyed')
+            LIMIT 1
+            """,
+            (fleet_id,),
+        ).fetchone()
+        if not has_ct:
+            return None
+
+        from .presence import (
+            create_presence, record_colonist_delivery,
+            get_presences_in_system,
+        )
+        from .economy import get_best_body_in_system
+        from .events import write_event
+
+        presences = get_presences_in_system(self._conn, system_id)
+        own = [p for p in presences if p.polity_id == polity_id]
+
+        if not own:
+            # No presence yet — establish an outpost on the best body
+            body_id = get_best_body_in_system(self._conn, system_id)
+            if body_id is None:
+                return None  # system not in WorldPotential cache yet
+            create_presence(
+                self._conn, polity_id, system_id, body_id,
+                control_state="outpost",
+                development_level=0,
+                established_tick=tick,
+            )
+            polity_name = self._conn.execute(
+                "SELECT name FROM Polity WHERE polity_id = ?", (polity_id,)
+            ).fetchone()["name"]
+            write_event(
+                self._conn, tick=tick, phase=3,
+                event_type="colony_established",
+                summary=f"{polity_name} established outpost at system {system_id}",
+                polity_a_id=polity_id, system_id=system_id, body_id=body_id,
+            )
+            # Re-fetch so we have the new presence for delivery counting
+            presences = get_presences_in_system(self._conn, system_id)
+            own = [p for p in presences if p.polity_id == polity_id]
+
+        if own:
+            p = own[0]
+            if p.control_state in ("outpost", "colony"):
+                record_colonist_delivery(self._conn, p.presence_id, tick)
+                return (
+                    f"tick={tick} polity={polity_id} colonist_delivery "
+                    f"system={system_id} deliveries={p.colonist_deliveries + 1}"
+                )
+
+        return None
 
     def process_arrivals(self, tick: int) -> list[tuple[int, int, int, int | None]]:
         from .movement import process_arrivals

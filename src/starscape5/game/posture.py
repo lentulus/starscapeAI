@@ -67,17 +67,23 @@ def posture_weights(snap: GameStateSnapshot) -> dict[Posture, float]:
         + (0.5 if p.treasury_ru < 10.0 else 0.0)
     )
 
+    # Suppress war-seeking posture until polity has at least 6 colonies.
+    # Young polities fight before they can afford it and never recover.
+    # PROSECUTE is still allowed if already at war (can't un-declare a war).
+    _COLONY_WAR_THRESHOLD = 6
+    may_seek_war = snap.n_colonies >= _COLONY_WAR_THRESHOLD
+
     prepare_w = (
         0.3
         + p.aggression * 1.5
         + n_contacts * 0.5
         - (1.0 if at_war else 0.0)
-    )
+    ) if may_seek_war else 0.0
 
     prosecute_w = (
         n_wars * 3.0
         + p.aggression * 1.0
-    )
+    ) if (at_war or may_seek_war) else 0.0
 
     return {
         Posture.EXPAND:      max(0.0, expand_w),

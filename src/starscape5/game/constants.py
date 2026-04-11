@@ -40,7 +40,7 @@ HULL_STATS: dict[str, HullStats] = {
     "colony_transport": HullStats(attack=0, bombard=0, defence=1, jump=3,
                                   build_cost=10.0, build_time=7,  maint_per_tick=0.5),
     "scout":            HullStats(attack=0, bombard=0, defence=0, jump=10,
-                                  build_cost=4.0,  build_time=4,  maint_per_tick=0.0),
+                                  build_cost=4.0,  build_time=4,  maint_per_tick=0.1),
     "sdb":              HullStats(attack=2, bombard=2, defence=3, jump=0,
                                   build_cost=6.0,  build_time=5,  maint_per_tick=0.5),
 }

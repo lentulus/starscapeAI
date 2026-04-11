@@ -82,8 +82,9 @@ def test_sdb_no_jump():
     assert HULL_STATS["sdb"].jump == 0
 
 
-def test_scout_zero_maintenance():
-    assert HULL_STATS["scout"].maint_per_tick == 0.0
+def test_scout_maintenance():
+    # Scouts have a small maintenance cost to prevent unlimited accumulation
+    assert HULL_STATS["scout"].maint_per_tick == 0.1
 
 
 def test_garrison_zero_maintenance():

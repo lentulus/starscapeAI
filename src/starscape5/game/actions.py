@@ -158,11 +158,19 @@ def _score_build_hull(
     if snap.polity.treasury_ru < cost:
         return -99.0
 
+    # Hard cap on scouts: one per colony + 1 for the homeworld. More is waste.
+    _SCOUT_CAP = snap.n_colonies + 1
+    if hull_type == "scout" and snap.n_scouts >= _SCOUT_CAP:
+        return -99.0
+
     if posture == Posture.PREPARE:
         if hull_type in ("capital", "old_capital", "cruiser", "escort"):
             return snap.polity.aggression * 2.0 + 1.0
     if posture == Posture.EXPAND:
-        if hull_type in ("scout", "colony_transport"):
+        if hull_type == "colony_transport":
+            # Colony transports are the expansion priority — score above scouts
+            return snap.polity.expansionism * 3.0 + 2.0
+        if hull_type == "scout":
             return snap.polity.expansionism * 2.0 + 1.0
     if posture == Posture.PROSECUTE:
         if hull_type in ("capital", "cruiser", "troop"):
@@ -265,7 +273,9 @@ def generate_candidates(
 
     # -- War initiation actions --
     # (Actual roll handled by war_initiation_roll; here we just score the action)
-    if posture in (Posture.PREPARE, Posture.PROSECUTE):
+    # Gate on having established colonies — young polities cannot afford war.
+    _COLONY_WAR_THRESHOLD = 6
+    if posture in (Posture.PREPARE, Posture.PROSECUTE) and snap.n_colonies >= _COLONY_WAR_THRESHOLD:
         for cid in p.in_contact_with:
             if cid in p.at_war_with:
                 continue  # already at war
