@@ -85,9 +85,16 @@ class ConsolidateAction:
     score: float = 0.0
 
 
+@dataclass
+class UpgradeJumpAction:
+    """Spend RU to increase scout jump range by one step (2 pc)."""
+    score: float = 0.0
+
+
 CandidateAction = Union[
     ScoutAction, ColoniseAction, BuildHullAction,
-    MoveFleetAction, InitiateWarAction, AssaultAction, ConsolidateAction
+    MoveFleetAction, InitiateWarAction, AssaultAction, ConsolidateAction,
+    UpgradeJumpAction,
 ]
 
 
@@ -292,6 +299,19 @@ def generate_candidates(
     for pr in snap.presences:
         sc = (1.0 - p.expansionism) * 0.5 + 0.1
         candidates.append(ConsolidateAction(system_id=pr.system_id, score=sc))
+
+    # -- Jump upgrade --
+    # Offer when: treasury can cover cost, not yet at max, and has scouts
+    _UPGRADE_COST = 75.0
+    _UPGRADE_MAX  = 20
+    has_scouts = any(f.has_scout for f in snap.fleets)
+    if (has_scouts
+            and p.jump_level < _UPGRADE_MAX
+            and p.treasury_ru >= _UPGRADE_COST):
+        # Score: explorers want range; scale with treasury cushion above cost
+        cushion = (p.treasury_ru - _UPGRADE_COST) / max(p.treasury_ru, 1.0)
+        sc = p.expansionism * 2.5 + cushion * 1.0
+        candidates.append(UpgradeJumpAction(score=sc))
 
     return candidates
 

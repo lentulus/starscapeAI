@@ -67,6 +67,11 @@ class WorldFacadeImpl:
     ) -> None:
         self._ro = ro_conn
         self._rw = rw_conn
+        # Cell caches — starscape.db is static, so these never invalidate.
+        # _neighbor_cache: (system_id, parsecs) → sorted list of (dist_pc, system_id)
+        # _star_ids_cache: system_id → list[star_id]
+        self._neighbor_cache: dict[tuple[int, float], list[tuple[float, int]]] = {}
+        self._star_ids_cache: dict[int, list[int]] = {}
 
     # ------------------------------------------------------------------
     # Positions
@@ -92,46 +97,55 @@ class WorldFacadeImpl:
         return a.distance_pc_to(b)
 
     def get_systems_within_parsecs(
-        self, system_id: int, parsecs: float
+        self, system_id: int, parsecs: float, limit: int | None = None
     ) -> list[int]:
-        pos = self.get_star_position(system_id)
-        r_mpc = parsecs * 1000.0
-        r_mpc_sq = r_mpc * r_mpc
-        rows = self._ro.execute(
-            """
-            SELECT system_id, x, y, z
-            FROM   IndexedIntegerDistinctSystems
-            WHERE  system_id != ?
-              AND  x BETWEEN ? AND ?
-              AND  y BETWEEN ? AND ?
-              AND  z BETWEEN ? AND ?
-            """,
-            (
-                system_id,
-                pos.x_mpc - r_mpc, pos.x_mpc + r_mpc,
-                pos.y_mpc - r_mpc, pos.y_mpc + r_mpc,
-                pos.z_mpc - r_mpc, pos.z_mpc + r_mpc,
-            ),
-        ).fetchall()
-        result = []
-        for r in rows:
-            dx = r["x"] - pos.x_mpc
-            dy = r["y"] - pos.y_mpc
-            dz = r["z"] - pos.z_mpc
-            if dx * dx + dy * dy + dz * dz <= r_mpc_sq:
-                result.append(r["system_id"])
-        return result
+        cache_key = (system_id, parsecs)
+        if cache_key not in self._neighbor_cache:
+            pos = self.get_star_position(system_id)
+            r_mpc = parsecs * 1000.0
+            r_mpc_sq = r_mpc * r_mpc
+            rows = self._ro.execute(
+                """
+                SELECT system_id, x, y, z
+                FROM   IndexedIntegerDistinctSystems
+                WHERE  system_id != ?
+                  AND  x BETWEEN ? AND ?
+                  AND  y BETWEEN ? AND ?
+                  AND  z BETWEEN ? AND ?
+                """,
+                (
+                    system_id,
+                    pos.x_mpc - r_mpc, pos.x_mpc + r_mpc,
+                    pos.y_mpc - r_mpc, pos.y_mpc + r_mpc,
+                    pos.z_mpc - r_mpc, pos.z_mpc + r_mpc,
+                ),
+            ).fetchall()
+            pairs: list[tuple[float, int]] = []
+            for r in rows:
+                dx = r["x"] - pos.x_mpc
+                dy = r["y"] - pos.y_mpc
+                dz = r["z"] - pos.z_mpc
+                dist_sq = dx * dx + dy * dy + dz * dz
+                if dist_sq <= r_mpc_sq:
+                    pairs.append((math.sqrt(dist_sq) / 1000.0, r["system_id"]))
+            pairs.sort()
+            self._neighbor_cache[cache_key] = pairs
+        cached = self._neighbor_cache[cache_key]
+        entries = cached[:limit] if limit is not None else cached
+        return [sid for _, sid in entries]
 
     # ------------------------------------------------------------------
     # Bodies
     # ------------------------------------------------------------------
 
     def _get_star_ids(self, system_id: int) -> list[int]:
-        rows = self._ro.execute(
-            "SELECT star_id FROM IndexedIntegerDistinctStars WHERE system_id = ?",
-            (system_id,),
-        ).fetchall()
-        return [r["star_id"] for r in rows]
+        if system_id not in self._star_ids_cache:
+            rows = self._ro.execute(
+                "SELECT star_id FROM IndexedIntegerDistinctStars WHERE system_id = ?",
+                (system_id,),
+            ).fetchall()
+            self._star_ids_cache[system_id] = [r["star_id"] for r in rows]
+        return self._star_ids_cache[system_id]
 
     def _row_to_body(self, r: sqlite3.Row) -> BodyData:
         db_pc = r["planet_class"]

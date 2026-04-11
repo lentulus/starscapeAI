@@ -428,9 +428,11 @@ class GameFacadeImpl:
             ).fetchone()
             fleet_id = fleet_row["fleet_id"] if fleet_row else None
 
-            gen = NameGenerator(species_id=self._conn.execute(
-                "SELECT species_id FROM Polity WHERE polity_id = ?", (polity_id,)
-            ).fetchone()["species_id"])
+            polity_row = self._conn.execute(
+                "SELECT species_id, name FROM Polity WHERE polity_id = ?", (polity_id,)
+            ).fetchone()
+            gen = NameGenerator(species_id=polity_row["species_id"])
+            polity_name = polity_row["name"]
             seq = self._conn.execute(
                 "SELECT COUNT(*) FROM Hull WHERE polity_id = ?", (polity_id,)
             ).fetchone()[0] + 1
@@ -447,7 +449,7 @@ class GameFacadeImpl:
             write_event(
                 self._conn, tick=tick, phase=8,
                 event_type="hull_built",
-                summary=f"{hull_type} completed at system {system_id}",
+                summary=f"{polity_name}: {hull_type} completed at system {system_id}",
                 polity_a_id=polity_id, system_id=system_id,
             )
 

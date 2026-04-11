@@ -185,11 +185,13 @@ class WorldFacade(Protocol):
         ...
 
     def get_systems_within_parsecs(
-        self, system_id: int, parsecs: float
+        self, system_id: int, parsecs: float, limit: int | None = None
     ) -> list[int]:
-        """Return system_ids of all other systems within `parsecs` distance.
+        """Return system_ids of other systems within `parsecs` distance.
 
-        Used for passive-scan radius (20 pc) and jump-range planning.
+        Results are sorted by ascending distance from system_id.
+        If limit is given, returns at most that many (the closest ones).
+        Used for passive-scan radius and jump-range planning.
         """
         ...
 

@@ -19,7 +19,8 @@ import sqlite3
 
 from starscape5.world.facade import WorldFacade
 
-_PASSIVE_SCAN_RADIUS_PC: float = 20.0
+_PASSIVE_SCAN_RADIUS_PC: float = 10.0
+_PASSIVE_SCAN_LIMIT: int = 20
 
 
 # ---------------------------------------------------------------------------
@@ -47,7 +48,9 @@ def update_passive_scan(
     written = 0
     for row in presences:
         origin_id = row["system_id"]
-        nearby = world.get_systems_within_parsecs(origin_id, _PASSIVE_SCAN_RADIUS_PC)
+        nearby = world.get_systems_within_parsecs(
+            origin_id, _PASSIVE_SCAN_RADIUS_PC, limit=_PASSIVE_SCAN_LIMIT
+        )
         for system_id in nearby:
             _upsert_passive(conn, polity_id, system_id, world)
             written += 1

@@ -14,6 +14,8 @@ same connection will violate the GameState singleton constraint.
 from __future__ import annotations
 
 import sqlite3
+import time
+from datetime import datetime
 from random import Random
 
 from starscape5.world.facade import WorldFacade
@@ -50,9 +52,14 @@ def init_game(
 
     rng = Random(rng_seed)
 
-    # Pick spatially distributed homeworld systems (real impl) or sequential
-    # stub IDs — the facade decides which is appropriate.
+    def _ts() -> str:
+        return datetime.now().strftime("%H:%M:%S")
+
+    print(f"[{_ts()}] init_game: picking {len(ob_data)} homeworld systems ...", flush=True)
+    t_pick = time.perf_counter()
     homeworld_systems = world.pick_homeworld_systems(len(ob_data), seed=rng_seed)
+    print(f"[{_ts()}] init_game: homeworlds picked in {time.perf_counter() - t_pick:.1f}s "
+          f"— system IDs: {homeworld_systems}", flush=True)
 
     for entry_idx, entry in enumerate(ob_data):
         species_id = entry["species_id"]
@@ -76,6 +83,10 @@ def init_game(
 
         # All polities of a species share one homeworld system.
         homeworld_system = homeworld_systems[entry_idx]
+        species_name = entry["polities"][0]["name"] if entry["polities"] else f"species {species_id}"
+        print(f"[{_ts()}]   {entry_idx+1}/{len(ob_data)} {species_name} "
+              f"(species {species_id}) → system {homeworld_system} ...", flush=True)
+        t_entry = time.perf_counter()
 
         # Seed WorldPotential cache for the homeworld via resolve_system.
         world.resolve_system(homeworld_system, game_conn)
@@ -234,5 +245,8 @@ def init_game(
                     body_id=homeworld_body_id,
                     created_tick=0,
                 )
+
+        print(f"[{_ts()}]   {entry_idx+1}/{len(ob_data)} {species_name} done "
+              f"({len(bodies)} bodies, {time.perf_counter() - t_entry:.1f}s)", flush=True)
 
     game_conn.commit()

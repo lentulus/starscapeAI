@@ -59,18 +59,23 @@ def execute_jump(
 
 
 def get_fleet_jump_range(
-    conn: sqlite3.Connection, fleet_id: int
+    conn: sqlite3.Connection, fleet_id: int,
+    polity_jump_level: int | None = None,
 ) -> int:
     """Return the effective jump range of fleet (min of all jumping hulls).
 
+    If polity_jump_level is given, scout hulls use max(base_jump, polity_jump_level).
     Returns 0 if no hull in the fleet has a jump drive.
     """
     hulls = get_hulls_in_fleet(conn, fleet_id)
-    ranges = [
-        HULL_STATS[h.hull_type].jump
-        for h in hulls
-        if h.hull_type in HULL_STATS and HULL_STATS[h.hull_type].jump > 0
-    ]
+    ranges = []
+    for h in hulls:
+        if h.hull_type not in HULL_STATS or HULL_STATS[h.hull_type].jump == 0:
+            continue
+        j = HULL_STATS[h.hull_type].jump
+        if h.hull_type == "scout" and polity_jump_level is not None:
+            j = max(j, polity_jump_level)
+        ranges.append(j)
     return min(ranges) if ranges else 0
 
 

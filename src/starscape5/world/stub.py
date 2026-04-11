@@ -57,15 +57,18 @@ class WorldStub:
         return a.distance_pc_to(b)
 
     def get_systems_within_parsecs(
-        self, system_id: int, parsecs: float
+        self, system_id: int, parsecs: float, limit: int | None = None
     ) -> list[int]:
-        result = []
+        pairs = []
         for sid in range(1, self._universe_size + 1):
             if sid == system_id:
                 continue
-            if self.get_distance_pc(system_id, sid) <= parsecs:
-                result.append(sid)
-        return result
+            d = self.get_distance_pc(system_id, sid)
+            if d <= parsecs:
+                pairs.append((d, sid))
+        pairs.sort()
+        result = [sid for _, sid in pairs]
+        return result[:limit] if limit is not None else result
 
     # ------------------------------------------------------------------
     # Bodies

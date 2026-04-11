@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS "Polity" (
     "risk_appetite"     REAL    NOT NULL,
     "processing_order"  INTEGER NOT NULL,
     "founded_tick"      INTEGER NOT NULL DEFAULT 0,
+    "jump_level"        INTEGER NOT NULL DEFAULT 10,
     "status"            TEXT    NOT NULL DEFAULT 'active'
                         CHECK(status IN ('active','eliminated','vassal'))
 );
@@ -324,8 +325,8 @@ CREATE TABLE IF NOT EXISTS "GameEvent" (
     "event_type"    TEXT    NOT NULL CHECK(event_type IN (
                         'contact','war_declared','combat','control_change',
                         'fleet_destroyed','disengage','pursuit','bombardment',
-                        'colony_established','hull_built','admiral_commissioned',
-                        'map_shared','summary','monthly_summary')),
+                        'colony_established','hull_built','jump_upgrade',
+                        'admiral_commissioned','map_shared','summary','monthly_summary')),
     "polity_a_id"   INTEGER REFERENCES "Polity"("polity_id"),
     "polity_b_id"   INTEGER REFERENCES "Polity"("polity_id"),
     "system_id"     INTEGER,

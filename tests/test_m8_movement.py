@@ -125,10 +125,10 @@ class TestExecuteJump:
 # ---------------------------------------------------------------------------
 
 class TestFleetJumpRange:
-    def test_scout_fleet_has_range_4(self, conn):
+    def test_scout_fleet_has_range_10(self, conn):
         pid = _make_polity(conn, 1, 1)
         fleet_id, _ = _make_scout_fleet(conn, pid, 1)
-        assert get_fleet_jump_range(conn, fleet_id) == 4
+        assert get_fleet_jump_range(conn, fleet_id) == 10
 
     def test_empty_fleet_has_range_0(self, conn):
         pid = _make_polity(conn, 1, 1)

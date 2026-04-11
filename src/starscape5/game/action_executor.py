@@ -16,9 +16,12 @@ from starscape5.world.facade import WorldFacade
 from .actions import (
     AssaultAction, BuildHullAction, CandidateAction, ColoniseAction,
     ConsolidateAction, InitiateWarAction, MoveFleetAction, ScoutAction,
+    UpgradeJumpAction,
 )
 from .constants import HULL_STATS
 from .movement import execute_jump, get_fleet_jump_range
+from .events import write_event
+from .polity import upgrade_jump_level, get_jump_upgrade_cost
 
 
 def execute_actions(
@@ -54,6 +57,8 @@ def _dispatch(
         return _execute_move_fleet(conn, polity_id, action, tick)
     if isinstance(action, AssaultAction):
         return _execute_assault(conn, polity_id, action, tick)
+    if isinstance(action, UpgradeJumpAction):
+        return _execute_upgrade_jump(conn, polity_id, action, tick)
     if isinstance(action, ConsolidateAction):
         return None   # no DB mutation; just a priority signal
     if isinstance(action, InitiateWarAction):
@@ -76,8 +81,12 @@ def _execute_scout(
     if row is None or row["status"] != "active" or row["system_id"] is None:
         return None
 
-    # Verify destination is reachable
-    jump_range = get_fleet_jump_range(conn, action.fleet_id)
+    # Verify destination is reachable using polity jump level
+    polity_jl = conn.execute(
+        "SELECT jump_level FROM Polity WHERE polity_id = ?", (polity_id,)
+    ).fetchone()
+    polity_jump_level = polity_jl["jump_level"] if polity_jl else None
+    jump_range = get_fleet_jump_range(conn, action.fleet_id, polity_jump_level)
     if jump_range == 0:
         return None
 
@@ -185,4 +194,39 @@ def _execute_assault(
     return (
         f"tick={tick} polity={polity_id} assault fleet={action.fleet_id} "
         f"jump→{action.target_system_id}"
+    )
+
+
+def _execute_upgrade_jump(
+    conn: sqlite3.Connection,
+    polity_id: int,
+    action: "UpgradeJumpAction",
+    tick: int,
+) -> str | None:
+    """Spend RU to increase polity scout jump range by one step."""
+    row = conn.execute(
+        "SELECT treasury_ru, jump_level FROM Polity WHERE polity_id = ?",
+        (polity_id,),
+    ).fetchone()
+    if row is None:
+        return None
+    cost = get_jump_upgrade_cost()
+    if row["treasury_ru"] < cost:
+        return None
+    old_level = row["jump_level"]
+    new_level = upgrade_jump_level(conn, polity_id)
+    if new_level == old_level:
+        return None  # already at max
+    polity_name = conn.execute(
+        "SELECT name FROM Polity WHERE polity_id = ?", (polity_id,)
+    ).fetchone()["name"]
+    write_event(
+        conn, tick=tick, phase=2,
+        event_type="jump_upgrade",
+        summary=f"{polity_name}: scout jump J{old_level}→J{new_level}",
+        polity_a_id=polity_id,
+    )
+    return (
+        f"tick={tick} polity={polity_id} jump_upgrade "
+        f"J{old_level}→J{new_level} cost={cost:.0f}RU"
     )

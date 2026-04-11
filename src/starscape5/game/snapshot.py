@@ -24,6 +24,7 @@ class PolitySnapshot:
     expansionism: float
     aggression: float
     risk_appetite: float
+    jump_level: int              # current scout jump range (pc); upgradeable
     at_war_with: list[int]       # polity_ids this polity is at war with
     in_contact_with: list[int]   # all contacted polity_ids (war or peace)
 
@@ -106,6 +107,7 @@ def build_snapshot(
         for r in contacts
     ]
 
+    polity_jump_level = p["jump_level"] if "jump_level" in p.keys() else 10
     polity = PolitySnapshot(
         polity_id=polity_id,
         species_id=p["species_id"],
@@ -114,6 +116,7 @@ def build_snapshot(
         expansionism=p["expansionism"],
         aggression=p["aggression"],
         risk_appetite=p["risk_appetite"],
+        jump_level=polity_jump_level,
         at_war_with=at_war_with,
         in_contact_with=in_contact_with,
     )
@@ -155,7 +158,10 @@ def build_snapshot(
             (fr["fleet_id"],),
         ).fetchall()
         types = [h["hull_type"] for h in hulls]
-        jump_vals = [HULL_STATS[t].jump for t in types if t in HULL_STATS and HULL_STATS[t].jump > 0]
+        jump_vals = [
+            max(HULL_STATS[t].jump, polity_jump_level) if t == "scout" else HULL_STATS[t].jump
+            for t in types if t in HULL_STATS and HULL_STATS[t].jump > 0
+        ]
         fleets.append(FleetSnapshot(
             fleet_id=fr["fleet_id"],
             polity_id=polity_id,

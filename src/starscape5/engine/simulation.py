@@ -7,7 +7,9 @@ run_simulation() — loops run_tick(); handles resume from last committed state.
 from __future__ import annotations
 
 import sqlite3
+import time
 from dataclasses import dataclass, field
+from datetime import datetime
 
 from starscape5.game.facade import GameFacade
 from starscape5.game.polity import get_polity_processing_order
@@ -66,13 +68,19 @@ def run_tick(
     polity_order = get_polity_processing_order(game_conn)
     result = TickResult(tick=tick)
 
+    def _ts() -> str:
+        return datetime.now().strftime("%H:%M:%S")
+
     for phase_num, phase_fn in _PHASES:
         if phase_num <= resume_from_phase:
             continue  # already committed; skip on resume
 
+        print(f"[{_ts()}] tick={tick} phase={phase_num} {phase_fn.__module__.split('.')[-1]} start", flush=True)
+        t_phase = time.perf_counter()
         advance_phase(game_conn, tick, phase_num)
         summaries = phase_fn(tick, phase_num, polity_order, game, world)
         commit_phase(game_conn, tick, phase_num)
+        print(f"[{_ts()}] tick={tick} phase={phase_num} done ({time.perf_counter() - t_phase:.2f}s, {len(summaries)} events)", flush=True)
 
         result.summaries.extend(summaries)
         result.phases_run += 1

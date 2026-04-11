@@ -31,6 +31,7 @@ class PolityRow:
     risk_appetite: float
     processing_order: int
     founded_tick: int
+    jump_level: int   # scout jump range (pc); upgradeable via UpgradeJumpAction
     status: str  # 'active' | 'eliminated' | 'vassal'
 
 
@@ -46,6 +47,7 @@ def _row_to_polity(row: sqlite3.Row) -> PolityRow:
         risk_appetite=row["risk_appetite"],
         processing_order=row["processing_order"],
         founded_tick=row["founded_tick"],
+        jump_level=row["jump_level"] if "jump_level" in row.keys() else 10,
         status=row["status"],
     )
 
@@ -110,6 +112,35 @@ def set_capital(
         "UPDATE Polity SET capital_system_id = ? WHERE polity_id = ?",
         (system_id, polity_id),
     )
+
+
+_JUMP_UPGRADE_COST: float = 75.0   # RU per upgrade step
+_JUMP_UPGRADE_STEP: int   = 2      # parsecs added per upgrade
+_JUMP_UPGRADE_MAX: int    = 20     # hard ceiling
+
+def get_jump_upgrade_cost() -> float:
+    return _JUMP_UPGRADE_COST
+
+def upgrade_jump_level(conn: sqlite3.Connection, polity_id: int) -> int:
+    """Increment polity jump_level by one step and deduct cost from treasury.
+
+    Returns the new jump_level, or current level if already at max.
+    """
+    row = conn.execute(
+        "SELECT jump_level, treasury_ru FROM Polity WHERE polity_id = ?",
+        (polity_id,),
+    ).fetchone()
+    if row is None:
+        raise KeyError(f"Polity {polity_id} not found")
+    current = row["jump_level"]
+    if current >= _JUMP_UPGRADE_MAX:
+        return current
+    new_level = min(current + _JUMP_UPGRADE_STEP, _JUMP_UPGRADE_MAX)
+    conn.execute(
+        "UPDATE Polity SET jump_level = ?, treasury_ru = treasury_ru - ? WHERE polity_id = ?",
+        (new_level, _JUMP_UPGRADE_COST, polity_id),
+    )
+    return new_level
 
 
 # ---------------------------------------------------------------------------
