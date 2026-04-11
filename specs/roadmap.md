@@ -1,92 +1,110 @@
 # Starscape 5 — Design & Implementation Roadmap
 
 Cross-reference of every major system component: design spec, implementation
-scripts, DB tables, and current status.
+modules, DB tables, and current status.
 
 **Status codes:**
 - `design` — spec written, nothing implemented
 - `partial` — implementation started but incomplete or not integrated
-- `impl` — implemented in scripts but not yet wired into main pipeline
+- `impl` — implemented but not yet fully integrated / run against full DB
 - `done` — implemented, integrated, tested
 
 ---
 
-## Pipeline Components
+## World Layer (starscape.db — static read-only substrate)
 
-| Component | Status | Spec doc(s) | Script(s) | DB table(s) | Blockers / Notes |
-|---|---|---|---|---|---|
-| Star seeding | `done` | — | `seed_sol.py` | `Stars` | Sol seeded manually; procedural star gen out of scope |
-| Fill stars (spectral/physical props) | `done` | `specs/worldgeneration/fillstars.md` | `scripts/fill_spectral.py` | `Stars` (update) | — |
-| Orbit computation | `done` | `specs/worldgeneration/orbits.md` | `scripts/compute_orbits.py` | `StarOrbits` | — |
-| Planet / moon / belt generation | `done` | `specs/worldgeneration/planets.md` | `scripts/generate_planets.py` | `Bodies` | Includes rings, belt composition, belt span, world_size_code |
-| Atmosphere & surface conditions | `impl` | `specs/biosphere/planetbiosphere.md` | `scripts/generate_atmosphere.py` | `BodyMutable`, `Bodies` (3 immutable cols) | Two-pass resumable; tidal heating for inner GG moons |
-| Metrics computation | `done` | `specs/worldgeneration/computemetrics.md` | `scripts/compute_metrics.py` | derived / reporting | — |
-| Pipeline analysis / completeness | `done` | — | `scripts/analyze_completeness.py` | — | Diagnostic tool |
-
----
-
-## Biosphere Layer
-
-| Component | Status | Spec doc(s) | Script(s) | DB table(s) | Blockers / Notes |
-|---|---|---|---|---|---|
-| BodyMutable (atm, hydro, surface temp) | `impl` | `specs/biosphere/planetbiosphere.md` | `scripts/generate_atmosphere.py` | `BodyMutable` | Schema in `sql/schema.sql`; inline CREATE in generate_atmosphere.py |
-| Biosphere table (native life presence) | `design` | `specs/biosphere/planetbiosphere.md` | — | `Biosphere` | Blocked on Species implementation |
-| SophontPresence table | `design` | `specs/biosphere/planetbiosphere.md` | — | `SophontPresence` | Blocked on Species; presence_start=NULL for native species |
-| TerraformProject table | `design` | `specs/biosphere/planetbiosphere.md` | — | `TerraformProject` | Blocked on SophontPresence + Species |
+| Component | Status | Module(s) | DB table(s) | Notes |
+|---|---|---|---|---|
+| Star seeding | `done` | `scripts/seed_sol.py` | `IndexedIntegerDistinctStars` | Sol seeded manually |
+| Fill stars (spectral/physical) | `done` | `scripts/fill_spectral.py` | `IndexedIntegerDistinctStars` | — |
+| Orbit computation | `done` | `scripts/compute_orbits.py` | `StarOrbits` | — |
+| Metrics computation | `done` | `scripts/compute_metrics.py` | `DistinctStarsExtended` | — |
+| Planet/moon/belt generation | `done` | `scripts/generate_planets.py` | `Bodies` | Lazy generation also in `world/impl.py` |
+| Atmosphere & surface conditions | `impl` | `scripts/generate_atmosphere.py` | `BodyMutable`, `Bodies` | Run against full DB; sanity-check Earth/Venus/Moon |
+| WorldFacadeImpl (real world layer) | `done` | `src/starscape5/world/impl.py` | — | M12; neighbor index `idx_systems_x` created on DB |
+| Species table + seed | `done` | `scripts/seed_species.py` | `Species` | 11 hand-authored rows seeded |
 
 ---
 
-## Species Layer
+## Game Layer (game.db — mutable simulation state)
 
-| Component | Status | Spec doc(s) | Script(s) | DB table(s) | Blockers / Notes |
-|---|---|---|---|---|---|
-| Species table schema | `design` | `specs/biosphere/species.md` | — | `Species` | 11 hand-authored species data rows ready; vocab finalisation needed first |
-| Controlled vocab finalisation | `design` | `specs/biosphere/species.md` (Open Questions) | — | — | body_plan, locomotion, atm_req, metabolic_rate — new terms from hand-authored species |
-| Hand-authored species seed script | `design` | `specs/biosphere/species.md` | — | `Species` | Blocked on Species schema; data rows complete in spec |
-| SpeciesCaste child table | `design` | `specs/biosphere/species.md` (note) | — | `SpeciesCaste` | Deferred; needed for Kreeth (Bugs) |
-| SpeciesHost join table | `design` | `specs/biosphere/species.md` (note) | — | `SpeciesHost` | Deferred; needed for Nhaveth parasite/host operational stats |
-| Procedural species generation | `design` | `specs/biosphere/species.md` (Generation Notes) | `generate_species.py` (future) | `Species` | Blocked on hand-authored seed + homeworld seeding |
+| Component | Status | Module(s) | DB table(s) | Notes |
+|---|---|---|---|---|
+| Schema | `done` | `sql/schema_game.sql` | all game tables | — |
+| DB helpers | `done` | `src/starscape5/game/db.py` | — | open_game, init_schema |
+| Polity / state | `done` | `game/polity.py`, `game/state.py` | `Polity`, `GameState` | crash-safe advance/commit |
+| Fleet / hull / squadron | `done` | `game/fleet.py` | `Fleet`, `Hull`, `Squadron` | — |
+| Ground forces | `done` | `game/ground.py` | `GroundForce` | army + garrison |
+| Presence / control | `done` | `game/presence.py`, `game/control.py` | `SystemPresence` | control_state lifecycle |
+| Economy | `done` | `game/economy.py` | `WorldPotential`, `BuildQueue`, `RepairQueue` | RU production, maintenance, build queues |
+| Intelligence | `done` | `game/intelligence.py` | `SystemIntelligence` | passive scan, record_visit, map sharing |
+| Movement | `done` | `game/movement.py` | `Fleet` | execute_jump, arrivals, contacts |
+| Space combat | `done` | `game/combat.py` | `Hull`, `Fleet` | M9; simultaneous fire, disengage, pursuit |
+| Bombardment | `done` | `game/bombardment.py` | `GroundForce`, `GameEvent` | M10; naval superiority prerequisite |
+| Assault | `done` | `game/assault.py` | `GroundForce`, `SystemPresence` | M10; garrison bonus, rout/decisive table |
+| Decision engine | `done` | `game/snapshot.py`, `game/posture.py`, `game/actions.py`, `game/war.py`, `game/action_executor.py` | — | M11; softmax candidate selection |
+| Log / summary | `done` | `game/log.py` | `GameEvent` | M13; monthly_summary compression |
+| Events | `done` | `game/events.py` | `GameEvent` | append-only history log |
+| Admirals / names | `done` | `game/admiral.py`, `game/names.py` | `Admiral` | — |
+| GameFacade | `done` | `game/facade.py` | — | Protocol + Stub + Impl; full engine seam |
+| Game initialiser | `done` | `game/init_game.py`, `game/ob_data.py` | all | OB_DATA for 11 species |
 
 ---
 
-## Civilisation Layer  *(not yet started)*
+## Engine Layer (orchestrates phases)
 
-| Component | Status | Spec doc(s) | Script(s) | DB table(s) | Blockers / Notes |
-|---|---|---|---|---|---|
-| Tech tree spec | `design` | `specs/GameDesign/techtree.mmd` | — | `TechTree`, `TechNode` (future) | 6-domain DAG; jump range/transit split; see techtree.mmd |
-| Polity / civilisation table | `design` | — | — | `Polity` (future) | Blocked on Species + tech tree; mixed vs homogenous polity decision pending |
-| Tech tree implementation | `design` | `specs/GameDesign/techtree.mmd` | — | `PolityTech` (future) | Blocked on Polity + species-modifier design |
-| Diplomacy / relations | `design` | — | — | `DiplomaticRelation` (future) | Blocked on Polity |
-| Military / conflict | `design` | — | — | TBD | Blocked on Polity + tech tree |
+| Component | Status | Module(s) | Notes |
+|---|---|---|---|
+| Intelligence phase (1) | `done` | `engine/intelligence.py` | passive scan, peace weeks, map sharing |
+| Decision phase (2) | `done` | `engine/decision.py` | war rolls, posture, candidate gen, action exec |
+| Movement phase (3) | `done` | `engine/movement.py` | arrivals, visits, contacts |
+| Combat phase (4) | `done` | `engine/combat.py` | space combat in contested systems |
+| Bombardment phase (5) | `done` | `engine/bombardment.py` | orbital bombardment |
+| Assault phase (6) | `done` | `engine/assault.py` | ground combat |
+| Economy phase (8) | `done` | `engine/economy.py` | RU collect, maintenance, queues |
+| Control phase (7) | `done` | `engine/control.py` | 25-week growth cycles |
+| Log phase (9) | `done` | `engine/log.py` | quiet-tick classifier, monthly summary |
+| Tick runner (partial) | `done` | `engine/tick.py` | `run_partial_tick` — all 9 phases, no crash-safe wrapping |
+| Tick runner (crash-safe) | `done` | `engine/simulation.py` | `run_tick`, `run_simulation` with advance/commit and resume |
 
 ---
 
-## Game Design Reference
+## Simulation Execution
 
-| Doc | Purpose |
-|---|---|
-| `specs/GameDesign/game_1.md` | High-level game design notes |
-| `specs/GameDesign/greatspace4x.md` | 4X design reference / comparables |
-| `specs/GameDesign/techtree.mmd` | Tech tree domain structure (Mermaid diagram) |
-| `specs/biosphere/species.md` | Species schema, 11 hand-authored entries, tech tree species constraints |
-| `specs/biosphere/planetbiosphere.md` | BodyMutable, Biosphere, SophontPresence, TerraformProject |
-| `specs/worldgeneration/planets.md` | Bodies table, planet/moon/belt generation |
-| `specs/worldgeneration/orbits.md` | StarOrbits, orbital mechanics |
-| `specs/worldgeneration/fillstars.md` | Star spectral/physical fill |
-| `specs/worldgeneration/worldnotes.md` | World classification notes (rings, belts, size codes) |
-| `specs/datadictionary.md` | Cross-table data dictionary |
+| Component | Status | Module(s) | Notes |
+|---|---|---|---|
+| run_sim.py | `done` | `scripts/run_sim.py` | CLI runner; `--ticks N`, `--resume`, `--verbose` |
+| First 500-tick run | `in progress` | — | M13 smoke test; `game.db` on local disk |
+
+---
+
+## Biosphere Layer (future)
+
+| Component | Status | Notes |
+|---|---|---|
+| Biosphere table (native life) | `design` | Blocked on integration with running simulation |
+| SophontPresence table | `design` | Blocked on Biosphere |
+| TerraformProject table | `design` | Blocked on SophontPresence |
+
+---
+
+## Tech Tree & Advanced Civilisation (future)
+
+| Component | Status | Notes |
+|---|---|---|
+| Tech tree DAG | `design` | `specs/GameDesign/techtree.md` — 6 domains, jump range progression |
+| PolityTech table | `design` | Blocked on simulation stability validation |
+| Diplomacy / relations | `design` | Blocked on tech tree |
+| Faction splits | `design` | Triggered by social_cohesion + grievance_memory thresholds |
+| LLM historian pipeline | `design` | `specs/GameDesign/documentation-pipeline.md` — reads GameEvent log |
 
 ---
 
 ## Immediate Next Steps (ordered by dependency)
 
-1. Finalise controlled vocabularies for `body_plan`, `locomotion`, `atm_req`,
-   `metabolic_rate` — required before Species schema can be written to SQL
-2. Write `Species` CREATE TABLE into `sql/schema.sql`
-3. Write `seed_species.py` to insert the 11 hand-authored rows
-4. Promote `generate_atmosphere.py` from `impl` to `done` — run against full
-   DB, verify Earth/Venus/Moon sanity checks pass
-5. Implement `Biosphere` + `SophontPresence` tables (unblocked once Species exists)
-6. Begin civilisation-layer spec: Polity table design with species FK
-7. Tech tree spec (full DAG write-up) — after Polity design resolves
-   mixed-polity question
+1. **Validate first 500-tick run** — check event counts, verify wars fire for high-aggression species, colonies establish, no crashes
+2. **Tune if needed** — if wars are too rare/frequent, adjust `_WAR_THRESHOLD` in `game/war.py` or posture weights in `game/posture.py`
+3. **Run `generate_atmosphere.py` to completion** against full DB — promote to `done` after Earth/Venus/Moon sanity checks
+4. **Run longer simulation** (5000 ticks ≈ 96 years) to observe multi-polity dynamics
+5. **Tech tree spec** — begin DAG implementation once simulation produces stable history
+6. **LLM historian** — point at `game.db` `GameEvent` table once sufficient history exists

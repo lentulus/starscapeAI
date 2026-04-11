@@ -46,15 +46,60 @@ src/starscape5/
     orbits.py       — orbital mechanics
     planets.py      — planet/moon/belt generation logic
     spectral.py     — B-V → spectral type, multiplicity helpers
+    world/
+        facade.py   — WorldFacade Protocol + dataclasses (BodyData, SpeciesData, etc.)
+        stub.py     — WorldStub (deterministic test double)
+        impl.py     — WorldFacadeImpl (real starscape.db backend, M12)
+        db.py       — open_world_ro / open_world_rw helpers
+    game/
+        db.py           — open_game, init_schema
+        facade.py       — GameFacade Protocol + GameFacadeStub + GameFacadeImpl
+        state.py        — GameState singleton; advance_phase / commit_phase
+        polity.py       — Polity CRUD
+        fleet.py        — Fleet / Hull / Squadron CRUD + combat helpers
+        ground.py       — GroundForce CRUD
+        presence.py     — SystemPresence CRUD
+        control.py      — control_state lifecycle, growth cycles
+        economy.py      — RU production, WorldPotential, BuildQueue, RepairQueue
+        intelligence.py — SystemIntelligence, passive scan, map sharing
+        movement.py     — execute_jump, arrivals, contacts
+        combat.py       — space combat resolution (M9)
+        bombardment.py  — orbital bombardment (M10)
+        assault.py      — ground combat (M10)
+        snapshot.py     — GameStateSnapshot builder (M11)
+        posture.py      — strategic posture draw (M11)
+        actions.py      — candidate generation + softmax selection (M11)
+        war.py          — war initiation rolls (M11)
+        action_executor.py — CandidateAction → DB writes (M11)
+        log.py          — is_quiet_tick, write_monthly_summary (M13)
+        events.py       — GameEvent append + query
+        admiral.py      — Admiral commissioning
+        names.py        — NameGenerator (species-specific)
+        constants.py    — HULL_STATS, GROUND_STATS, etc.
+        init_game.py    — full game initialiser from OB_DATA
+        ob_data.py      — starting Orders of Battle for 11 species
+    engine/
+        intelligence.py — phase 1 runner
+        decision.py     — phase 2 runner (real AI, M11)
+        movement.py     — phase 3 runner
+        combat.py       — phase 4 runner
+        bombardment.py  — phase 5 runner
+        assault.py      — phase 6 runner
+        economy.py      — phase 8 runner
+        control.py      — phase 7 runner
+        log.py          — phase 9 runner (M13)
+        tick.py         — run_partial_tick (all 9 phases, no advance/commit)
+        simulation.py   — run_tick + run_simulation with crash-safe resume (M13)
 scripts/
     seed_sol.py             — manually seeds Sol
+    seed_species.py         — inserts 11 hand-authored species rows
     fill_spectral.py        — fills NULL spectral types; generates companion stars
-    compute_metrics.py      — populates DistinctStarsExtended (resumable, time-limited)
+    compute_metrics.py      — populates DistinctStarsExtended (resumable)
     compute_orbits.py       — populates StarOrbits
     generate_planets.py     — populates Bodies
     generate_atmosphere.py  — populates BodyMutable; back-fills 3 cols on Bodies
     analyze_completeness.py — diagnostic pipeline completeness tool
-    fill_stars.py           — (backfill utility)
+    run_sim.py              — CLI simulation runner (--ticks, --resume, --verbose)
 specs/
     roadmap.md              — canonical status tracker; update it when things change
     datadictionary.md       — authoritative field-level reference
@@ -65,8 +110,12 @@ specs/
     GameDesign/
         greatspace4x.md     — top-level design decisions and open questions
         techtree.md         — tech tree DAG (6 domains)
+        version1/
+            implementation_plan.md — 13-milestone build plan (complete)
+            game.md                — full game rules reference
 sql/
-    schema.sql              — CREATE TABLE statements (source of truth for schema)
+    schema.sql              — starscape.db CREATE TABLE statements
+    schema_game.sql         — game.db CREATE TABLE statements (source of truth)
 ```
 
 ---
@@ -77,26 +126,30 @@ From `specs/roadmap.md` — keep this in sync:
 
 | Component | Status |
 |---|---|
-| Fill stars (spectral/physical) | `done` |
-| Orbit computation | `done` |
-| Planet/moon/belt generation | `done` |
-| Metrics computation | `done` |
-| Atmosphere & surface conditions (`generate_atmosphere.py`) | `impl` — run against full DB, verify Earth/Venus/Moon sanity checks |
-| Biosphere table | `design` — blocked on Species |
-| SophontPresence | `design` — blocked on Species |
-| TerraformProject | `design` — blocked on Species |
-| Species table + seed script | `design` — 11 hand-authored rows ready in spec; blocked on vocab finalisation |
+| Fill stars / orbits / planets / metrics | `done` |
+| Atmosphere & surface conditions | `impl` — run against full DB, verify sanity checks |
+| Species table + seed | `done` — 11 rows seeded in starscape.db |
+| Game schema + DB helpers | `done` |
+| Polity / fleet / hull / ground / presence | `done` |
+| Economy phase (M6) | `done` |
+| Intelligence phase (M7) | `done` |
+| Movement phase + contact detection (M8) | `done` |
+| Space combat (M9) | `done` |
+| Bombardment + ground assault (M10) | `done` |
+| Decision engine — posture, candidates, war rolls (M11) | `done` |
+| WorldFacadeImpl — real starscape.db (M12) | `done` |
+| Log phase + full tick loop + crash-safe resume (M13) | `done` |
+| First simulation run | `in progress` — `scripts/run_sim.py` |
 
 ---
 
 ## Immediate next steps (ordered by dependency)
 
-1. Finalise controlled vocabularies for `body_plan`, `locomotion`, `atm_req`, `metabolic_rate` in `specs/biosphere/species.md`
-2. Write `Species` CREATE TABLE into `sql/schema.sql`
-3. Write `seed_species.py` to insert the 11 hand-authored rows
-4. Promote `generate_atmosphere.py` to `done` — full DB run + sanity checks
-5. Implement `Biosphere` + `SophontPresence` tables
-6. Begin civilisation-layer spec: `Polity` table design
+1. **Validate first 500-tick run** — check wars, contacts, colonies; tune thresholds if needed
+2. **Run `generate_atmosphere.py`** to completion against full DB (promotes to `done`)
+3. **Run longer simulation** (5000+ ticks) to observe multi-polity dynamics
+4. **Tech tree implementation** — after simulation produces stable history
+5. **LLM historian pipeline** — point at `GameEvent` table once sufficient history exists
 
 ---
 
