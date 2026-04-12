@@ -93,9 +93,10 @@ def test_all_indexes_created(game_conn):
 def test_foreign_keys_enforced(game_conn):
     """A FK violation must raise IntegrityError when FK pragma is on."""
     with pytest.raises(sqlite3.IntegrityError):
+        # Hull.fleet_id REFERENCES Fleet(fleet_id) — referencing a non-existent fleet
         game_conn.execute(
-            "INSERT INTO Fleet (polity_id, name, status, supply_ticks) "
-            "VALUES (9999, 'Ghost Fleet', 'active', 0)"
+            "INSERT INTO Hull (fleet_id, tick, seq, polity_id, hull_type, status, created_tick) "
+            "VALUES (9999, 0, 0, 1, 'escort', 'active', 0)"
         )
         game_conn.commit()
 

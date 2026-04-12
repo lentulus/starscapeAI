@@ -112,6 +112,19 @@ def init_game(
                 has_ocean=0,
             )
 
+        # Seed NamePool entries if provided in the OB entry.
+        if "name_pool" in entry:
+            for name_type, names in entry["name_pool"].items():
+                for name in names:
+                    game_conn.execute(
+                        """
+                        INSERT OR IGNORE INTO NamePool
+                            (species_id, name_type, name, used)
+                        VALUES (?, ?, ?, 0)
+                        """,
+                        (species_id, name_type, name),
+                    )
+
         for i, pdef in enumerate(polity_defs):
             name_gen = NameGenerator(species_id=species_id)
             polity_id = create_polity(

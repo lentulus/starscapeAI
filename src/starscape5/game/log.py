@@ -53,27 +53,27 @@ class MonthlySummaryData:
 def _gather_summary_data(conn: sqlite3.Connection) -> MonthlySummaryData:
     """Query game.db for summary statistics."""
     treasury = conn.execute(
-        "SELECT COALESCE(SUM(treasury_ru), 0.0) AS total FROM Polity WHERE status = 'active'"
+        "SELECT COALESCE(SUM(treasury_ru), 0.0) AS total FROM Polity_head WHERE status = 'active'"
     ).fetchone()
 
     fleets = conn.execute(
         """
         SELECT COUNT(*) AS total FROM Fleet f
-        JOIN Polity p ON p.polity_id = f.polity_id
+        JOIN Polity_head p ON p.polity_id = f.polity_id
         WHERE f.status != 'destroyed' AND p.status = 'active'
         """
     ).fetchone()
 
     presences = conn.execute(
         """
-        SELECT COUNT(*) AS total FROM SystemPresence sp
-        JOIN Polity p ON p.polity_id = sp.polity_id
+        SELECT COUNT(*) AS total FROM SystemPresence_head sp
+        JOIN Polity_head p ON p.polity_id = sp.polity_id
         WHERE p.status = 'active'
         """
     ).fetchone()
 
     polities = conn.execute(
-        "SELECT COUNT(*) AS total FROM Polity WHERE status = 'active'"
+        "SELECT COUNT(*) AS total FROM Polity_head WHERE status = 'active'"
     ).fetchone()
 
     return MonthlySummaryData(

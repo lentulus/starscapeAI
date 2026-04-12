@@ -78,6 +78,15 @@ class GameFacade(Protocol):
         """Fire intel exchange for pairs at peace >= 52 weeks."""
         ...
 
+    def process_admiral_retirements(
+        self, polity_id: int, tick: int, world: WorldFacade, rng: Random
+    ) -> list[int]:
+        """Retire admirals whose retirement_tick has passed; commission replacements.
+
+        Returns list of retired admiral_ids.
+        """
+        ...
+
     def execute_jump(
         self, fleet_id: int, destination_system_id: int, tick: int
     ) -> None:
@@ -100,6 +109,16 @@ class GameFacade(Protocol):
 
         - No presence yet: create an outpost on the best body, log colony_established.
         - Presence exists as outpost/colony: record a colonist delivery.
+        Returns a summary string or None.
+        """
+        ...
+
+    def disembark_troops(
+        self, fleet_id: int, polity_id: int, system_id: int, tick: int,
+    ) -> str | None:
+        """If the fleet has troop hulls and the polity is at war at this system,
+        create a fresh Army formation (strength 4) to prosecute the assault.
+        Fires at most once per fleet arrival — does not stack on repeated visits.
         Returns a summary string or None.
         """
         ...
@@ -247,6 +266,12 @@ class GameFacadeStub:
         self._record("check_map_sharing", tick)
         return self.returns.get("check_map_sharing", [])
 
+    def process_admiral_retirements(
+        self, polity_id: int, tick: int, world: WorldFacade, rng: Random
+    ) -> list[int]:
+        self._record("process_admiral_retirements", polity_id, tick)
+        return self.returns.get("process_admiral_retirements", [])
+
     def execute_jump(
         self, fleet_id: int, destination_system_id: int, tick: int
     ) -> None:
@@ -262,6 +287,12 @@ class GameFacadeStub:
     ) -> str | None:
         self._record("deliver_colonists", fleet_id, polity_id, system_id, tick)
         return self.returns.get("deliver_colonists", None)
+
+    def disembark_troops(
+        self, fleet_id: int, polity_id: int, system_id: int, tick: int,
+    ) -> str | None:
+        self._record("disembark_troops", fleet_id, polity_id, system_id, tick)
+        return self.returns.get("disembark_troops", None)
 
     def record_jump_route(
         self, from_system_id: int, to_system_id: int, tick: int, world: WorldFacade
@@ -403,7 +434,7 @@ class GameFacadeImpl:
         # SDB maintenance (squadron but no fleet)
         sdb_rows = self._conn.execute(
             """
-            SELECT h.hull_type FROM Hull h
+            SELECT h.hull_type FROM Hull_head h
             JOIN   Squadron s ON s.squadron_id = h.squadron_id
             WHERE  h.polity_id = ? AND h.fleet_id IS NULL
               AND  h.status != 'destroyed'
@@ -461,12 +492,13 @@ class GameFacadeImpl:
             fleet_id = fleet_row["fleet_id"] if fleet_row else None
 
             polity_row = self._conn.execute(
-                "SELECT species_id, name FROM Polity WHERE polity_id = ?", (polity_id,)
+                "SELECT species_id, name FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+                (polity_id,),
             ).fetchone()
             gen = NameGenerator(species_id=polity_row["species_id"])
             polity_name = polity_row["name"]
             seq = self._conn.execute(
-                "SELECT COUNT(*) FROM Hull WHERE polity_id = ?", (polity_id,)
+                "SELECT COUNT(DISTINCT hull_id) FROM Hull WHERE polity_id = ?", (polity_id,)
             ).fetchone()[0] + 1
             name = gen.hull(hull_type, seq)
 
@@ -534,6 +566,21 @@ class GameFacadeImpl:
         from .intelligence import check_map_sharing
         return check_map_sharing(self._conn, tick)
 
+    def process_admiral_retirements(
+        self, polity_id: int, tick: int, world: WorldFacade, rng: Random
+    ) -> list[int]:
+        from .admiral import process_retirements
+        from .names import NameGenerator
+        polity_row = self._conn.execute(
+            "SELECT species_id FROM Polity WHERE polity_id = ? "
+            "ORDER BY row_id DESC LIMIT 1", (polity_id,)
+        ).fetchone()
+        if polity_row is None:
+            return []
+        species_data = world.get_species(polity_row["species_id"])
+        name_gen = NameGenerator(species_id=polity_row["species_id"])
+        return process_retirements(self._conn, polity_id, tick, species_data, rng, name_gen)
+
     def execute_jump(
         self, fleet_id: int, destination_system_id: int, tick: int
     ) -> None:
@@ -550,7 +597,7 @@ class GameFacadeImpl:
         """
         has_ct = self._conn.execute(
             """
-            SELECT 1 FROM Hull
+            SELECT 1 FROM Hull_head
             WHERE fleet_id = ? AND hull_type = 'colony_transport'
               AND status NOT IN ('destroyed')
             LIMIT 1
@@ -582,7 +629,8 @@ class GameFacadeImpl:
                 established_tick=tick,
             )
             polity_name = self._conn.execute(
-                "SELECT name FROM Polity WHERE polity_id = ?", (polity_id,)
+                "SELECT name FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+                (polity_id,),
             ).fetchone()["name"]
             write_event(
                 self._conn, tick=tick, phase=3,
@@ -604,6 +652,68 @@ class GameFacadeImpl:
                 )
 
         return None
+
+    def disembark_troops(
+        self, fleet_id: int, polity_id: int, system_id: int, tick: int,
+    ) -> str | None:
+        """Create a fresh Army at system_id when a troop hull arrives during a war."""
+        has_troop = self._conn.execute(
+            """
+            SELECT 1 FROM Hull_head
+            WHERE fleet_id = ? AND hull_type = 'troop'
+              AND status NOT IN ('destroyed')
+            LIMIT 1
+            """,
+            (fleet_id,),
+        ).fetchone()
+        if not has_troop:
+            return None
+
+        # Only disembark if the polity is at war with someone present here
+        at_war = self._conn.execute(
+            """
+            SELECT 1 FROM ContactRecord_head cr
+            JOIN Fleet f ON (
+                (cr.polity_a_id = ? AND cr.polity_b_id = f.polity_id)
+                OR (cr.polity_b_id = ? AND cr.polity_a_id = f.polity_id)
+            )
+            WHERE cr.at_war = 1 AND f.system_id = ? AND f.status = 'active'
+            LIMIT 1
+            """,
+            (polity_id, polity_id, system_id),
+        ).fetchone()
+        if not at_war:
+            return None
+
+        from .ground import create_ground_force
+        from .names import NameGenerator
+
+        polity_row = self._conn.execute(
+            "SELECT species_id, name FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+            (polity_id,),
+        ).fetchone()
+        gen = NameGenerator(species_id=polity_row["species_id"])
+        seq = self._conn.execute(
+            "SELECT COUNT(DISTINCT force_id) FROM GroundForce WHERE polity_id = ?", (polity_id,)
+        ).fetchone()[0] + 1
+
+        # Best body in system (or None — army sits at system level)
+        from .economy import get_best_body_in_system
+        body_id = get_best_body_in_system(self._conn, system_id)
+
+        create_ground_force(
+            self._conn, polity_id,
+            name=gen.hull("army", seq),
+            unit_type="army",
+            system_id=system_id,
+            body_id=body_id,
+            created_tick=tick,
+            marine_designated=1,   # combat-dropped troops are marines
+        )
+        return (
+            f"tick={tick} polity={polity_id} troops_disembarked "
+            f"system={system_id} fleet={fleet_id}"
+        )
 
     def process_arrivals(self, tick: int) -> list[tuple[int, int, int, int | None]]:
         from .movement import process_arrivals

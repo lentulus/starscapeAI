@@ -173,7 +173,13 @@ def _score_build_hull(
         if hull_type == "scout":
             return snap.polity.expansionism * 2.0 + 1.0
     if posture == Posture.PROSECUTE:
-        if hull_type in ("capital", "cruiser", "troop"):
+        if hull_type == "troop":
+            # Urgently needed when at war with no armies left
+            base = snap.polity.aggression * 2.5
+            if snap.n_armies == 0:
+                base += 4.0   # hard boost: must rebuild assault capability
+            return base
+        if hull_type in ("capital", "cruiser"):
             return snap.polity.aggression * 2.5
     return 0.3  # always worth considering even off-posture
 

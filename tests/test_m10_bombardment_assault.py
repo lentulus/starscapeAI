@@ -19,9 +19,11 @@ import pytest
 from starscape5.game.db import open_game, init_schema
 from starscape5.game.facade import GameFacadeImpl, GameFacadeStub
 from starscape5.game.fleet import create_fleet, create_hull
-from starscape5.game.ground import create_ground_force, disembark_force
+from starscape5.game.ground import create_ground_force, disembark_force, apply_strength_delta
 from starscape5.game.polity import create_polity
+from starscape5.game.presence import create_presence
 from starscape5.game.events import get_events
+from starscape5.game.intelligence import _insert_contact_row
 from starscape5.game.bombardment import (
     BombardmentResult,
     check_naval_superiority,
@@ -95,12 +97,12 @@ def _garrison(conn, polity_id: int, system_id: int, body_id: int) -> int:
 
 def _at_war(conn, pid_a: int, pid_b: int, system_id: int = 1) -> None:
     a, b = (pid_a, pid_b) if pid_a < pid_b else (pid_b, pid_a)
-    conn.execute(
-        "INSERT INTO ContactRecord "
-        "(polity_a_id, polity_b_id, contact_tick, contact_system_id, at_war) "
-        "VALUES (?, ?, 0, ?, 1)",
-        (a, b, system_id),
-    )
+    next_id = conn.execute(
+        "SELECT COALESCE(MAX(contact_id), 0) + 1 FROM ContactRecord"
+    ).fetchone()[0]
+    _insert_contact_row(conn, contact_id=next_id, polity_a_id=a, polity_b_id=b,
+                        contact_tick=0, contact_system_id=system_id,
+                        peace_weeks=0, at_war=1, map_shared=0)
 
 
 # ---------------------------------------------------------------------------
@@ -130,11 +132,11 @@ class TestNavalSuperiority:
         pid1 = _polity(conn, 1)
         pid2 = _polity(conn, 2)
         # ContactRecord with at_war=0
-        conn.execute(
-            "INSERT INTO ContactRecord "
-            "(polity_a_id, polity_b_id, contact_tick, contact_system_id, at_war) "
-            "VALUES (1, 2, 0, 5, 0)"
-        )
+        a, b = min(pid1, pid2), max(pid1, pid2)
+        next_id = conn.execute("SELECT COALESCE(MAX(contact_id), 0) + 1 FROM ContactRecord").fetchone()[0]
+        _insert_contact_row(conn, contact_id=next_id, polity_a_id=a, polity_b_id=b,
+                            contact_tick=0, contact_system_id=5,
+                            peace_weeks=0, at_war=0, map_shared=0)
         _fleet(conn, pid1, 5, ["cruiser"])
         _fleet(conn, pid2, 5, ["cruiser"])
         assert check_naval_superiority(conn, 5, pid1)
@@ -173,13 +175,10 @@ class TestBombardmentTick:
         # Attacker has a capital (bombard=3); defender has no fleet
         _fleet(conn, pid1, 5, ["capital"])
         fid = _garrison(conn, pid2, 5, body_id=50)
-        before = conn.execute(
-            "SELECT strength FROM GroundForce WHERE force_id = ?", (fid,)
-        ).fetchone()["strength"]
+        from starscape5.game.ground import get_ground_force
+        before = get_ground_force(conn, fid).strength
         run_bombardment_tick(conn, 5, pid1, pid2, tick=1, rng=Random(0))
-        after = conn.execute(
-            "SELECT strength FROM GroundForce WHERE force_id = ?", (fid,)
-        ).fetchone()["strength"]
+        after = get_ground_force(conn, fid).strength
         assert after == before - 1
 
     def test_no_effect_when_net_bombard_zero_or_negative(self, conn):
@@ -196,28 +195,25 @@ class TestBombardmentTick:
         create_hull(conn, pid2, "SDB-1", "sdb",
                     system_id=5, fleet_id=None, squadron_id=sdb_squad, created_tick=0)
         fid = _garrison(conn, pid2, 5, body_id=50)
-        before = conn.execute(
-            "SELECT strength FROM GroundForce WHERE force_id = ?", (fid,)
-        ).fetchone()["strength"]
+        from starscape5.game.ground import get_ground_force
+        before = get_ground_force(conn, fid).strength
         run_bombardment_tick(conn, 5, pid1, pid2, tick=1, rng=Random(0))
-        after = conn.execute(
-            "SELECT strength FROM GroundForce WHERE force_id = ?", (fid,)
-        ).fetchone()["strength"]
+        after = get_ground_force(conn, fid).strength
         assert after == before  # no change
 
-    def test_minimum_strength_one_from_bombardment(self, conn):
+    def test_bombardment_can_destroy_unit(self, conn):
         pid1 = _polity(conn, 1)
         pid2 = _polity(conn, 2)
         _at_war(conn, pid1, pid2)
         _fleet(conn, pid1, 5, ["capital"])
         fid = _garrison(conn, pid2, 5, body_id=50)
-        # Reduce to strength 1 manually
-        conn.execute("UPDATE GroundForce SET strength = 1 WHERE force_id = ?", (fid,))
+        # Reduce to strength 1 manually; bombardment should now finish the unit
+        from starscape5.game.ground import get_ground_force
+        cur_strength = get_ground_force(conn, fid).strength
+        apply_strength_delta(conn, fid, -(cur_strength - 1), tick=0)
         run_bombardment_tick(conn, 5, pid1, pid2, tick=1, rng=Random(0))
-        after = conn.execute(
-            "SELECT strength FROM GroundForce WHERE force_id = ?", (fid,)
-        ).fetchone()["strength"]
-        assert after == 1  # cannot go below 1 via bombardment
+        after = get_ground_force(conn, fid).strength
+        assert after == 0  # bombardment can now destroy the last point of strength
 
     def test_writes_bombardment_event(self, conn):
         pid1 = _polity(conn, 1)
@@ -361,18 +357,14 @@ class TestRunGroundAssault:
         pid1 = _polity(conn, 1)
         pid2 = _polity(conn, 2)
         # Attacker: 6 armies (36 strength total → near-guaranteed rout)
+        from starscape5.game.ground import get_ground_force
         for i in range(6):
-            conn.execute(
-                "INSERT INTO GroundForce "
-                "(polity_id, name, unit_type, strength, max_strength, "
-                "system_id, body_id, marine_designated, occupation_duty, "
-                "refit_ticks_remaining, created_tick, last_updated_tick) "
-                "VALUES (?, ?, 'army', 6, 6, 5, 50, 1, 0, 0, 0, 0)",
-                (pid1, f"Army{i}"),
-            )
+            create_ground_force(conn, pid1, f"Army{i}", "army",
+                                system_id=5, body_id=50, created_tick=0, marine_designated=1)
         # Defender: 1 weak garrison
         gid = _garrison(conn, pid2, 5, 50)
-        conn.execute("UPDATE GroundForce SET strength = 1 WHERE force_id = ?", (gid,))
+        cur_strength = get_ground_force(conn, gid).strength
+        apply_strength_delta(conn, gid, -(cur_strength - 1), tick=0)
 
         result = None
         for _ in range(20):   # enough tries to get a rout with fixed seed
@@ -385,24 +377,20 @@ class TestRunGroundAssault:
         pid1 = _polity(conn, 1)
         pid2 = _polity(conn, 2)
         # Create a presence for pid2 to be contested
-        conn.execute(
-            "INSERT INTO SystemPresence "
-            "(polity_id, system_id, body_id, control_state, "
-            "development_level, established_tick, last_updated_tick) "
-            "VALUES (?, 5, 50, 'controlled', 3, 0, 0)",
-            (pid2,),
-        )
+        create_presence(conn, pid2, system_id=5, body_id=50,
+                        control_state="controlled", development_level=3,
+                        established_tick=0)
         # Single garrison vs massive force
         gid = _garrison(conn, pid2, 5, 50)
-        conn.execute("UPDATE GroundForce SET strength = 1 WHERE force_id = ?", (gid,))
+        cur_strength = conn.execute(
+            "SELECT strength FROM GroundForce_head WHERE force_id = ?", (gid,)
+        ).fetchone()["strength"]
+        apply_strength_delta(conn, gid, -(cur_strength - 1), tick=0)
         for i in range(6):
-            conn.execute(
-                "INSERT INTO GroundForce "
-                "(polity_id, name, unit_type, strength, max_strength, "
-                "system_id, body_id, marine_designated, occupation_duty, "
-                "refit_ticks_remaining, created_tick, last_updated_tick) "
-                "VALUES (?, ?, 'army', 6, 6, 5, 50, 1, 0, 0, 0, 0)",
-                (pid1, f"A{i}"),
+            create_ground_force(
+                conn, pid1, f"A{i}", "army",
+                system_id=5, body_id=50,
+                created_tick=0, marine_designated=1,
             )
         for _ in range(20):
             result = run_ground_assault(conn, 5, 50, pid1, pid2, tick=1, rng=Random(42))
@@ -546,13 +534,9 @@ class TestPartialTickWithBombardmentAssault:
             "INSERT INTO WorldPotential (body_id, system_id, world_potential, "
             "has_gas_giant, has_ocean) VALUES (10, 1, 15, 0, 0)"
         )
-        conn.execute(
-            "INSERT INTO SystemPresence "
-            "(polity_id, system_id, body_id, control_state, "
-            "development_level, established_tick, last_updated_tick) "
-            "VALUES (?, 1, 10, 'controlled', 3, 0, 0)",
-            (pid,),
-        )
+        create_presence(conn, pid, system_id=1, body_id=10,
+                        control_state="controlled", development_level=3,
+                        established_tick=0)
         game = GameFacadeImpl(conn)
         result = run_partial_tick(1, [pid], game, world)
         assert isinstance(result, list)

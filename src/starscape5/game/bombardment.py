@@ -152,12 +152,11 @@ def run_bombardment_tick(
     strength_delta = 0
 
     if net_bombard > 0 and defender_forces:
-        # Hit the weakest unit first; minimum 1 strength (bombardment can't destroy)
+        # Hit the weakest unit first; can reduce to 0 (destroy the formation)
         target = min(defender_forces, key=lambda f: f.strength)
-        if target.strength > 1:
-            apply_strength_delta(conn, target.force_id, -1, tick)
-            strength_delta = -1
-            total_after = total_before - 1
+        apply_strength_delta(conn, target.force_id, -1, tick)
+        strength_delta = -1
+        total_after = total_before - 1
 
     write_event(
         conn, tick=tick, phase=5,
@@ -193,7 +192,7 @@ def find_bombardment_candidates(
     un-embarked ground forces in the system.
     """
     war_pairs = conn.execute(
-        "SELECT polity_a_id, polity_b_id FROM ContactRecord WHERE at_war = 1"
+        "SELECT polity_a_id, polity_b_id FROM ContactRecord_head WHERE at_war = 1"
     ).fetchall()
 
     candidates: list[tuple[int, int, int]] = []
@@ -206,7 +205,7 @@ def find_bombardment_candidates(
             # Systems where defender has un-embarked ground forces
             systems = conn.execute(
                 """
-                SELECT DISTINCT system_id FROM GroundForce
+                SELECT DISTINCT system_id FROM GroundForce_head
                 WHERE polity_id = ? AND system_id IS NOT NULL
                   AND strength > 0 AND embarked_hull_id IS NULL
                 """,

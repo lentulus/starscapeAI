@@ -40,6 +40,14 @@ def run_intelligence_phase(
                 f"tick={tick} polity={polity_id} passive_scan={n} systems"
             )
 
+        # Admiral retirements
+        rng = rng_factory(polity_id) if rng_factory else __import__("random").Random(polity_id)
+        retired = game.process_admiral_retirements(polity_id, tick, world, rng)
+        for adm_id in retired:
+            summaries.append(
+                f"tick={tick} polity={polity_id} admiral_retired={adm_id}"
+            )
+
     # Peace week increment (once per tick, not per polity)
     game.increment_peace_weeks()
 

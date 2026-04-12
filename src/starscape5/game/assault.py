@@ -165,7 +165,7 @@ def run_ground_assault(
 
     str_after_atk = sum(
         conn.execute(
-            "SELECT COALESCE(SUM(strength), 0) FROM GroundForce "
+            "SELECT COALESCE(SUM(strength), 0) FROM GroundForce_head "
             "WHERE force_id IN (%s)" % ",".join("?" * len(attacker_forces)),
             [f.force_id for f in attacker_forces],
         ).fetchone()[0]
@@ -174,7 +174,7 @@ def run_ground_assault(
 
     str_after_def = (
         conn.execute(
-            "SELECT COALESCE(SUM(strength), 0) FROM GroundForce "
+            "SELECT COALESCE(SUM(strength), 0) FROM GroundForce_head "
             "WHERE force_id IN (%s)" % ",".join("?" * len(defender_forces)),
             [f.force_id for f in defender_forces],
         ).fetchone()[0]
@@ -225,7 +225,7 @@ def find_assault_candidates(
     from .bombardment import check_naval_superiority
 
     war_pairs = conn.execute(
-        "SELECT polity_a_id, polity_b_id FROM ContactRecord WHERE at_war = 1"
+        "SELECT polity_a_id, polity_b_id FROM ContactRecord_head WHERE at_war = 1"
     ).fetchall()
 
     candidates: list[tuple[int, int, int, int]] = []
@@ -239,7 +239,7 @@ def find_assault_candidates(
             bodies = conn.execute(
                 """
                 SELECT DISTINCT body_id
-                FROM   GroundForce
+                FROM   GroundForce_head
                 WHERE  polity_id = ? AND system_id IS NOT NULL
                   AND  strength  > 0  AND embarked_hull_id IS NULL
                 """,
@@ -250,7 +250,7 @@ def find_assault_candidates(
                 body_id = b["body_id"]
                 # Get system_id for this body
                 sys_row = conn.execute(
-                    "SELECT system_id FROM GroundForce "
+                    "SELECT system_id FROM GroundForce_head "
                     "WHERE polity_id = ? AND body_id = ? AND system_id IS NOT NULL LIMIT 1",
                     (defender, body_id),
                 ).fetchone()
@@ -260,7 +260,7 @@ def find_assault_candidates(
 
                 # Check attacker has landed armies in this system
                 atk_forces = conn.execute(
-                    "SELECT 1 FROM GroundForce "
+                    "SELECT 1 FROM GroundForce_head "
                     "WHERE polity_id = ? AND system_id = ? "
                     "AND strength > 0 AND embarked_hull_id IS NULL LIMIT 1",
                     (attacker, sid),
@@ -293,7 +293,7 @@ def _apply_defender_losses(conn, forces, delta: int, tick: int) -> int:
         apply_strength_delta(conn, f.force_id, -loss, tick)
         remaining_loss -= loss
     total = conn.execute(
-        "SELECT COALESCE(SUM(strength), 0) FROM GroundForce "
+        "SELECT COALESCE(SUM(strength), 0) FROM GroundForce_head "
         "WHERE force_id IN (%s)" % ",".join("?" * len(forces)),
         [f.force_id for f in forces],
     ).fetchone()[0]
@@ -314,7 +314,7 @@ def _transfer_system_control(
     """
     presence = conn.execute(
         """
-        SELECT presence_id, control_state FROM SystemPresence
+        SELECT presence_id, control_state FROM SystemPresence_head
         WHERE  polity_id = ? AND system_id = ?
           AND  (? IS NULL OR body_id = ?)
         LIMIT  1

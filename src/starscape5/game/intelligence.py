@@ -8,9 +8,12 @@ Three knowledge tiers:
 Map sharing: polities that have been in contact for 52 weeks without war
 receive a one-time full intel exchange.
 
-ContactRecord:
-  peace_weeks is incremented each tick the pair is not at war.
-  map_shared = 1 once the exchange has fired; never fires twice.
+ContactRecord is TEMPORAL: append-only; all mutations INSERT new rows.
+contact_id is the logical entity key; row_id is the physical autoincrement PK.
+Use ContactRecord_head view for current state.
+
+peace_weeks is incremented each tick the pair is not at war.
+map_shared = 1 once the exchange has fired; never fires twice.
 """
 
 from __future__ import annotations
@@ -21,6 +24,46 @@ from starscape5.world.facade import WorldFacade
 
 _PASSIVE_SCAN_RADIUS_PC: float = 10.0
 _PASSIVE_SCAN_LIMIT: int = 20
+
+
+# ---------------------------------------------------------------------------
+# ContactRecord helpers
+# ---------------------------------------------------------------------------
+
+def _current_contact_row(conn: sqlite3.Connection, contact_id: int) -> sqlite3.Row:
+    """Return the most recent raw row for contact_id."""
+    row = conn.execute(
+        "SELECT * FROM ContactRecord WHERE contact_id = ? ORDER BY row_id DESC LIMIT 1",
+        (contact_id,),
+    ).fetchone()
+    if row is None:
+        raise KeyError(f"ContactRecord {contact_id} not found")
+    return row
+
+
+def _insert_contact_row(
+    conn: sqlite3.Connection,
+    contact_id: int,
+    polity_a_id: int,
+    polity_b_id: int,
+    contact_tick: int,
+    contact_system_id: int,
+    peace_weeks: int,
+    at_war: int,
+    map_shared: int,
+    tick: int = 0,
+    seq: int = 0,
+) -> None:
+    conn.execute(
+        """
+        INSERT INTO ContactRecord
+            (contact_id, tick, seq, polity_a_id, polity_b_id,
+             contact_tick, contact_system_id, peace_weeks, at_war, map_shared)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (contact_id, tick, seq, polity_a_id, polity_b_id,
+         contact_tick, contact_system_id, peace_weeks, at_war, map_shared),
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -39,7 +82,7 @@ def update_passive_scan(
     """
     presences = conn.execute(
         """
-        SELECT DISTINCT system_id FROM SystemPresence
+        SELECT DISTINCT system_id FROM SystemPresence_head
         WHERE  polity_id = ? AND control_state IN ('controlled', 'colony')
         """,
         (polity_id,),
@@ -128,7 +171,8 @@ def record_visit(
     habitable = 0
     if best:
         sp_row = conn.execute(
-            "SELECT species_id FROM Polity WHERE polity_id = ?", (polity_id,)
+            "SELECT species_id FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+            (polity_id,),
         ).fetchone()
         if sp_row:
             habitable = int(world.check_habitability(best.body_id, sp_row["species_id"]))
@@ -184,7 +228,7 @@ def check_map_sharing(
     rows = conn.execute(
         """
         SELECT contact_id, polity_a_id, polity_b_id
-        FROM   ContactRecord
+        FROM   ContactRecord_head
         WHERE  peace_weeks >= 52 AND at_war = 0 AND map_shared = 0
         """,
     ).fetchall()
@@ -193,9 +237,19 @@ def check_map_sharing(
     for row in rows:
         copy_intel_between_polities(conn, row["polity_a_id"], row["polity_b_id"])
         copy_intel_between_polities(conn, row["polity_b_id"], row["polity_a_id"])
-        conn.execute(
-            "UPDATE ContactRecord SET map_shared = 1 WHERE contact_id = ?",
-            (row["contact_id"],),
+        # Temporal INSERT for map_shared=1
+        cur = _current_contact_row(conn, row["contact_id"])
+        _insert_contact_row(
+            conn,
+            contact_id=row["contact_id"],
+            polity_a_id=cur["polity_a_id"],
+            polity_b_id=cur["polity_b_id"],
+            contact_tick=cur["contact_tick"],
+            contact_system_id=cur["contact_system_id"],
+            peace_weeks=cur["peace_weeks"],
+            at_war=cur["at_war"],
+            map_shared=1,
+            tick=tick, seq=0,
         )
         pairs.append((row["polity_a_id"], row["polity_b_id"]))
     return pairs
@@ -264,11 +318,24 @@ def copy_intel_between_polities(
 # Peace week tracking (called from intelligence phase)
 # ---------------------------------------------------------------------------
 
-def increment_peace_weeks(conn: sqlite3.Connection) -> None:
-    """Increment peace_weeks for all non-war contact pairs."""
-    conn.execute(
-        "UPDATE ContactRecord SET peace_weeks = peace_weeks + 1 WHERE at_war = 0"
-    )
+def increment_peace_weeks(conn: sqlite3.Connection, tick: int = 0, seq: int = 0) -> None:
+    """Increment peace_weeks for all non-war contact pairs (temporal INSERT)."""
+    rows = conn.execute(
+        "SELECT * FROM ContactRecord_head WHERE at_war = 0"
+    ).fetchall()
+    for row in rows:
+        _insert_contact_row(
+            conn,
+            contact_id=row["contact_id"],
+            polity_a_id=row["polity_a_id"],
+            polity_b_id=row["polity_b_id"],
+            contact_tick=row["contact_tick"],
+            contact_system_id=row["contact_system_id"],
+            peace_weeks=row["peace_weeks"] + 1,
+            at_war=row["at_war"],
+            map_shared=row["map_shared"],
+            tick=tick, seq=seq,
+        )
 
 
 # ---------------------------------------------------------------------------

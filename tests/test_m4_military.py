@@ -352,7 +352,7 @@ def test_admiral_generation_params_all_species():
 def test_create_admiral_links_fleet(two_polities):
     conn, p1, _ = two_polities
     fid = create_fleet(conn, p1, "Fleet", 100)
-    aid = create_admiral(conn, p1, "Kreth-Vaa", 2, fid, 0)
+    aid = create_admiral(conn, p1, "Kreth-Vaa", 2, fid, 0, retirement_tick=1000)
     conn.commit()
     adm = get_fleet_admiral(conn, fid)
     assert adm is not None
@@ -371,7 +371,7 @@ def test_transfer_command(two_polities):
     conn, p1, _ = two_polities
     f1 = create_fleet(conn, p1, "Fleet A", 100)
     f2 = create_fleet(conn, p1, "Fleet B", 100)
-    create_admiral(conn, p1, "Kreth-Vaa", 1, f1, 0)
+    create_admiral(conn, p1, "Kreth-Vaa", 1, f1, 0, retirement_tick=1000)
     conn.commit()
     transfer_command(conn, f1, f2)
     conn.commit()
@@ -383,8 +383,8 @@ def test_get_senior_admiral_picks_lowest_id(two_polities):
     conn, p1, _ = two_polities
     f1 = create_fleet(conn, p1, "Fleet A", 100)
     f2 = create_fleet(conn, p1, "Fleet B", 100)
-    a1 = create_admiral(conn, p1, "Senior", 0, f1, 0)
-    a2 = create_admiral(conn, p1, "Junior", 1, f2, 0)
+    a1 = create_admiral(conn, p1, "Senior", 0, f1, 0, retirement_tick=1000)
+    a2 = create_admiral(conn, p1, "Junior", 1, f2, 0, retirement_tick=1000)
     conn.commit()
     senior = get_senior_admiral(conn, p1, [f1, f2])
     assert senior is not None

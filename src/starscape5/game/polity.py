@@ -3,9 +3,13 @@
 Each Polity represents one politically independent actor in the simulation.
 A species with faction_tendency > 0.85 spawns multiple polities at game start.
 
-All write functions take an open game.db connection and return the new
-primary key (or None for updates).  Callers are responsible for committing
-at phase boundaries via game.state.commit_phase().
+TEMPORAL TABLE: all mutations INSERT new rows (copy-on-write).
+polity_id is the logical entity key; row_id is the physical autoincrement PK.
+Use Polity_head view or ORDER BY row_id DESC LIMIT 1 for current state.
+
+All write functions take an open game.db connection and return the logical
+polity_id (NOT row_id).  Callers are responsible for committing at phase
+boundaries via game.state.commit_phase().
 """
 
 from __future__ import annotations
@@ -53,6 +57,52 @@ def _row_to_polity(row: sqlite3.Row) -> PolityRow:
 
 
 # ---------------------------------------------------------------------------
+# Internal copy-on-write helper
+# ---------------------------------------------------------------------------
+
+def _current_polity_row(conn: sqlite3.Connection, polity_id: int) -> sqlite3.Row:
+    """Return the most recent raw row for polity_id."""
+    row = conn.execute(
+        "SELECT * FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+        (polity_id,),
+    ).fetchone()
+    if row is None:
+        raise KeyError(f"Polity {polity_id} not found")
+    return row
+
+
+def _insert_polity_row(
+    conn: sqlite3.Connection,
+    polity_id: int,
+    species_id: int,
+    name: str,
+    capital_system_id: int | None,
+    treasury_ru: float,
+    expansionism: float,
+    aggression: float,
+    risk_appetite: float,
+    processing_order: int,
+    founded_tick: int,
+    jump_level: int,
+    status: str,
+    tick: int = 0,
+    seq: int = 0,
+) -> None:
+    conn.execute(
+        """
+        INSERT INTO Polity
+            (polity_id, tick, seq, species_id, name, capital_system_id,
+             treasury_ru, expansionism, aggression, risk_appetite,
+             processing_order, founded_tick, jump_level, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (polity_id, tick, seq, species_id, name, capital_system_id,
+         treasury_ru, expansionism, aggression, risk_appetite,
+         processing_order, founded_tick, jump_level, status),
+    )
+
+
+# ---------------------------------------------------------------------------
 # Write functions
 # ---------------------------------------------------------------------------
 
@@ -69,48 +119,87 @@ def create_polity(
     founded_tick: int = 0,
 ) -> int:
     """Insert a new Polity row and return its polity_id."""
-    cur = conn.execute(
-        """
-        INSERT INTO Polity
-            (species_id, name, capital_system_id,
-             treasury_ru, expansionism, aggression, risk_appetite,
-             processing_order, founded_tick)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (species_id, name, capital_system_id,
-         treasury_ru, expansionism, aggression, risk_appetite,
-         processing_order, founded_tick),
+    # Assign next logical polity_id
+    row = conn.execute("SELECT COALESCE(MAX(polity_id), 0) + 1 FROM Polity").fetchone()
+    polity_id: int = row[0]
+    _insert_polity_row(
+        conn, polity_id, species_id, name, capital_system_id,
+        treasury_ru, expansionism, aggression, risk_appetite,
+        processing_order, founded_tick, jump_level=10, status="active",
+        tick=0, seq=0,
     )
-    return cur.lastrowid  # type: ignore[return-value]
+    return polity_id
 
 
 def update_treasury(
-    conn: sqlite3.Connection, polity_id: int, delta_ru: float
+    conn: sqlite3.Connection, polity_id: int, delta_ru: float,
+    tick: int = 0, seq: int = 0,
 ) -> None:
     """Add delta_ru to the polity's treasury (delta may be negative)."""
-    conn.execute(
-        "UPDATE Polity SET treasury_ru = treasury_ru + ? WHERE polity_id = ?",
-        (delta_ru, polity_id),
+    cur = _current_polity_row(conn, polity_id)
+    _insert_polity_row(
+        conn, polity_id,
+        species_id=cur["species_id"],
+        name=cur["name"],
+        capital_system_id=cur["capital_system_id"],
+        treasury_ru=cur["treasury_ru"] + delta_ru,
+        expansionism=cur["expansionism"],
+        aggression=cur["aggression"],
+        risk_appetite=cur["risk_appetite"],
+        processing_order=cur["processing_order"],
+        founded_tick=cur["founded_tick"],
+        jump_level=cur["jump_level"],
+        status=cur["status"],
+        tick=tick,
+        seq=seq,
     )
 
 
 def set_polity_status(
-    conn: sqlite3.Connection, polity_id: int, status: str
+    conn: sqlite3.Connection, polity_id: int, status: str,
+    tick: int = 0, seq: int = 0,
 ) -> None:
     """Update polity status to 'eliminated' or 'vassal'."""
-    conn.execute(
-        "UPDATE Polity SET status = ? WHERE polity_id = ?",
-        (status, polity_id),
+    cur = _current_polity_row(conn, polity_id)
+    _insert_polity_row(
+        conn, polity_id,
+        species_id=cur["species_id"],
+        name=cur["name"],
+        capital_system_id=cur["capital_system_id"],
+        treasury_ru=cur["treasury_ru"],
+        expansionism=cur["expansionism"],
+        aggression=cur["aggression"],
+        risk_appetite=cur["risk_appetite"],
+        processing_order=cur["processing_order"],
+        founded_tick=cur["founded_tick"],
+        jump_level=cur["jump_level"],
+        status=status,
+        tick=tick,
+        seq=seq,
     )
 
 
 def set_capital(
-    conn: sqlite3.Connection, polity_id: int, system_id: int
+    conn: sqlite3.Connection, polity_id: int, system_id: int,
+    tick: int = 0, seq: int = 0,
 ) -> None:
     """Set or change the capital system for a polity."""
-    conn.execute(
-        "UPDATE Polity SET capital_system_id = ? WHERE polity_id = ?",
-        (system_id, polity_id),
+    cur = _current_polity_row(conn, polity_id)
+    _insert_polity_row(
+        conn, polity_id,
+        species_id=cur["species_id"],
+        name=cur["name"],
+        capital_system_id=system_id,
+        treasury_ru=cur["treasury_ru"],
+        expansionism=cur["expansionism"],
+        aggression=cur["aggression"],
+        risk_appetite=cur["risk_appetite"],
+        processing_order=cur["processing_order"],
+        founded_tick=cur["founded_tick"],
+        jump_level=cur["jump_level"],
+        status=cur["status"],
+        tick=tick,
+        seq=seq,
     )
 
 
@@ -121,36 +210,47 @@ _JUMP_UPGRADE_MAX: int    = 20     # hard ceiling
 def get_jump_upgrade_cost() -> float:
     return _JUMP_UPGRADE_COST
 
-def upgrade_jump_level(conn: sqlite3.Connection, polity_id: int) -> int:
+def upgrade_jump_level(
+    conn: sqlite3.Connection, polity_id: int,
+    tick: int = 0, seq: int = 0,
+) -> int:
     """Increment polity jump_level by one step and deduct cost from treasury.
 
     Returns the new jump_level, or current level if already at max.
     """
-    row = conn.execute(
-        "SELECT jump_level, treasury_ru FROM Polity WHERE polity_id = ?",
-        (polity_id,),
-    ).fetchone()
-    if row is None:
-        raise KeyError(f"Polity {polity_id} not found")
-    current = row["jump_level"]
+    cur = _current_polity_row(conn, polity_id)
+    current = cur["jump_level"]
     if current >= _JUMP_UPGRADE_MAX:
         return current
     new_level = min(current + _JUMP_UPGRADE_STEP, _JUMP_UPGRADE_MAX)
-    conn.execute(
-        "UPDATE Polity SET jump_level = ?, treasury_ru = treasury_ru - ? WHERE polity_id = ?",
-        (new_level, _JUMP_UPGRADE_COST, polity_id),
+    _insert_polity_row(
+        conn, polity_id,
+        species_id=cur["species_id"],
+        name=cur["name"],
+        capital_system_id=cur["capital_system_id"],
+        treasury_ru=cur["treasury_ru"] - _JUMP_UPGRADE_COST,
+        expansionism=cur["expansionism"],
+        aggression=cur["aggression"],
+        risk_appetite=cur["risk_appetite"],
+        processing_order=cur["processing_order"],
+        founded_tick=cur["founded_tick"],
+        jump_level=new_level,
+        status=cur["status"],
+        tick=tick,
+        seq=seq,
     )
     return new_level
 
 
 # ---------------------------------------------------------------------------
-# Read functions
+# Read functions  (use Polity_head view / ORDER BY row_id DESC LIMIT 1)
 # ---------------------------------------------------------------------------
 
 def get_polity(conn: sqlite3.Connection, polity_id: int) -> PolityRow:
-    """Fetch a single polity.  Raises KeyError if not found."""
+    """Fetch a single polity's current state.  Raises KeyError if not found."""
     row = conn.execute(
-        "SELECT * FROM Polity WHERE polity_id = ?", (polity_id,)
+        "SELECT * FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+        (polity_id,),
     ).fetchone()
     if row is None:
         raise KeyError(f"Polity {polity_id} not found")
@@ -158,9 +258,9 @@ def get_polity(conn: sqlite3.Connection, polity_id: int) -> PolityRow:
 
 
 def get_all_polities(conn: sqlite3.Connection) -> list[PolityRow]:
-    """Return all polities ordered by processing_order."""
+    """Return all polities (current state) ordered by processing_order."""
     rows = conn.execute(
-        "SELECT * FROM Polity ORDER BY processing_order"
+        "SELECT * FROM Polity_head ORDER BY processing_order"
     ).fetchall()
     return [_row_to_polity(r) for r in rows]
 
@@ -168,7 +268,7 @@ def get_all_polities(conn: sqlite3.Connection) -> list[PolityRow]:
 def get_active_polities(conn: sqlite3.Connection) -> list[PolityRow]:
     """Return only active polities, ordered by processing_order."""
     rows = conn.execute(
-        "SELECT * FROM Polity WHERE status = 'active' ORDER BY processing_order"
+        "SELECT * FROM Polity_head WHERE status = 'active' ORDER BY processing_order"
     ).fetchall()
     return [_row_to_polity(r) for r in rows]
 
@@ -176,6 +276,6 @@ def get_active_polities(conn: sqlite3.Connection) -> list[PolityRow]:
 def get_polity_processing_order(conn: sqlite3.Connection) -> list[int]:
     """Return polity_ids of active polities in processing order."""
     rows = conn.execute(
-        "SELECT polity_id FROM Polity WHERE status = 'active' ORDER BY processing_order"
+        "SELECT polity_id FROM Polity_head WHERE status = 'active' ORDER BY processing_order"
     ).fetchall()
     return [r["polity_id"] for r in rows]

@@ -16,9 +16,11 @@ import pytest
 
 from starscape5.game.db import open_game, init_schema
 from starscape5.game.facade import GameFacadeImpl, GameFacadeStub
-from starscape5.game.fleet import create_fleet, create_hull, get_hull
+from starscape5.game.fleet import create_fleet, create_hull, get_hull, mark_hull_damaged, mark_hull_destroyed
 from starscape5.game.polity import create_polity
+from starscape5.game.presence import create_presence
 from starscape5.game.events import get_events
+from starscape5.game.intelligence import _insert_contact_row
 from starscape5.game.combat import (
     CombatResult,
     compute_hits,
@@ -77,14 +79,12 @@ def _fleet_with_hulls(
 def _at_war(conn, pid_a: int, pid_b: int, system_id: int = 1) -> None:
     """Insert a ContactRecord with at_war=1 between a < b."""
     a, b = (pid_a, pid_b) if pid_a < pid_b else (pid_b, pid_a)
-    conn.execute(
-        """
-        INSERT INTO ContactRecord
-            (polity_a_id, polity_b_id, contact_tick, contact_system_id, at_war)
-        VALUES (?, ?, 0, ?, 1)
-        """,
-        (a, b, system_id),
-    )
+    next_id = conn.execute(
+        "SELECT COALESCE(MAX(contact_id), 0) + 1 FROM ContactRecord"
+    ).fetchone()[0]
+    _insert_contact_row(conn, contact_id=next_id, polity_a_id=a, polity_b_id=b,
+                        contact_tick=0, contact_system_id=system_id,
+                        peace_weeks=0, at_war=1, map_shared=0)
 
 
 # ---------------------------------------------------------------------------
@@ -128,9 +128,9 @@ class TestFleetStrength:
         pid = _polity(conn, 1)
         fleet_id = _fleet_with_hulls(conn, pid, 1, ["capital"])
         hull_id = conn.execute(
-            "SELECT hull_id FROM Hull WHERE fleet_id = ?", (fleet_id,)
+            "SELECT hull_id FROM Hull_head WHERE fleet_id = ?", (fleet_id,)
         ).fetchone()["hull_id"]
-        conn.execute("UPDATE Hull SET status = 'damaged' WHERE hull_id = ?", (hull_id,))
+        mark_hull_damaged(conn, hull_id)
         s = get_fleet_strength_in_system(conn, pid, 1)
         assert s["attack"] == 2   # 4 // 2
         assert s["defence"] == 2
@@ -138,7 +138,8 @@ class TestFleetStrength:
     def test_destroyed_excluded(self, conn):
         pid = _polity(conn, 1)
         fleet_id = _fleet_with_hulls(conn, pid, 1, ["capital"])
-        conn.execute("UPDATE Hull SET status = 'destroyed' WHERE fleet_id = ?", (fleet_id,))
+        for h in conn.execute("SELECT hull_id FROM Hull_head WHERE fleet_id = ?", (fleet_id,)).fetchall():
+            mark_hull_destroyed(conn, h["hull_id"])
         s = get_fleet_strength_in_system(conn, pid, 1)
         assert s["attack"] == 0
 
@@ -165,22 +166,23 @@ class TestApplyHits:
         pid = _polity(conn, 1)
         _fleet_with_hulls(conn, pid, 1, ["cruiser"])
         apply_hits_to_system(conn, pid, 1, 1)
-        row = conn.execute("SELECT status FROM Hull WHERE polity_id = ?", (pid,)).fetchone()
+        row = conn.execute("SELECT status FROM Hull_head WHERE polity_id = ?", (pid,)).fetchone()
         assert row["status"] == "damaged"
 
     def test_damaged_becomes_destroyed(self, conn):
         pid = _polity(conn, 1)
         fleet_id = _fleet_with_hulls(conn, pid, 1, ["cruiser"])
-        conn.execute("UPDATE Hull SET status = 'damaged' WHERE fleet_id = ?", (fleet_id,))
+        for h in conn.execute("SELECT hull_id FROM Hull_head WHERE fleet_id = ?", (fleet_id,)).fetchall():
+            mark_hull_damaged(conn, h["hull_id"])
         apply_hits_to_system(conn, pid, 1, 1)
-        row = conn.execute("SELECT status FROM Hull WHERE polity_id = ?", (pid,)).fetchone()
+        row = conn.execute("SELECT status FROM Hull_head WHERE polity_id = ?", (pid,)).fetchone()
         assert row["status"] == "destroyed"
 
     def test_zero_hits_no_change(self, conn):
         pid = _polity(conn, 1)
         _fleet_with_hulls(conn, pid, 1, ["cruiser"])
         apply_hits_to_system(conn, pid, 1, 0)
-        row = conn.execute("SELECT status FROM Hull WHERE polity_id = ?", (pid,)).fetchone()
+        row = conn.execute("SELECT status FROM Hull_head WHERE polity_id = ?", (pid,)).fetchone()
         assert row["status"] == "active"
 
     def test_excess_hits_clamped_to_hulls(self, conn):
@@ -194,16 +196,16 @@ class TestApplyHits:
         fleet_id = _fleet_with_hulls(conn, pid, 1, ["capital", "cruiser"])
         hull_ids = [
             r["hull_id"] for r in conn.execute(
-                "SELECT hull_id FROM Hull WHERE fleet_id = ?", (fleet_id,)
+                "SELECT hull_id FROM Hull_head WHERE fleet_id = ?", (fleet_id,)
             ).fetchall()
         ]
         # Damage the capital
-        conn.execute("UPDATE Hull SET status = 'damaged' WHERE hull_id = ?", (hull_ids[0],))
+        mark_hull_damaged(conn, hull_ids[0])
         apply_hits_to_system(conn, pid, 1, 1)
         # The damaged capital should be destroyed; the cruiser should still be active
         statuses = {
             r["hull_id"]: r["status"]
-            for r in conn.execute("SELECT hull_id, status FROM Hull WHERE fleet_id = ?", (fleet_id,))
+            for r in conn.execute("SELECT hull_id, status FROM Hull_head WHERE fleet_id = ?", (fleet_id,))
         }
         assert statuses[hull_ids[0]] == "destroyed"
         assert statuses[hull_ids[1]] == "active"
@@ -217,7 +219,8 @@ class TestFleetDestruction:
     def test_no_hulls_marks_fleet_destroyed(self, conn):
         pid = _polity(conn, 1)
         fleet_id = _fleet_with_hulls(conn, pid, 1, ["escort"])
-        conn.execute("UPDATE Hull SET status = 'destroyed' WHERE fleet_id = ?", (fleet_id,))
+        for h in conn.execute("SELECT hull_id FROM Hull_head WHERE fleet_id = ?", (fleet_id,)).fetchall():
+            mark_hull_destroyed(conn, h["hull_id"])
         destroyed = check_and_mark_fleets_destroyed(conn, pid, 1, tick=1)
         assert fleet_id in destroyed
         row = conn.execute("SELECT status FROM Fleet WHERE fleet_id = ?", (fleet_id,)).fetchone()
@@ -232,7 +235,8 @@ class TestFleetDestruction:
     def test_damaged_hull_not_destroyed(self, conn):
         pid = _polity(conn, 1)
         fleet_id = _fleet_with_hulls(conn, pid, 1, ["cruiser"])
-        conn.execute("UPDATE Hull SET status = 'damaged' WHERE fleet_id = ?", (fleet_id,))
+        for h in conn.execute("SELECT hull_id FROM Hull_head WHERE fleet_id = ?", (fleet_id,)).fetchall():
+            mark_hull_damaged(conn, h["hull_id"])
         destroyed = check_and_mark_fleets_destroyed(conn, pid, 1, tick=1)
         assert fleet_id not in destroyed
 
@@ -299,11 +303,11 @@ class TestResolveCombat:
         pid1 = _polity(conn, 1)
         pid2 = _polity(conn, 2)
         # ContactRecord exists but at_war=0
-        conn.execute(
-            "INSERT INTO ContactRecord "
-            "(polity_a_id, polity_b_id, contact_tick, contact_system_id, at_war) "
-            "VALUES (1, 2, 0, 5, 0)"
-        )
+        a, b = min(pid1, pid2), max(pid1, pid2)
+        next_id = conn.execute("SELECT COALESCE(MAX(contact_id), 0) + 1 FROM ContactRecord").fetchone()[0]
+        _insert_contact_row(conn, contact_id=next_id, polity_a_id=a, polity_b_id=b,
+                            contact_tick=0, contact_system_id=5,
+                            peace_weeks=0, at_war=0, map_shared=0)
         _fleet_with_hulls(conn, pid1, 5, ["capital"])
         _fleet_with_hulls(conn, pid2, 5, ["capital"])
         results = resolve_space_combat(conn, 5, tick=1, rng=Random(0))
@@ -327,17 +331,8 @@ class TestResolveCombat:
         conn2 = open_game(":memory:")
         init_schema(conn2)
         for pid in (pid1, pid2):
-            conn2.execute(
-                "INSERT INTO Polity (polity_id, species_id, name, capital_system_id, "
-                "expansionism, aggression, risk_appetite, processing_order, founded_tick) "
-                "VALUES (?, 1, ?, 1, 0.5, 0.5, 0.5, ?, 0)",
-                (pid, f"P{pid}", pid),
-            )
-        conn2.execute(
-            "INSERT INTO ContactRecord "
-            "(polity_a_id, polity_b_id, contact_tick, contact_system_id, at_war) "
-            "VALUES (1, 2, 0, 3, 1)"
-        )
+            _polity(conn2, pid)
+        _at_war(conn2, pid1, pid2, system_id=3)
         _setup(conn2)
         r2 = resolve_space_combat(conn2, 3, tick=5, rng=Random(99))[0]
         conn2.close()
@@ -426,7 +421,9 @@ class TestRunCombatPhase:
         s1 = run_combat_phase(10, 4, [pid1, pid2], game)
 
         # Reset hull statuses back to active for a clean second run
-        conn.execute("UPDATE Hull SET status = 'active'")
+        for h in conn.execute("SELECT hull_id FROM Hull_head WHERE status != 'active'").fetchall():
+            from starscape5.game.fleet import mark_hull_active
+            mark_hull_active(conn, h["hull_id"])
         s2 = run_combat_phase(10, 4, [pid1, pid2], game)
 
         # Extract hits lines (they encode the dice outcome)
@@ -447,13 +444,8 @@ class TestPartialTickWithCombat:
             "INSERT INTO WorldPotential (body_id, system_id, world_potential, "
             "has_gas_giant, has_ocean) VALUES (10, 1, 15, 0, 0)"
         )
-        conn.execute(
-            "INSERT INTO SystemPresence "
-            "(polity_id, system_id, body_id, control_state, "
-            "development_level, established_tick, last_updated_tick) "
-            "VALUES (?, 1, 10, 'controlled', 3, 0, 0)",
-            (pid,),
-        )
+        create_presence(conn, pid, system_id=1, body_id=10,
+                        control_state="controlled", development_level=3, established_tick=0)
         game = GameFacadeImpl(conn)
         result = run_partial_tick(1, [pid], game, world)
         assert isinstance(result, list)

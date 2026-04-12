@@ -104,7 +104,8 @@ def check_growth_cycles(
         return []
 
     polity_row = conn.execute(
-        "SELECT expansionism FROM Polity WHERE polity_id = ?", (polity_id,)
+        "SELECT expansionism FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+        (polity_id,),
     ).fetchone()
     if polity_row is None:
         return []
@@ -114,7 +115,7 @@ def check_growth_cycles(
         """
         SELECT presence_id, system_id, body_id, control_state,
                development_level, colonist_deliveries
-        FROM   SystemPresence
+        FROM   SystemPresence_head
         WHERE  polity_id = ?
         """,
         (polity_id,),

@@ -87,7 +87,7 @@ def compute_hits(
 def find_contested_systems(conn: sqlite3.Connection) -> list[int]:
     """Return system_ids where at least one at-war polity pair both have active fleets."""
     war_pairs = conn.execute(
-        "SELECT polity_a_id, polity_b_id FROM ContactRecord WHERE at_war = 1"
+        "SELECT polity_a_id, polity_b_id FROM ContactRecord_head WHERE at_war = 1"
     ).fetchall()
 
     contested: set[int] = set()
@@ -122,7 +122,7 @@ def get_fleet_strength_in_system(
     hulls = conn.execute(
         """
         SELECT hull_type, status
-        FROM   Hull
+        FROM   Hull_head
         WHERE  polity_id = ?
           AND  system_id = ?
           AND  status NOT IN ('destroyed', 'in_transit', 'establishing')
@@ -186,7 +186,7 @@ def apply_hits_to_system(
     hulls = conn.execute(
         """
         SELECT hull_id, hull_type, status
-        FROM   Hull
+        FROM   Hull_head
         WHERE  polity_id = ?
           AND  system_id = ?
           AND  status IN ('damaged', 'active')
@@ -237,7 +237,7 @@ def check_and_mark_fleets_destroyed(
     for row in fleets:
         fleet_id = row["fleet_id"]
         remaining = conn.execute(
-            "SELECT COUNT(*) FROM Hull "
+            "SELECT COUNT(*) FROM Hull_head "
             "WHERE fleet_id = ? AND status IN ('active','damaged')",
             (fleet_id,),
         ).fetchone()[0]
@@ -275,7 +275,7 @@ def resolve_space_combat(
     Returns one CombatResult per pair.  Results are recorded as GameEvents.
     """
     war_pairs = conn.execute(
-        "SELECT polity_a_id, polity_b_id FROM ContactRecord WHERE at_war = 1"
+        "SELECT polity_a_id, polity_b_id FROM ContactRecord_head WHERE at_war = 1"
     ).fetchall()
 
     results: list[CombatResult] = []
@@ -369,7 +369,8 @@ def _try_disengage(
 
     # Loser retreats to capital
     capital_row = conn.execute(
-        "SELECT capital_system_id FROM Polity WHERE polity_id = ?", (loser,)
+        "SELECT capital_system_id FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+        (loser,),
     ).fetchone()
     capital = capital_row["capital_system_id"] if capital_row else None
 
@@ -398,7 +399,8 @@ def _try_disengage(
 
     # Pursuit
     winner_row = conn.execute(
-        "SELECT aggression FROM Polity WHERE polity_id = ?", (winner,)
+        "SELECT aggression FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+        (winner,),
     ).fetchone()
     if winner_row and winner_row["aggression"] >= _PURSUE_AGGRESSION_MIN:
         str_w = get_fleet_strength_in_system(conn, winner, system_id)

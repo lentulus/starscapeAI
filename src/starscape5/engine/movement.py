@@ -46,5 +46,8 @@ def run_movement_phase(
         delivery = game.deliver_colonists(fleet_id, polity_id, system_id, world, tick)
         if delivery:
             summaries.append(delivery)
+        landing = game.disembark_troops(fleet_id, polity_id, system_id, tick)
+        if landing:
+            summaries.append(landing)
 
     return summaries

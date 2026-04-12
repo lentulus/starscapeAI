@@ -392,7 +392,9 @@ def test_nhaveth_three_polities(game_conn):
 
 def test_human_three_polities(game_conn):
     polities = get_all_polities(game_conn)
-    humans = [p for p in polities if "Human" in p.name]
+    # Human polities are now Oceania, Eurasia, Eastasia (1984 theme)
+    human_names = {"Oceania", "Eurasia", "Eastasia"}
+    humans = [p for p in polities if p.name in human_names]
     assert len(humans) == 3
 
 

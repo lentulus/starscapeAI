@@ -115,8 +115,11 @@ class NameGenerator:
         return self._draw("war", tick)
 
     def hull(self, hull_type: str, sequence: int) -> str:
-        """Name for an individual hull.  Always uses code — hull names are not
-        in the pre-generated pool."""
+        """Name for an individual hull.  Draws from the DB pool when available,
+        falls back to structured code otherwise."""
+        name = self._draw_from_pool("hull")
+        if name is not None:
+            return name
         tag = hull_type[:3].upper()
         return format_code(self._prefix, tag, sequence)
 

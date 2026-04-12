@@ -21,6 +21,7 @@ from dataclasses import dataclass
 from random import Random
 
 from .events import write_event
+from .intelligence import _current_contact_row, _insert_contact_row
 from .names import NameGenerator
 
 
@@ -66,9 +67,9 @@ def process_war_rolls(
         SELECT cr.contact_id, cr.polity_a_id, cr.polity_b_id,
                pa.aggression AS agg_a, pb.aggression AS agg_b,
                pa.species_id AS sp_a
-        FROM   ContactRecord cr
-        JOIN   Polity pa ON pa.polity_id = cr.polity_a_id
-        JOIN   Polity pb ON pb.polity_id = cr.polity_b_id
+        FROM   ContactRecord_head cr
+        JOIN   Polity_head pa ON pa.polity_id = cr.polity_a_id
+        JOIN   Polity_head pb ON pb.polity_id = cr.polity_b_id
         WHERE  cr.at_war = 0
         """,
     ).fetchall()
@@ -106,10 +107,19 @@ def process_war_rolls(
             (a_id, b_id, war_name, tick, initiator),
         )
 
-        # Update ContactRecord
-        conn.execute(
-            "UPDATE ContactRecord SET at_war = 1 WHERE contact_id = ?",
-            (row["contact_id"],),
+        # Update ContactRecord — temporal INSERT
+        cur = _current_contact_row(conn, row["contact_id"])
+        _insert_contact_row(
+            conn,
+            contact_id=row["contact_id"],
+            polity_a_id=cur["polity_a_id"],
+            polity_b_id=cur["polity_b_id"],
+            contact_tick=cur["contact_tick"],
+            contact_system_id=cur["contact_system_id"],
+            peace_weeks=cur["peace_weeks"],
+            at_war=1,
+            map_shared=cur["map_shared"],
+            tick=tick, seq=2,
         )
 
         write_event(

@@ -80,14 +80,17 @@ def _make_presence(conn, polity_id: int, system_id: int, body_id: int | None = N
     """Insert a minimal controlled presence for polity at system."""
     if body_id is None:
         body_id = system_id * 10
+    presence_id = conn.execute(
+        "SELECT COALESCE(MAX(presence_id), 0) + 1 FROM SystemPresence"
+    ).fetchone()[0]
     conn.execute(
         """
         INSERT INTO SystemPresence
-            (polity_id, system_id, body_id, control_state,
+            (presence_id, polity_id, system_id, body_id, control_state,
              development_level, established_tick, last_updated_tick)
-        VALUES (?, ?, ?, 'controlled', 3, 0, 0)
+        VALUES (?, ?, ?, ?, 'controlled', 3, 0, 0)
         """,
-        (polity_id, system_id, body_id),
+        (presence_id, polity_id, system_id, body_id),
     )
 
 
@@ -112,7 +115,7 @@ class TestExecuteJump:
         execute_jump(conn, fleet_id, 5, tick=3)
         row = conn.execute(
             "SELECT status, destination_system_id, destination_tick, system_id "
-            "FROM Hull WHERE hull_id = ?", (hull_id,)
+            "FROM Hull_head WHERE hull_id = ?", (hull_id,)
         ).fetchone()
         assert row["status"] == "in_transit"
         assert row["destination_system_id"] == 5

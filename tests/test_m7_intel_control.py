@@ -210,14 +210,17 @@ def test_record_visit_updates_last_visit(two_polities, world):
 
 def _make_contact(conn, p_a, p_b, tick, peace_weeks=0, at_war=0, map_shared=0):
     a, b = (p_a, p_b) if p_a < p_b else (p_b, p_a)
+    contact_id = conn.execute(
+        "SELECT COALESCE(MAX(contact_id), 0) + 1 FROM ContactRecord"
+    ).fetchone()[0]
     conn.execute(
         """
         INSERT INTO ContactRecord
-            (polity_a_id, polity_b_id, contact_tick, contact_system_id,
+            (contact_id, polity_a_id, polity_b_id, contact_tick, contact_system_id,
              peace_weeks, at_war, map_shared)
-        VALUES (?, ?, ?, 100, ?, ?, ?)
+        VALUES (?, ?, ?, ?, 100, ?, ?, ?)
         """,
-        (a, b, tick, peace_weeks, at_war, map_shared),
+        (contact_id, a, b, tick, peace_weeks, at_war, map_shared),
     )
 
 
@@ -227,7 +230,7 @@ def test_increment_peace_weeks(two_polities):
     conn.commit()
     increment_peace_weeks(conn)
     conn.commit()
-    row = conn.execute("SELECT peace_weeks FROM ContactRecord").fetchone()
+    row = conn.execute("SELECT peace_weeks FROM ContactRecord_head").fetchone()
     assert row["peace_weeks"] == 11
 
 
@@ -398,7 +401,7 @@ def test_impl_increment_peace_weeks(two_polities):
     facade = GameFacadeImpl(conn)
     facade.increment_peace_weeks()
     conn.commit()
-    row = conn.execute("SELECT peace_weeks FROM ContactRecord").fetchone()
+    row = conn.execute("SELECT peace_weeks FROM ContactRecord_head").fetchone()
     assert row["peace_weeks"] == 6
 
 

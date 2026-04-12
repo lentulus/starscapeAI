@@ -17,8 +17,10 @@ import pytest
 
 from starscape5.game.db import open_game, init_schema
 from starscape5.game.facade import GameFacadeImpl, GameFacadeStub
-from starscape5.game.fleet import create_fleet, create_hull
-from starscape5.game.polity import create_polity
+from starscape5.game.fleet import create_fleet, create_hull, _current_hull_row, _insert_hull_row
+from starscape5.game.polity import create_polity, update_treasury
+from starscape5.game.presence import create_presence
+from starscape5.game.intelligence import _insert_contact_row
 from starscape5.game.events import get_events
 from starscape5.game.snapshot import build_snapshot, GameStateSnapshot
 from starscape5.game.posture import Posture, draw_posture, posture_weights
@@ -72,12 +74,20 @@ def _fleet(conn, polity_id: int, system_id: int, hull_types: list[str]) -> int:
 
 def _contact(conn, pid_a: int, pid_b: int, at_war: int = 0) -> None:
     a, b = (pid_a, pid_b) if pid_a < pid_b else (pid_b, pid_a)
-    conn.execute(
-        "INSERT OR IGNORE INTO ContactRecord "
-        "(polity_a_id, polity_b_id, contact_tick, contact_system_id, at_war) "
-        "VALUES (?, ?, 0, 1, ?)",
-        (a, b, at_war),
-    )
+    # Check if contact already exists
+    existing = conn.execute(
+        "SELECT contact_id FROM ContactRecord WHERE polity_a_id = ? AND polity_b_id = ? "
+        "ORDER BY row_id DESC LIMIT 1",
+        (a, b),
+    ).fetchone()
+    if existing:
+        return
+    next_id = conn.execute(
+        "SELECT COALESCE(MAX(contact_id), 0) + 1 FROM ContactRecord"
+    ).fetchone()[0]
+    _insert_contact_row(conn, contact_id=next_id, polity_a_id=a, polity_b_id=b,
+                        contact_tick=0, contact_system_id=1,
+                        peace_weeks=0, at_war=at_war, map_shared=0)
 
 
 def _presence(conn, polity_id: int, system_id: int, body_id: int,
@@ -90,13 +100,9 @@ def _presence(conn, polity_id: int, system_id: int, body_id: int,
         "VALUES (?, ?, 15, 0, 0)",
         (body_id, system_id),
     )
-    conn.execute(
-        "INSERT INTO SystemPresence "
-        "(polity_id, system_id, body_id, control_state, development_level, "
-        "has_shipyard, established_tick, last_updated_tick) "
-        "VALUES (?, ?, ?, ?, ?, ?, 0, 0)",
-        (polity_id, system_id, body_id, control_state, dev, shipyard),
-    )
+    create_presence(conn, polity_id, system_id=system_id, body_id=body_id,
+                    control_state=control_state, development_level=dev,
+                    established_tick=0, has_shipyard=shipyard)
 
 
 def _visited(conn, polity_id: int, system_id: int,
@@ -262,7 +268,7 @@ class TestCandidates:
     def test_build_hull_requires_shipyard(self, conn, world):
         pid = _polity(conn, 1)
         _presence(conn, pid, 1, 10, shipyard=0)
-        conn.execute("UPDATE Polity SET treasury_ru = 100 WHERE polity_id = ?", (pid,))
+        update_treasury(conn, pid, 100.0)
         snap = build_snapshot(conn, pid, tick=1)
         candidates = generate_candidates(snap, Posture.PREPARE,
                                          world.get_systems_within_parsecs)
@@ -272,8 +278,7 @@ class TestCandidates:
     def test_build_hull_requires_treasury(self, conn, world):
         pid = _polity(conn, 1)
         _presence(conn, pid, 1, 10, shipyard=1)
-        # Deliberately low treasury
-        conn.execute("UPDATE Polity SET treasury_ru = 0 WHERE polity_id = ?", (pid,))
+        # Deliberately low treasury (polity starts at 0 by default)
         snap = build_snapshot(conn, pid, tick=1)
         candidates = generate_candidates(snap, Posture.PREPARE,
                                          world.get_systems_within_parsecs)
@@ -429,21 +434,21 @@ class TestExecuteActions:
     def test_build_hull_deducts_treasury(self, conn, world):
         pid = _polity(conn, 1)
         _presence(conn, pid, 1, 10, shipyard=1)
-        conn.execute("UPDATE Polity SET treasury_ru = 50 WHERE polity_id = ?", (pid,))
+        update_treasury(conn, pid, 50.0)
         from starscape5.game.actions import BuildHullAction
         action = BuildHullAction(system_id=1, hull_type="escort", score=1.0)
         game = GameFacadeImpl(conn)
         summaries = game.execute_actions(pid, [action], world, tick=1)
         assert any("build_order" in s for s in summaries)
         treasury = conn.execute(
-            "SELECT treasury_ru FROM Polity WHERE polity_id = ?", (pid,)
+            "SELECT treasury_ru FROM Polity_head WHERE polity_id = ?", (pid,)
         ).fetchone()["treasury_ru"]
         assert treasury == 50 - 8.0  # escort costs 8 RU
 
     def test_build_hull_insufficient_treasury_no_op(self, conn, world):
         pid = _polity(conn, 1)
         _presence(conn, pid, 1, 10, shipyard=1)
-        conn.execute("UPDATE Polity SET treasury_ru = 0 WHERE polity_id = ?", (pid,))
+        # Treasury starts at 0 — no update needed
         action = BuildHullAction(system_id=1, hull_type="capital", score=1.0)
         game = GameFacadeImpl(conn)
         summaries = game.execute_actions(pid, [action], world, tick=1)
@@ -511,9 +516,32 @@ class TestRunDecisionPhase:
         conn.execute("UPDATE Fleet SET status='active', system_id=1, "
                      "destination_system_id=NULL, destination_tick=NULL "
                      "WHERE polity_id=?", (pid,))
-        conn.execute("UPDATE Hull SET status='active', system_id=1, "
-                     "destination_system_id=NULL, destination_tick=NULL "
-                     "WHERE polity_id=?", (pid,))
+        # Reset hulls to active at origin (temporal: INSERT new head rows)
+        hull_ids = [
+            r["hull_id"] for r in conn.execute(
+                "SELECT DISTINCT hull_id FROM Hull WHERE polity_id = ?", (pid,)
+            ).fetchall()
+        ]
+        for hid in hull_ids:
+            cur = _current_hull_row(conn, hid)
+            _insert_hull_row(
+                conn, hull_id=hid,
+                polity_id=cur["polity_id"],
+                name=cur["name"],
+                hull_type=cur["hull_type"],
+                squadron_id=cur["squadron_id"],
+                fleet_id=cur["fleet_id"],
+                system_id=1,
+                destination_system_id=None,
+                destination_tick=None,
+                status="active",
+                marine_designated=cur["marine_designated"],
+                cargo_type=cur["cargo_type"],
+                cargo_id=cur["cargo_id"],
+                establish_tick=cur["establish_tick"],
+                created_tick=cur["created_tick"],
+                tick=5, seq=99,
+            )
         s2 = run_decision_phase(5, 2, [pid], game, world)
         assert s1 == s2
 

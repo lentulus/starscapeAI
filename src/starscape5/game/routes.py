@@ -89,7 +89,7 @@ def all_homeworlds_linked(conn: sqlite3.Connection) -> bool:
     Uses a simple in-memory Union-Find over the full JumpRoute graph.
     """
     capital_rows = conn.execute(
-        "SELECT DISTINCT capital_system_id FROM Polity "
+        "SELECT DISTINCT capital_system_id FROM Polity_head "
         "WHERE capital_system_id IS NOT NULL AND status = 'active'"
     ).fetchall()
     capitals = {r["capital_system_id"] for r in capital_rows}

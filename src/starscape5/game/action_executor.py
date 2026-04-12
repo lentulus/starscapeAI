@@ -21,7 +21,7 @@ from .actions import (
 from .constants import HULL_STATS
 from .movement import execute_jump, get_fleet_jump_range
 from .events import write_event
-from .polity import upgrade_jump_level, get_jump_upgrade_cost
+from .polity import upgrade_jump_level, get_jump_upgrade_cost, update_treasury
 
 
 def execute_actions(
@@ -83,7 +83,8 @@ def _execute_scout(
 
     # Verify destination is reachable using polity jump level
     polity_jl = conn.execute(
-        "SELECT jump_level FROM Polity WHERE polity_id = ?", (polity_id,)
+        "SELECT jump_level FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+        (polity_id,),
     ).fetchone()
     polity_jump_level = polity_jl["jump_level"] if polity_jl else None
     jump_range = get_fleet_jump_range(conn, action.fleet_id, polity_jump_level)
@@ -131,16 +132,14 @@ def _execute_build_hull(
 
     # Check treasury
     treasury = conn.execute(
-        "SELECT treasury_ru FROM Polity WHERE polity_id = ?", (polity_id,)
+        "SELECT treasury_ru FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+        (polity_id,),
     ).fetchone()
     if treasury is None or treasury["treasury_ru"] < stats.build_cost:
         return None
 
-    # Reserve RU
-    conn.execute(
-        "UPDATE Polity SET treasury_ru = treasury_ru - ? WHERE polity_id = ?",
-        (stats.build_cost, polity_id),
-    )
+    # Reserve RU (temporal INSERT via update_treasury)
+    update_treasury(conn, polity_id, -stats.build_cost, tick=tick, seq=2)
 
     conn.execute(
         """
@@ -205,7 +204,7 @@ def _execute_upgrade_jump(
 ) -> str | None:
     """Spend RU to increase polity scout jump range by one step."""
     row = conn.execute(
-        "SELECT treasury_ru, jump_level FROM Polity WHERE polity_id = ?",
+        "SELECT treasury_ru, jump_level FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
         (polity_id,),
     ).fetchone()
     if row is None:
@@ -218,7 +217,8 @@ def _execute_upgrade_jump(
     if new_level == old_level:
         return None  # already at max
     polity_name = conn.execute(
-        "SELECT name FROM Polity WHERE polity_id = ?", (polity_id,)
+        "SELECT name FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+        (polity_id,),
     ).fetchone()["name"]
     write_event(
         conn, tick=tick, phase=2,

@@ -74,6 +74,7 @@ class GameStateSnapshot:
     enemy_systems: set[int]           # systems known to have hostile forces
     n_scouts: int = 0                 # total non-destroyed scout hulls this polity owns
     n_colonies: int = 0               # presences with control_state in (colony, controlled)
+    n_armies: int = 0                 # un-embarked ground armies with strength > 0
 
 
 # ---------------------------------------------------------------------------
@@ -89,13 +90,14 @@ def build_snapshot(
 
     # Polity row
     p = conn.execute(
-        "SELECT * FROM Polity WHERE polity_id = ?", (polity_id,)
+        "SELECT * FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+        (polity_id,),
     ).fetchone()
 
     contacts = conn.execute(
         """
         SELECT polity_a_id, polity_b_id, at_war
-        FROM   ContactRecord
+        FROM   ContactRecord_head
         WHERE  polity_a_id = ? OR polity_b_id = ?
         """,
         (polity_id, polity_id),
@@ -126,7 +128,7 @@ def build_snapshot(
     # Presences
     prows = conn.execute(
         "SELECT sp.*, COALESCE(wp.world_potential, 0) AS wp_val "
-        "FROM SystemPresence sp "
+        "FROM SystemPresence_head sp "
         "LEFT JOIN WorldPotential wp ON wp.body_id = sp.body_id "
         "WHERE sp.polity_id = ?",
         (polity_id,),
@@ -155,7 +157,7 @@ def build_snapshot(
     fleets = []
     for fr in frows:
         hulls = conn.execute(
-            "SELECT hull_type FROM Hull "
+            "SELECT hull_type FROM Hull_head "
             "WHERE fleet_id = ? AND status NOT IN ('destroyed')",
             (fr["fleet_id"],),
         ).fetchall()
@@ -203,9 +205,18 @@ def build_snapshot(
         ).fetchall()
         enemy_systems = {r["system_id"] for r in rows}
 
+    n_armies = conn.execute(
+        """
+        SELECT COUNT(*) FROM GroundForce_head
+        WHERE polity_id = ? AND unit_type = 'army'
+          AND strength > 0 AND embarked_hull_id IS NULL
+        """,
+        (polity_id,),
+    ).fetchone()[0]
+
     n_scouts = conn.execute(
         """
-        SELECT COUNT(*) FROM Hull h
+        SELECT COUNT(*) FROM Hull_head h
         JOIN Fleet f ON f.fleet_id = h.fleet_id
         WHERE f.polity_id = ? AND h.hull_type = 'scout'
           AND h.status NOT IN ('destroyed')
@@ -227,4 +238,5 @@ def build_snapshot(
         enemy_systems=enemy_systems,
         n_scouts=n_scouts,
         n_colonies=n_colonies,
+        n_armies=n_armies,
     )

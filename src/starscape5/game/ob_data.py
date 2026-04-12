@@ -229,34 +229,78 @@ OB_DATA: list[dict] = [
     },
 
     # -----------------------------------------------------------------------
-    # Human — three polities; faction_tendency 0.90
+    # Human — three polities from Orwell's 1984:
+    #   Oceania   (Ingsoc / English Socialism) — Earth's dominant superstate
+    #   Eurasia   (Neo-Bolshevism) — continental Eurasian bloc
+    #   Eastasia  (Death-Worship / Obliteration of the Self) — Far Eastern bloc
     # -----------------------------------------------------------------------
     {
         "species_id": HUMAN,
         "polities": [
-            {"name": "Human Polity A", "processing_order": 13,
+            {"name": "Oceania", "processing_order": 13,
              "treasury_ru": 14.0,
-             "aggression": 0.55, "expansionism": 0.80, "risk_appetite": 0.55},
-            {"name": "Human Polity B", "processing_order": 14,
+             "aggression": 0.65, "expansionism": 0.80, "risk_appetite": 0.55},
+            {"name": "Eurasia", "processing_order": 14,
              "treasury_ru": 8.0,
-             "aggression": 0.55, "expansionism": 0.75, "risk_appetite": 0.60},
-            {"name": "Human Polity C", "processing_order": 15,
+             "aggression": 0.60, "expansionism": 0.75, "risk_appetite": 0.60},
+            {"name": "Eastasia", "processing_order": 15,
              "treasury_ru": 6.0,
-             "aggression": 0.50, "expansionism": 0.70, "risk_appetite": 0.65},
+             "aggression": 0.55, "expansionism": 0.70, "risk_appetite": 0.70},
         ],
         "hulls_by_polity": [
-            # Polity A — dominant (Earth / inner system)
+            # Oceania — dominant (Earth / inner system)
             [("capital", 1), ("old_capital", 2), ("cruiser", 2),
              ("escort", 4), ("transport", 1), ("colony_transport", 1), ("scout", 1)],
-            # Polity B — mid-weight (Mars)
+            # Eurasia — mid-weight (Mars / inner colonies)
             [("old_capital", 1), ("cruiser", 2), ("escort", 4),
              ("colony_transport", 1), ("scout", 2)],
-            # Polity C — outer system
+            # Eastasia — outer system
             [("cruiser", 1), ("escort", 3), ("transport", 2),
              ("colony_transport", 1), ("scout", 2)],
         ],
         "sdbs_by_polity": [4, 3, 2],
         "armies_by_polity": [3, 2, 1],
         "garrisons_by_polity": [4, 3, 2],
+        # Pre-generated names seeded into NamePool at init_game time.
+        # All three Human polities share species_id=11 and draw from one pool.
+        # Hull names are broadly 1984-themed; colony names follow the same palette.
+        "name_pool": {
+            "hull": [
+                # Ingsoc / Oceania
+                "Victory", "Big Brother", "Minitrue", "Minipax", "Miniluv",
+                "Miniplenty", "Telescreen", "Thoughtpol", "Doublethink",
+                "Newspeak", "Ingsoc", "Room 101", "Unperson", "Prolefeed",
+                "Duckspeak", "Crimestop", "Blackwhite", "Hate Week",
+                "Two Minutes Hate", "O'Brien", "Parsons", "Ampleforth",
+                "Syme", "Charrington", "Brotherhood",
+                # Eurasia
+                "Volga", "Neva", "Moskva", "Dnieper", "Ural",
+                "Sibir", "Tundra", "Steppes", "Taiga", "Baikal",
+                "Arkhangelsk", "Leningrad", "Stalingrad", "Kursk",
+                "Sevastopol", "Vladivostok", "Kamchatka", "Yenisei",
+                "Lena", "Amur", "Kolyma",
+                # Eastasia
+                "Yangtze", "Huang He", "Pearl River", "Han",
+                "Tang", "Ming", "Qin", "Zhou", "Song",
+                "Forbidden City", "Dragon Throne", "Jade Gate",
+                "Silk Road", "Great Wall", "Gobi", "Sichuan",
+                "Yunnan", "Canton", "Nanking", "Peking", "Chungking",
+            ],
+            "system": [
+                "Airstrip Two", "Airstrip Three", "Airstrip Four",
+                "Victory Colony", "Ingsoc Reach", "Oceania Prime",
+                "Minipax Station", "Thoughtcrime Drift", "Prole World",
+                "New Moscow", "Eastern Front", "Siberian Reach",
+                "Volga Station", "Ural Outpost", "Red Frontier",
+                "Eastern Capital", "Yangtze Outpost", "Great Wall Station",
+                "Dragon Reach", "Jade Colony", "Han Frontier",
+            ],
+            "body": [
+                "Airstrip One", "Victory Square", "Ministry World",
+                "Hate Plain", "Prole District", "Outer Party Moon",
+                "Red Plain", "Volga Shore", "Steppe Moon", "Ural Rock",
+                "Dragon Moon", "Jade Plain", "Han Shore", "Ming Rock",
+            ],
+        },
     },
 ]
