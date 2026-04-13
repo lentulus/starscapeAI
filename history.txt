@@ -1,0 +1,2687 @@
+STARSCAPE 5 — HISTORY REPORT
+
+  Simulation span : 12 Apr 2526  →  27 Aug 3024
+  Ticks run       : 26,004  (500.1 yr)
+  Polities        : 15 started  |  15 active  |  0 eliminated
+  Presences       : 25 at run end
+  Significant events recorded : 600
+
+══════════════════════════════════════════════════════════════════════
+  POLITY ROSTER — FINAL STATE
+══════════════════════════════════════════════════════════════════════
+
+Polity                          Treasury  Presences    Hulls   Jump  Status
+  ------------------------------------------------------------------
+Kreeth Dominion                 +526,827  1 (controlled)       27    J10  active
+Vashori Compact                 +716,408  1 (controlled)       16    J10  active
+Kraathi Crusade                  -83,528  2 (controlled, outpost)       21    J10  active
+Nakhavi Reach                   +707,910  1 (controlled)       22    J10  active
+Skharri Pride                   +553,302  2 (controlled, outpost)       27    J10  active
+Vaelkhi Choth                   +597,752  1 (controlled)       29    J10  active
+Shekhari Exchange               +154,566  1 (controlled)       15    J10  active
+Golvhaan Reach                  +320,726  2 (controlled, outpost)       29    J10  active
+Nhaveth Court A                 +631,003  1 (controlled)       24    J10  active
+Nhaveth Court B                 +740,509  1 (controlled)       24    J10  active
+Nhaveth Court C                 +1,009,149  4 (controlled, outpost)       14    J12  active
+Vardhek Roidhunate              +598,315  1 (controlled)       25    J10  active
+Oceania                          -53,855  2 (controlled, outpost)       17    J10  active
+Eurasia                         -125,866  2 (contested, outpost)       18    J10  active
+Eastasia                        -113,423  3 (contested, outpost)       17    J10  active
+
+══════════════════════════════════════════════════════════════════════
+  CONTACTS & WARS
+══════════════════════════════════════════════════════════════════════
+
+FIRST CONTACTS
+
+  26 Apr 2526 (tick 2)
+    Oceania  ↔  Eurasia at system 1162492
+
+  10 May 2526 (tick 4)
+    Oceania  ↔  Eastasia at system 1157617
+
+  10 May 2526 (tick 4)
+    Eurasia  ↔  Eastasia at system 1157617
+
+WARS
+
+  ── Oceania  vs  Eurasia ──
+  Declared : 03 May 2526 (tick 3)  by Oceania
+  Bombardment campaign: 17 May 2526 – 04 Oct 2526  (20 rounds, system 1157617)
+    10 May 2526  Combat at system 1157617
+      system=1157617 polity_a=13 polity_b=14 hits_on_a=0 hits_on_b=2
+    10 May 2526  Disengage at system 1157617
+      Polity 14 disengaged from system 1157617 to system 1157617
+    10 May 2526  Pursuit at system 1157617
+      Polity 13 pursues polity 14 at system 1157617: 1 pursuit hits
+    17 May 2526  Combat at system 1157617
+      ground_assault system=1157617 body=532 attacker=13 defender=14 outcome=rout_defe
+    04 Oct 2526  Control Change at system 1157617
+      system=1157617 body=532: controlled→contested (polity 14 ground forces annihilat
+
+  ── Oceania  vs  Eastasia ──
+  Declared : 17 May 2526 (tick 5)  by Oceania
+  Bombardment campaign: 17 May 2526 – 09 Aug 2526  (12 rounds, system 1157617)
+    17 May 2526  Combat at system 1157617
+      ground_assault system=1157617 body=532 attacker=13 defender=15 outcome=rout_defe
+    21 Jun 2526  Combat at system 1157617
+      system=1157617 polity_a=13 polity_b=15 hits_on_a=0 hits_on_b=2
+    09 Aug 2526  Control Change at system 1157617
+      system=1157617 body=532: controlled→contested (polity 15 ground forces annihilat
+
+  ── Eurasia  vs  Eastasia ──
+  Declared : 17 May 2526 (tick 5)  by Eurasia
+    10 May 2526  Disengage at system 1157617
+      Polity 14 disengaged from system 1157617 to system 1157617
+
+
+══════════════════════════════════════════════════════════════════════
+  COLONY CHRONICLE
+══════════════════════════════════════════════════════════════════════
+
+  Kreeth Dominion  (1 presence at run end)
+
+    12 Apr 2526 (tick    0)  system     898454  homeworld               → controlled/dev5/pot25 at run end
+
+  Vashori Compact  (1 presence at run end)
+
+    12 Apr 2526 (tick    0)  system    1066934  homeworld               → controlled/dev5/pot25 at run end
+
+  Kraathi Crusade  (2 presences at run end)
+
+    12 Apr 2526 (tick    0)  system     918040  homeworld               → controlled/dev5/pot7 at run end
+    26 Apr 2526 (tick    2)  system     921316  outpost established     → outpost/dev1/pot3 at run end
+
+  Nakhavi Reach  (1 presence at run end)
+
+    12 Apr 2526 (tick    0)  system    1036727  homeworld               → controlled/dev5/pot25 at run end
+
+  Skharri Pride  (2 presences at run end)
+
+    12 Apr 2526 (tick    0)  system     911133  homeworld               → controlled/dev5/pot25 at run end
+    21 Jun 2526 (tick   10)  system     917145  outpost established     → outpost/dev1/pot8 at run end
+
+  Vaelkhi Choth  (1 presence at run end)
+
+    12 Apr 2526 (tick    0)  system    1158848  homeworld               → controlled/dev5/pot25 at run end
+
+  Shekhari Exchange  (1 presence at run end)
+
+    12 Apr 2526 (tick    0)  system    1061677  homeworld               → controlled/dev5/pot10 at run end
+
+  Golvhaan Reach  (2 presences at run end)
+
+    12 Apr 2526 (tick    0)  system     987309  homeworld               → controlled/dev5/pot15 at run end
+    26 Apr 2526 (tick    2)  system     989661  outpost established     → outpost/dev1/pot20 at run end
+
+  Nhaveth Court A  (1 presence at run end)
+
+    12 Apr 2526 (tick    0)  system    1130253  homeworld               → controlled/dev5/pot25 at run end
+
+  Nhaveth Court B  (1 presence at run end)
+
+    12 Apr 2526 (tick    0)  system    1130253  homeworld               → controlled/dev5/pot25 at run end
+
+  Nhaveth Court C  (4 presences at run end)
+
+    12 Apr 2526 (tick    0)  system    1130253  homeworld               → controlled/dev5/pot25 at run end
+    05 Jul 2526 (tick   12)  system    1099225  outpost established     → outpost/dev1/pot20 at run end
+    19 Jul 2526 (tick   14)  system    1105767  outpost established     → outpost/dev1/pot1 at run end
+    02 Aug 2526 (tick   16)  system    1106201  outpost established     → outpost/dev1/pot17 at run end
+
+  Vardhek Roidhunate  (1 presence at run end)
+
+    12 Apr 2526 (tick    0)  system     942565  homeworld               → controlled/dev5/pot25 at run end
+
+  Oceania  (2 presences at run end)
+
+    12 Apr 2526 (tick    0)  system    1157617  homeworld               → controlled/dev5/pot7 at run end
+    26 Apr 2526 (tick    2)  system    1162492  outpost established     → outpost/dev1/pot1 at run end
+
+  Eurasia  (2 presences at run end)
+
+    12 Apr 2526 (tick    0)  system    1157617  homeworld               → contested/dev1/pot7 at run end
+    26 Apr 2526 (tick    2)  system    1162492  outpost established     → outpost/dev1/pot1 at run end
+
+  Eastasia  (3 presences at run end)
+
+    12 Apr 2526 (tick    0)  system    1157617  homeworld               → contested/dev1/pot7 at run end
+    26 Apr 2526 (tick    2)  system    1156112  outpost established     → outpost/dev1/pot7 at run end
+    05 Jul 2526 (tick   12)  system    1162492  outpost established     → outpost/dev1/pot1 at run end
+
+
+══════════════════════════════════════════════════════════════════════
+  FLEET COMPOSITION — FINAL STATE
+══════════════════════════════════════════════════════════════════════
+
+  Kreeth Dominion                 2×CAP,  3×OCAP,  1×CRU,  3×ESC,  6×SDB,  6×CT,  6×SCT
+  Vashori Compact                 1×CAP,  1×OCAP,  1×CRU,  4×ESC,  3×SDB,  2×TRN,  2×CT,  2×SCT
+  Kraathi Crusade                 1×CAP,  2×OCAP,  2×CRU,  4×ESC,  5×SDB,  1×TRP,  6×SCT
+  Nakhavi Reach                   1×CAP,  1×OCAP,  2×CRU,  3×ESC,  2×SDB,  1×TRN,  9×CT,  3×SCT
+  Skharri Pride                   2×CAP,  3×OCAP,  2×CRU,  5×ESC,  2×SDB,  1×TRP,  5×CT,  7×SCT
+  Vaelkhi Choth                   1×CAP,  2×OCAP,  2×CRU,  6×ESC,  4×SDB,  8×CT,  6×SCT
+  Shekhari Exchange               1×CAP,  1×OCAP,  1×CRU,  3×ESC,  2×SDB,  2×TRN,  2×CT,  3×SCT
+  Golvhaan Reach                  2×OCAP,  2×CRU,  4×ESC,  6×SDB,  2×TRN,  7×CT,  6×SCT
+  Nhaveth Court A                 1×CAP,  2×OCAP,  2×CRU,  3×ESC,  3×SDB,  1×TRP,  8×CT,  4×SCT
+  Nhaveth Court B                 1×OCAP,  2×CRU,  3×ESC,  2×SDB,  1×TRP,  9×CT,  6×SCT
+  Nhaveth Court C                 1×CRU,  2×ESC,  1×SDB,  6×CT,  4×SCT
+  Vardhek Roidhunate              1×CAP,  2×OCAP,  2×CRU,  4×ESC,  6×SDB,  1×TRN,  3×CT,  6×SCT
+  Oceania                         1×CAP,  2×OCAP,  3×CRU,  5×ESC,  4×SDB,  2×SCT
+  Eurasia                         3×CRU,  8×ESC,  3×SDB,  2×CT,  2×SCT
+  Eastasia                        2×CRU,  9×ESC,  2×SDB,  2×CT,  2×SCT
+
+══════════════════════════════════════════════════════════════════════
+  ECONOMIC NARRATIVE — PER POLITY
+══════════════════════════════════════════════════════════════════════
+
+  Kreeth Dominion
+    Starting treasury :       25 RU
+    Peak treasury     :  526,845 RU
+    End treasury      :  526,827 RU
+    Production (end)  :    37.5 RU/tick
+    Maintenance (end) :    17.6 RU/tick
+    Net (end)         :   +19.9 RU/tick
+
+  Vashori Compact
+    Starting treasury :       25 RU
+    Peak treasury     :  716,418 RU
+    End treasury      :  716,408 RU
+    Production (end)  :    37.5 RU/tick
+    Maintenance (end) :    10.2 RU/tick
+    Net (end)         :   +27.3 RU/tick
+
+  Kraathi Crusade
+    Starting treasury :       25 RU
+    Peak treasury     :       63 RU
+    End treasury      :  -83,528 RU
+    Production (end)  :    10.9 RU/tick
+    Maintenance (end) :    12.6 RU/tick
+    Net (end)         :    -1.7 RU/tick
+    Budget shortfalls : 3 scrapping events
+
+  Nakhavi Reach
+    Starting treasury :       25 RU
+    Peak treasury     :  707,920 RU
+    End treasury      :  707,910 RU
+    Production (end)  :    37.5 RU/tick
+    Maintenance (end) :    13.3 RU/tick
+    Net (end)         :   +24.2 RU/tick
+
+  Skharri Pride
+    Starting treasury :       25 RU
+    Peak treasury     :  553,320 RU
+    End treasury      :  553,302 RU
+    Production (end)  :    38.6 RU/tick
+    Maintenance (end) :    17.7 RU/tick
+    Net (end)         :   +20.9 RU/tick
+
+  Vaelkhi Choth
+    Starting treasury :       25 RU
+    Peak treasury     :  597,766 RU
+    End treasury      :  597,752 RU
+    Production (end)  :    37.5 RU/tick
+    Maintenance (end) :    16.6 RU/tick
+    Net (end)         :   +20.9 RU/tick
+
+  Shekhari Exchange
+    Starting treasury :       25 RU
+    Peak treasury     :  154,575 RU
+    End treasury      :  154,566 RU
+    Production (end)  :    15.0 RU/tick
+    Maintenance (end) :     9.3 RU/tick
+    Net (end)         :    +5.7 RU/tick
+
+  Golvhaan Reach
+    Starting treasury :       25 RU
+    Peak treasury     :  320,738 RU
+    End treasury      :  320,726 RU
+    Production (end)  :    25.3 RU/tick
+    Maintenance (end) :    15.1 RU/tick
+    Net (end)         :   +10.2 RU/tick
+
+  Nhaveth Court A
+    Starting treasury :       12 RU
+    Peak treasury     :  631,017 RU
+    End treasury      :  631,003 RU
+    Production (end)  :    37.5 RU/tick
+    Maintenance (end) :    14.9 RU/tick
+    Net (end)         :   +22.6 RU/tick
+
+  Nhaveth Court B
+    Starting treasury :        8 RU
+    Peak treasury     :  740,518 RU
+    End treasury      :  740,509 RU
+    Production (end)  :    37.5 RU/tick
+    Maintenance (end) :    11.6 RU/tick
+    Net (end)         :   +25.9 RU/tick
+
+  Nhaveth Court C
+    Starting treasury :        5 RU
+    Peak treasury     : 1,009,153 RU
+    End treasury      : 1,009,149 RU
+    Production (end)  :    42.8 RU/tick
+    Maintenance (end) :     5.9 RU/tick
+    Net (end)         :   +36.9 RU/tick
+
+  Vardhek Roidhunate
+    Starting treasury :       25 RU
+    Peak treasury     :  598,329 RU
+    End treasury      :  598,315 RU
+    Production (end)  :    37.5 RU/tick
+    Maintenance (end) :    14.6 RU/tick
+    Net (end)         :   +22.9 RU/tick
+
+  Oceania
+    Starting treasury :       14 RU
+    Peak treasury     :       36 RU
+    End treasury      :  -53,855 RU
+    Production (end)  :    10.6 RU/tick
+    Maintenance (end) :    12.7 RU/tick
+    Net (end)         :    -2.1 RU/tick
+    Budget shortfalls : 3 scrapping events
+
+  Eurasia
+    Starting treasury :        8 RU
+    Peak treasury     :       44 RU
+    End treasury      : -125,866 RU
+    Production (end)  :     1.9 RU/tick
+    Maintenance (end) :     9.7 RU/tick
+    Net (end)         :    -7.8 RU/tick
+
+  Eastasia
+    Starting treasury :        6 RU
+    Peak treasury     :       56 RU
+    End treasury      : -113,423 RU
+    Production (end)  :     2.8 RU/tick
+    Maintenance (end) :     8.7 RU/tick
+    Net (end)         :    -5.9 RU/tick
+    Budget shortfalls : 2 scrapping events
+
+
+══════════════════════════════════════════════════════════════════════
+  ADMIRAL SERVICE RECORDS
+══════════════════════════════════════════════════════════════════════
+
+  Kreeth Dominion
+    KRT-ADM-0001      TF+2  commissioned 12 Apr 2526  still serving
+    KRT-ADM-0001      TF+2  commissioned 12 Apr 2526  retired 30 Sep 2529  (3.5 yr service)
+    KRT-ADM-0002      TF+2  commissioned 30 Sep 2529  still serving
+    KRT-ADM-0002      TF+2  commissioned 30 Sep 2529  retired 18 Sep 2533  (4.0 yr service)
+    KRT-ADM-0003      TF+2  commissioned 18 Sep 2533  still serving
+    KRT-ADM-0003      TF+2  commissioned 18 Sep 2533  retired 06 Sep 2537  (4.0 yr service)
+    KRT-ADM-0004      TF+2  commissioned 06 Sep 2537  still serving
+    KRT-ADM-0004      TF+2  commissioned 06 Sep 2537  retired 25 Aug 2541  (4.0 yr service)
+    KRT-ADM-0005      TF+2  commissioned 25 Aug 2541  still serving
+    KRT-ADM-0005      TF+2  commissioned 25 Aug 2541  retired 13 Aug 2545  (4.0 yr service)
+    KRT-ADM-0006      TF+2  commissioned 13 Aug 2545  still serving
+    KRT-ADM-0006      TF+2  commissioned 13 Aug 2545  retired 01 Aug 2549  (4.0 yr service)
+    KRT-ADM-0007      TF+2  commissioned 01 Aug 2549  still serving
+    KRT-ADM-0007      TF+2  commissioned 01 Aug 2549  retired 20 Jul 2553  (4.0 yr service)
+    KRT-ADM-0008      TF+2  commissioned 20 Jul 2553  still serving
+    KRT-ADM-0008      TF+2  commissioned 20 Jul 2553  retired 08 Jul 2557  (4.0 yr service)
+    KRT-ADM-0009      TF+2  commissioned 08 Jul 2557  still serving
+    KRT-ADM-0009      TF+2  commissioned 08 Jul 2557  retired 26 Jun 2561  (4.0 yr service)
+    KRT-ADM-0010      TF+2  commissioned 26 Jun 2561  still serving
+    KRT-ADM-0010      TF+2  commissioned 26 Jun 2561  retired 14 Jun 2565  (4.0 yr service)
+    KRT-ADM-0011      TF+2  commissioned 14 Jun 2565  still serving
+    KRT-ADM-0011      TF+2  commissioned 14 Jun 2565  retired 02 Jun 2569  (4.0 yr service)
+    KRT-ADM-0012      TF+2  commissioned 02 Jun 2569  still serving
+    KRT-ADM-0012      TF+2  commissioned 02 Jun 2569  retired 21 May 2573  (4.0 yr service)
+    KRT-ADM-0013      TF+2  commissioned 21 May 2573  still serving
+    KRT-ADM-0013      TF+2  commissioned 21 May 2573  retired 09 May 2577  (4.0 yr service)
+    KRT-ADM-0014      TF+2  commissioned 09 May 2577  still serving
+    KRT-ADM-0014      TF+2  commissioned 09 May 2577  retired 27 Apr 2581  (4.0 yr service)
+    KRT-ADM-0015      TF+2  commissioned 27 Apr 2581  still serving
+    KRT-ADM-0015      TF+2  commissioned 27 Apr 2581  retired 15 Apr 2585  (4.0 yr service)
+    KRT-ADM-0016      TF+2  commissioned 15 Apr 2585  still serving
+    KRT-ADM-0016      TF+2  commissioned 15 Apr 2585  retired 03 Apr 2589  (4.0 yr service)
+    KRT-ADM-0017      TF+2  commissioned 03 Apr 2589  still serving
+    KRT-ADM-0017      TF+2  commissioned 03 Apr 2589  retired 22 Mar 2593  (4.0 yr service)
+    KRT-ADM-0018      TF+2  commissioned 22 Mar 2593  still serving
+    KRT-ADM-0018      TF+2  commissioned 22 Mar 2593  retired 10 Mar 2597  (4.0 yr service)
+    KRT-ADM-0019      TF+2  commissioned 10 Mar 2597  still serving
+    KRT-ADM-0019      TF+2  commissioned 10 Mar 2597  retired 27 Feb 2601  (4.0 yr service)
+    KRT-ADM-0020      TF+2  commissioned 27 Feb 2601  still serving
+    KRT-ADM-0020      TF+2  commissioned 27 Feb 2601  retired 15 Feb 2605  (4.0 yr service)
+    KRT-ADM-0021      TF+2  commissioned 15 Feb 2605  still serving
+    KRT-ADM-0021      TF+2  commissioned 15 Feb 2605  retired 03 Feb 2609  (4.0 yr service)
+    KRT-ADM-0022      TF+2  commissioned 03 Feb 2609  still serving
+    KRT-ADM-0022      TF+2  commissioned 03 Feb 2609  retired 22 Jan 2613  (4.0 yr service)
+    KRT-ADM-0023      TF+2  commissioned 22 Jan 2613  still serving
+    KRT-ADM-0023      TF+2  commissioned 22 Jan 2613  retired 10 Jan 2617  (4.0 yr service)
+    KRT-ADM-0024      TF+2  commissioned 10 Jan 2617  still serving
+    KRT-ADM-0024      TF+2  commissioned 10 Jan 2617  retired 29 Dec 2620  (4.0 yr service)
+    KRT-ADM-0025      TF+2  commissioned 29 Dec 2620  still serving
+    KRT-ADM-0025      TF+2  commissioned 29 Dec 2620  retired 17 Dec 2624  (4.0 yr service)
+    KRT-ADM-0026      TF+2  commissioned 17 Dec 2624  still serving
+    KRT-ADM-0026      TF+2  commissioned 17 Dec 2624  retired 05 Dec 2628  (4.0 yr service)
+    KRT-ADM-0027      TF+2  commissioned 05 Dec 2628  still serving
+    KRT-ADM-0027      TF+2  commissioned 05 Dec 2628  retired 23 Nov 2632  (4.0 yr service)
+    KRT-ADM-0028      TF+2  commissioned 23 Nov 2632  still serving
+    KRT-ADM-0028      TF+2  commissioned 23 Nov 2632  retired 11 Nov 2636  (4.0 yr service)
+    KRT-ADM-0029      TF+2  commissioned 11 Nov 2636  still serving
+    KRT-ADM-0029      TF+2  commissioned 11 Nov 2636  retired 30 Oct 2640  (4.0 yr service)
+    KRT-ADM-0030      TF+2  commissioned 30 Oct 2640  still serving
+    KRT-ADM-0030      TF+2  commissioned 30 Oct 2640  retired 18 Oct 2644  (4.0 yr service)
+    KRT-ADM-0031      TF+2  commissioned 18 Oct 2644  still serving
+    KRT-ADM-0031      TF+2  commissioned 18 Oct 2644  retired 06 Oct 2648  (4.0 yr service)
+    KRT-ADM-0032      TF+2  commissioned 06 Oct 2648  still serving
+    KRT-ADM-0032      TF+2  commissioned 06 Oct 2648  retired 24 Sep 2652  (4.0 yr service)
+    KRT-ADM-0033      TF+2  commissioned 24 Sep 2652  still serving
+    KRT-ADM-0033      TF+2  commissioned 24 Sep 2652  retired 12 Sep 2656  (4.0 yr service)
+    KRT-ADM-0034      TF+2  commissioned 12 Sep 2656  still serving
+    KRT-ADM-0034      TF+2  commissioned 12 Sep 2656  retired 31 Aug 2660  (4.0 yr service)
+    KRT-ADM-0035      TF+2  commissioned 31 Aug 2660  still serving
+    KRT-ADM-0035      TF+2  commissioned 31 Aug 2660  retired 19 Aug 2664  (4.0 yr service)
+    KRT-ADM-0036      TF+2  commissioned 19 Aug 2664  still serving
+    KRT-ADM-0036      TF+2  commissioned 19 Aug 2664  retired 07 Aug 2668  (4.0 yr service)
+    KRT-ADM-0037      TF+2  commissioned 07 Aug 2668  still serving
+    KRT-ADM-0037      TF+2  commissioned 07 Aug 2668  retired 26 Jul 2672  (4.0 yr service)
+    KRT-ADM-0038      TF+2  commissioned 26 Jul 2672  still serving
+    KRT-ADM-0038      TF+2  commissioned 26 Jul 2672  retired 14 Jul 2676  (4.0 yr service)
+    KRT-ADM-0039      TF+2  commissioned 14 Jul 2676  still serving
+    KRT-ADM-0039      TF+2  commissioned 14 Jul 2676  retired 02 Jul 2680  (4.0 yr service)
+    KRT-ADM-0040      TF+2  commissioned 02 Jul 2680  still serving
+    KRT-ADM-0040      TF+2  commissioned 02 Jul 2680  retired 20 Jun 2684  (4.0 yr service)
+    KRT-ADM-0041      TF+2  commissioned 20 Jun 2684  still serving
+    KRT-ADM-0041      TF+2  commissioned 20 Jun 2684  retired 08 Jun 2688  (4.0 yr service)
+    KRT-ADM-0042      TF+2  commissioned 08 Jun 2688  still serving
+    KRT-ADM-0042      TF+2  commissioned 08 Jun 2688  retired 27 May 2692  (4.0 yr service)
+    KRT-ADM-0043      TF+2  commissioned 27 May 2692  still serving
+    KRT-ADM-0043      TF+2  commissioned 27 May 2692  retired 15 May 2696  (4.0 yr service)
+    KRT-ADM-0044      TF+2  commissioned 15 May 2696  still serving
+    KRT-ADM-0044      TF+2  commissioned 15 May 2696  retired 04 May 2700  (4.0 yr service)
+    KRT-ADM-0045      TF+2  commissioned 04 May 2700  still serving
+    KRT-ADM-0045      TF+2  commissioned 04 May 2700  retired 22 Apr 2704  (4.0 yr service)
+    KRT-ADM-0046      TF+2  commissioned 22 Apr 2704  still serving
+    KRT-ADM-0046      TF+2  commissioned 22 Apr 2704  retired 10 Apr 2708  (4.0 yr service)
+    KRT-ADM-0047      TF+2  commissioned 10 Apr 2708  still serving
+    KRT-ADM-0047      TF+2  commissioned 10 Apr 2708  retired 29 Mar 2712  (4.0 yr service)
+    KRT-ADM-0048      TF+2  commissioned 29 Mar 2712  still serving
+    KRT-ADM-0048      TF+2  commissioned 29 Mar 2712  retired 17 Mar 2716  (4.0 yr service)
+    KRT-ADM-0049      TF+2  commissioned 17 Mar 2716  still serving
+    KRT-ADM-0049      TF+2  commissioned 17 Mar 2716  retired 05 Mar 2720  (4.0 yr service)
+    KRT-ADM-0050      TF+2  commissioned 05 Mar 2720  still serving
+    KRT-ADM-0050      TF+2  commissioned 05 Mar 2720  retired 22 Feb 2724  (4.0 yr service)
+    KRT-ADM-0051      TF+2  commissioned 22 Feb 2724  still serving
+    KRT-ADM-0051      TF+2  commissioned 22 Feb 2724  retired 10 Feb 2728  (4.0 yr service)
+    KRT-ADM-0052      TF+2  commissioned 10 Feb 2728  still serving
+    KRT-ADM-0052      TF+2  commissioned 10 Feb 2728  retired 29 Jan 2732  (4.0 yr service)
+    KRT-ADM-0053      TF+2  commissioned 29 Jan 2732  still serving
+    KRT-ADM-0053      TF+2  commissioned 29 Jan 2732  retired 17 Jan 2736  (4.0 yr service)
+    KRT-ADM-0054      TF+2  commissioned 17 Jan 2736  still serving
+    KRT-ADM-0054      TF+2  commissioned 17 Jan 2736  retired 05 Jan 2740  (4.0 yr service)
+    KRT-ADM-0055      TF+2  commissioned 05 Jan 2740  still serving
+    KRT-ADM-0055      TF+2  commissioned 05 Jan 2740  retired 24 Dec 2743  (4.0 yr service)
+    KRT-ADM-0056      TF+2  commissioned 24 Dec 2743  still serving
+    KRT-ADM-0056      TF+2  commissioned 24 Dec 2743  retired 12 Dec 2747  (4.0 yr service)
+    KRT-ADM-0057      TF+2  commissioned 12 Dec 2747  still serving
+    KRT-ADM-0057      TF+2  commissioned 12 Dec 2747  retired 30 Nov 2751  (4.0 yr service)
+    KRT-ADM-0058      TF+2  commissioned 30 Nov 2751  still serving
+    KRT-ADM-0058      TF+2  commissioned 30 Nov 2751  retired 18 Nov 2755  (4.0 yr service)
+    KRT-ADM-0059      TF+2  commissioned 18 Nov 2755  still serving
+    KRT-ADM-0059      TF+2  commissioned 18 Nov 2755  retired 06 Nov 2759  (4.0 yr service)
+    KRT-ADM-0060      TF+2  commissioned 06 Nov 2759  still serving
+    KRT-ADM-0060      TF+2  commissioned 06 Nov 2759  retired 25 Oct 2763  (4.0 yr service)
+    KRT-ADM-0061      TF+2  commissioned 25 Oct 2763  still serving
+    KRT-ADM-0061      TF+2  commissioned 25 Oct 2763  retired 13 Oct 2767  (4.0 yr service)
+    KRT-ADM-0062      TF+2  commissioned 13 Oct 2767  still serving
+    KRT-ADM-0062      TF+2  commissioned 13 Oct 2767  retired 01 Oct 2771  (4.0 yr service)
+    KRT-ADM-0063      TF+2  commissioned 01 Oct 2771  still serving
+    KRT-ADM-0063      TF+2  commissioned 01 Oct 2771  retired 19 Sep 2775  (4.0 yr service)
+    KRT-ADM-0064      TF+2  commissioned 19 Sep 2775  still serving
+    KRT-ADM-0064      TF+2  commissioned 19 Sep 2775  retired 07 Sep 2779  (4.0 yr service)
+    KRT-ADM-0065      TF+2  commissioned 07 Sep 2779  still serving
+    KRT-ADM-0065      TF+2  commissioned 07 Sep 2779  retired 26 Aug 2783  (4.0 yr service)
+    KRT-ADM-0066      TF+2  commissioned 26 Aug 2783  still serving
+    KRT-ADM-0066      TF+2  commissioned 26 Aug 2783  retired 14 Aug 2787  (4.0 yr service)
+    KRT-ADM-0067      TF+2  commissioned 14 Aug 2787  still serving
+    KRT-ADM-0067      TF+2  commissioned 14 Aug 2787  retired 02 Aug 2791  (4.0 yr service)
+    KRT-ADM-0068      TF+2  commissioned 02 Aug 2791  still serving
+    KRT-ADM-0068      TF+2  commissioned 02 Aug 2791  retired 21 Jul 2795  (4.0 yr service)
+    KRT-ADM-0069      TF+2  commissioned 21 Jul 2795  still serving
+    KRT-ADM-0069      TF+2  commissioned 21 Jul 2795  retired 09 Jul 2799  (4.0 yr service)
+    KRT-ADM-0070      TF+2  commissioned 09 Jul 2799  still serving
+    KRT-ADM-0070      TF+2  commissioned 09 Jul 2799  retired 27 Jun 2803  (4.0 yr service)
+    KRT-ADM-0071      TF+2  commissioned 27 Jun 2803  still serving
+    KRT-ADM-0071      TF+2  commissioned 27 Jun 2803  retired 15 Jun 2807  (4.0 yr service)
+    KRT-ADM-0072      TF+2  commissioned 15 Jun 2807  still serving
+    KRT-ADM-0072      TF+2  commissioned 15 Jun 2807  retired 03 Jun 2811  (4.0 yr service)
+    KRT-ADM-0073      TF+2  commissioned 03 Jun 2811  still serving
+    KRT-ADM-0073      TF+2  commissioned 03 Jun 2811  retired 22 May 2815  (4.0 yr service)
+    KRT-ADM-0074      TF+2  commissioned 22 May 2815  still serving
+    KRT-ADM-0074      TF+2  commissioned 22 May 2815  retired 10 May 2819  (4.0 yr service)
+    KRT-ADM-0075      TF+2  commissioned 10 May 2819  still serving
+    KRT-ADM-0075      TF+2  commissioned 10 May 2819  retired 28 Apr 2823  (4.0 yr service)
+    KRT-ADM-0076      TF+2  commissioned 28 Apr 2823  still serving
+    KRT-ADM-0076      TF+2  commissioned 28 Apr 2823  retired 16 Apr 2827  (4.0 yr service)
+    KRT-ADM-0077      TF+2  commissioned 16 Apr 2827  still serving
+    KRT-ADM-0077      TF+2  commissioned 16 Apr 2827  retired 04 Apr 2831  (4.0 yr service)
+    KRT-ADM-0078      TF+2  commissioned 04 Apr 2831  still serving
+    KRT-ADM-0078      TF+2  commissioned 04 Apr 2831  retired 23 Mar 2835  (4.0 yr service)
+    KRT-ADM-0079      TF+2  commissioned 23 Mar 2835  still serving
+    KRT-ADM-0079      TF+2  commissioned 23 Mar 2835  retired 11 Mar 2839  (4.0 yr service)
+    KRT-ADM-0080      TF+2  commissioned 11 Mar 2839  still serving
+    KRT-ADM-0080      TF+2  commissioned 11 Mar 2839  retired 27 Feb 2843  (4.0 yr service)
+    KRT-ADM-0081      TF+2  commissioned 27 Feb 2843  still serving
+    KRT-ADM-0081      TF+2  commissioned 27 Feb 2843  retired 15 Feb 2847  (4.0 yr service)
+    KRT-ADM-0082      TF+2  commissioned 15 Feb 2847  still serving
+    KRT-ADM-0082      TF+2  commissioned 15 Feb 2847  retired 03 Feb 2851  (4.0 yr service)
+    KRT-ADM-0083      TF+2  commissioned 03 Feb 2851  still serving
+    KRT-ADM-0083      TF+2  commissioned 03 Feb 2851  retired 22 Jan 2855  (4.0 yr service)
+    KRT-ADM-0084      TF+2  commissioned 22 Jan 2855  still serving
+    KRT-ADM-0084      TF+2  commissioned 22 Jan 2855  retired 10 Jan 2859  (4.0 yr service)
+    KRT-ADM-0085      TF+2  commissioned 10 Jan 2859  still serving
+    KRT-ADM-0085      TF+2  commissioned 10 Jan 2859  retired 29 Dec 2862  (4.0 yr service)
+    KRT-ADM-0086      TF+2  commissioned 29 Dec 2862  still serving
+    KRT-ADM-0086      TF+2  commissioned 29 Dec 2862  retired 17 Dec 2866  (4.0 yr service)
+    KRT-ADM-0087      TF+2  commissioned 17 Dec 2866  still serving
+    KRT-ADM-0087      TF+2  commissioned 17 Dec 2866  retired 05 Dec 2870  (4.0 yr service)
+    KRT-ADM-0088      TF+2  commissioned 05 Dec 2870  still serving
+    KRT-ADM-0088      TF+2  commissioned 05 Dec 2870  retired 23 Nov 2874  (4.0 yr service)
+    KRT-ADM-0089      TF+2  commissioned 23 Nov 2874  still serving
+    KRT-ADM-0089      TF+2  commissioned 23 Nov 2874  retired 11 Nov 2878  (4.0 yr service)
+    KRT-ADM-0090      TF+2  commissioned 11 Nov 2878  still serving
+    KRT-ADM-0090      TF+2  commissioned 11 Nov 2878  retired 30 Oct 2882  (4.0 yr service)
+    KRT-ADM-0091      TF+2  commissioned 30 Oct 2882  still serving
+    KRT-ADM-0091      TF+2  commissioned 30 Oct 2882  retired 18 Oct 2886  (4.0 yr service)
+    KRT-ADM-0092      TF+2  commissioned 18 Oct 2886  still serving
+    KRT-ADM-0092      TF+2  commissioned 18 Oct 2886  retired 06 Oct 2890  (4.0 yr service)
+    KRT-ADM-0093      TF+2  commissioned 06 Oct 2890  still serving
+    KRT-ADM-0093      TF+2  commissioned 06 Oct 2890  retired 24 Sep 2894  (4.0 yr service)
+    KRT-ADM-0094      TF+2  commissioned 24 Sep 2894  still serving
+    KRT-ADM-0094      TF+2  commissioned 24 Sep 2894  retired 12 Sep 2898  (4.0 yr service)
+    KRT-ADM-0095      TF+2  commissioned 12 Sep 2898  still serving
+    KRT-ADM-0095      TF+2  commissioned 12 Sep 2898  retired 01 Sep 2902  (4.0 yr service)
+    KRT-ADM-0096      TF+2  commissioned 01 Sep 2902  still serving
+    KRT-ADM-0096      TF+2  commissioned 01 Sep 2902  retired 20 Aug 2906  (4.0 yr service)
+    KRT-ADM-0097      TF+2  commissioned 20 Aug 2906  still serving
+    KRT-ADM-0097      TF+2  commissioned 20 Aug 2906  retired 08 Aug 2910  (4.0 yr service)
+    KRT-ADM-0098      TF+2  commissioned 08 Aug 2910  still serving
+    KRT-ADM-0098      TF+2  commissioned 08 Aug 2910  retired 27 Jul 2914  (4.0 yr service)
+    KRT-ADM-0099      TF+2  commissioned 27 Jul 2914  still serving
+    KRT-ADM-0099      TF+2  commissioned 27 Jul 2914  retired 15 Jul 2918  (4.0 yr service)
+    KRT-ADM-0100      TF+2  commissioned 15 Jul 2918  still serving
+    KRT-ADM-0100      TF+2  commissioned 15 Jul 2918  retired 03 Jul 2922  (4.0 yr service)
+    KRT-ADM-0101      TF+2  commissioned 03 Jul 2922  still serving
+    KRT-ADM-0101      TF+2  commissioned 03 Jul 2922  retired 21 Jun 2926  (4.0 yr service)
+    KRT-ADM-0102      TF+2  commissioned 21 Jun 2926  still serving
+    KRT-ADM-0102      TF+2  commissioned 21 Jun 2926  retired 09 Jun 2930  (4.0 yr service)
+    KRT-ADM-0103      TF+2  commissioned 09 Jun 2930  still serving
+    KRT-ADM-0103      TF+2  commissioned 09 Jun 2930  retired 28 May 2934  (4.0 yr service)
+    KRT-ADM-0104      TF+2  commissioned 28 May 2934  still serving
+    KRT-ADM-0104      TF+2  commissioned 28 May 2934  retired 16 May 2938  (4.0 yr service)
+    KRT-ADM-0105      TF+2  commissioned 16 May 2938  still serving
+    KRT-ADM-0105      TF+2  commissioned 16 May 2938  retired 04 May 2942  (4.0 yr service)
+    KRT-ADM-0106      TF+2  commissioned 04 May 2942  still serving
+    KRT-ADM-0106      TF+2  commissioned 04 May 2942  retired 22 Apr 2946  (4.0 yr service)
+    KRT-ADM-0107      TF+2  commissioned 22 Apr 2946  still serving
+    KRT-ADM-0107      TF+2  commissioned 22 Apr 2946  retired 10 Apr 2950  (4.0 yr service)
+    KRT-ADM-0108      TF+2  commissioned 10 Apr 2950  still serving
+    KRT-ADM-0108      TF+2  commissioned 10 Apr 2950  retired 29 Mar 2954  (4.0 yr service)
+    KRT-ADM-0109      TF+2  commissioned 29 Mar 2954  still serving
+    KRT-ADM-0109      TF+2  commissioned 29 Mar 2954  retired 17 Mar 2958  (4.0 yr service)
+    KRT-ADM-0110      TF+2  commissioned 17 Mar 2958  still serving
+    KRT-ADM-0110      TF+2  commissioned 17 Mar 2958  retired 05 Mar 2962  (4.0 yr service)
+    KRT-ADM-0111      TF+2  commissioned 05 Mar 2962  still serving
+    KRT-ADM-0111      TF+2  commissioned 05 Mar 2962  retired 21 Feb 2966  (4.0 yr service)
+    KRT-ADM-0112      TF+2  commissioned 21 Feb 2966  still serving
+    KRT-ADM-0112      TF+2  commissioned 21 Feb 2966  retired 09 Feb 2970  (4.0 yr service)
+    KRT-ADM-0113      TF+2  commissioned 09 Feb 2970  still serving
+    KRT-ADM-0113      TF+2  commissioned 09 Feb 2970  retired 28 Jan 2974  (4.0 yr service)
+    KRT-ADM-0114      TF+2  commissioned 28 Jan 2974  still serving
+    KRT-ADM-0114      TF+2  commissioned 28 Jan 2974  retired 16 Jan 2978  (4.0 yr service)
+    KRT-ADM-0115      TF+2  commissioned 16 Jan 2978  still serving
+    KRT-ADM-0115      TF+2  commissioned 16 Jan 2978  retired 04 Jan 2982  (4.0 yr service)
+    KRT-ADM-0116      TF+2  commissioned 04 Jan 2982  still serving
+    KRT-ADM-0116      TF+2  commissioned 04 Jan 2982  retired 23 Dec 2985  (4.0 yr service)
+    KRT-ADM-0117      TF+2  commissioned 23 Dec 2985  still serving
+    KRT-ADM-0117      TF+2  commissioned 23 Dec 2985  retired 11 Dec 2989  (4.0 yr service)
+    KRT-ADM-0118      TF+2  commissioned 11 Dec 2989  still serving
+    KRT-ADM-0118      TF+2  commissioned 11 Dec 2989  retired 29 Nov 2993  (4.0 yr service)
+    KRT-ADM-0119      TF+2  commissioned 29 Nov 2993  still serving
+    KRT-ADM-0119      TF+2  commissioned 29 Nov 2993  retired 17 Nov 2997  (4.0 yr service)
+    KRT-ADM-0120      TF+2  commissioned 17 Nov 2997  still serving
+    KRT-ADM-0120      TF+2  commissioned 17 Nov 2997  retired 06 Nov 3001  (4.0 yr service)
+    KRT-ADM-0121      TF+2  commissioned 06 Nov 3001  still serving
+    KRT-ADM-0121      TF+2  commissioned 06 Nov 3001  retired 25 Oct 3005  (4.0 yr service)
+    KRT-ADM-0122      TF+2  commissioned 25 Oct 3005  still serving
+    KRT-ADM-0122      TF+2  commissioned 25 Oct 3005  retired 13 Oct 3009  (4.0 yr service)
+    KRT-ADM-0123      TF+2  commissioned 13 Oct 3009  still serving
+    KRT-ADM-0123      TF+2  commissioned 13 Oct 3009  retired 01 Oct 3013  (4.0 yr service)
+    KRT-ADM-0124      TF+2  commissioned 01 Oct 3013  still serving
+    KRT-ADM-0124      TF+2  commissioned 01 Oct 3013  retired 19 Sep 3017  (4.0 yr service)
+    KRT-ADM-0125      TF+2  commissioned 19 Sep 3017  still serving
+    KRT-ADM-0125      TF+2  commissioned 19 Sep 3017  retired 07 Sep 3021  (4.0 yr service)
+    KRT-ADM-0126      TF+2  commissioned 07 Sep 3021  still serving
+
+  Vashori Compact
+    VSH-ADM-0001      TF-3  commissioned 12 Apr 2526  still serving
+    VSH-ADM-0001      TF-3  commissioned 12 Apr 2526  retired 08 Sep 2558  (32.5 yr service)
+    VSH-ADM-0002      TF+3  commissioned 08 Sep 2558  still serving
+    VSH-ADM-0002      TF+3  commissioned 08 Sep 2558  retired 14 Mar 2588  (29.6 yr service)
+    VSH-ADM-0003      TF+3  commissioned 14 Mar 2588  still serving
+    VSH-ADM-0003      TF+3  commissioned 14 Mar 2588  retired 19 Sep 2617  (29.6 yr service)
+    VSH-ADM-0004      TF+3  commissioned 19 Sep 2617  still serving
+    VSH-ADM-0004      TF+3  commissioned 19 Sep 2617  retired 26 Mar 2647  (29.6 yr service)
+    VSH-ADM-0005      TF+3  commissioned 26 Mar 2647  still serving
+    VSH-ADM-0005      TF+3  commissioned 26 Mar 2647  retired 29 Sep 2676  (29.6 yr service)
+    VSH-ADM-0006      TF+3  commissioned 29 Sep 2676  still serving
+    VSH-ADM-0006      TF+3  commissioned 29 Sep 2676  retired 06 Apr 2706  (29.6 yr service)
+    VSH-ADM-0007      TF+3  commissioned 06 Apr 2706  still serving
+    VSH-ADM-0007      TF+3  commissioned 06 Apr 2706  retired 11 Oct 2735  (29.6 yr service)
+    VSH-ADM-0008      TF+3  commissioned 11 Oct 2735  still serving
+    VSH-ADM-0008      TF+3  commissioned 11 Oct 2735  retired 16 Apr 2765  (29.6 yr service)
+    VSH-ADM-0009      TF+3  commissioned 16 Apr 2765  still serving
+    VSH-ADM-0009      TF+3  commissioned 16 Apr 2765  retired 21 Oct 2794  (29.6 yr service)
+    VSH-ADM-0010      TF+3  commissioned 21 Oct 2794  still serving
+    VSH-ADM-0010      TF+3  commissioned 21 Oct 2794  retired 26 Apr 2824  (29.6 yr service)
+    VSH-ADM-0011      TF+3  commissioned 26 Apr 2824  still serving
+    VSH-ADM-0011      TF+3  commissioned 26 Apr 2824  retired 31 Oct 2853  (29.6 yr service)
+    VSH-ADM-0012      TF+3  commissioned 31 Oct 2853  still serving
+    VSH-ADM-0012      TF+3  commissioned 31 Oct 2853  retired 07 May 2883  (29.6 yr service)
+    VSH-ADM-0013      TF+3  commissioned 07 May 2883  still serving
+    VSH-ADM-0013      TF+3  commissioned 07 May 2883  retired 11 Nov 2912  (29.6 yr service)
+    VSH-ADM-0014      TF+3  commissioned 11 Nov 2912  still serving
+    VSH-ADM-0014      TF+3  commissioned 11 Nov 2912  retired 18 May 2942  (29.6 yr service)
+    VSH-ADM-0015      TF+3  commissioned 18 May 2942  still serving
+    VSH-ADM-0015      TF+3  commissioned 18 May 2942  retired 22 Nov 2971  (29.6 yr service)
+    VSH-ADM-0016      TF+3  commissioned 22 Nov 2971  still serving
+    VSH-ADM-0016      TF+3  commissioned 22 Nov 2971  retired 29 May 3001  (29.6 yr service)
+    VSH-ADM-0017      TF+3  commissioned 29 May 3001  still serving
+
+  Kraathi Crusade
+    KRA-ADM-0001      TF-3  commissioned 12 Apr 2526  still serving
+    KRA-ADM-0001      TF-3  commissioned 12 Apr 2526  retired 01 Dec 2552  (26.7 yr service)
+    KRA-ADM-0002      TF±0  commissioned 01 Dec 2552  still serving
+    KRA-ADM-0002      TF±0  commissioned 01 Dec 2552  retired 04 Aug 2575  (22.8 yr service)
+    KRA-ADM-0003      TF±0  commissioned 04 Aug 2575  still serving
+    KRA-ADM-0003      TF±0  commissioned 04 Aug 2575  retired 06 Apr 2598  (22.8 yr service)
+    KRA-ADM-0004      TF±0  commissioned 06 Apr 2598  still serving
+    KRA-ADM-0004      TF±0  commissioned 06 Apr 2598  retired 08 Dec 2620  (22.8 yr service)
+    KRA-ADM-0005      TF±0  commissioned 08 Dec 2620  still serving
+    KRA-ADM-0005      TF±0  commissioned 08 Dec 2620  retired 11 Aug 2643  (22.8 yr service)
+    KRA-ADM-0006      TF±0  commissioned 11 Aug 2643  still serving
+    KRA-ADM-0006      TF±0  commissioned 11 Aug 2643  retired 13 Apr 2666  (22.8 yr service)
+    KRA-ADM-0007      TF±0  commissioned 13 Apr 2666  still serving
+    KRA-ADM-0007      TF±0  commissioned 13 Apr 2666  retired 14 Dec 2688  (22.8 yr service)
+    KRA-ADM-0008      TF±0  commissioned 14 Dec 2688  still serving
+    KRA-ADM-0008      TF±0  commissioned 14 Dec 2688  retired 18 Aug 2711  (22.8 yr service)
+    KRA-ADM-0009      TF±0  commissioned 18 Aug 2711  still serving
+    KRA-ADM-0009      TF±0  commissioned 18 Aug 2711  retired 20 Apr 2734  (22.8 yr service)
+    KRA-ADM-0010      TF±0  commissioned 20 Apr 2734  still serving
+    KRA-ADM-0010      TF±0  commissioned 20 Apr 2734  retired 21 Dec 2756  (22.8 yr service)
+    KRA-ADM-0011      TF±0  commissioned 21 Dec 2756  still serving
+    KRA-ADM-0011      TF±0  commissioned 21 Dec 2756  retired 24 Aug 2779  (22.8 yr service)
+    KRA-ADM-0012      TF±0  commissioned 24 Aug 2779  still serving
+    KRA-ADM-0012      TF±0  commissioned 24 Aug 2779  retired 26 Apr 2802  (22.8 yr service)
+    KRA-ADM-0013      TF±0  commissioned 26 Apr 2802  still serving
+    KRA-ADM-0013      TF±0  commissioned 26 Apr 2802  retired 27 Dec 2824  (22.8 yr service)
+    KRA-ADM-0014      TF±0  commissioned 27 Dec 2824  still serving
+    KRA-ADM-0014      TF±0  commissioned 27 Dec 2824  retired 30 Aug 2847  (22.8 yr service)
+    KRA-ADM-0015      TF±0  commissioned 30 Aug 2847  still serving
+    KRA-ADM-0015      TF±0  commissioned 30 Aug 2847  retired 02 May 2870  (22.8 yr service)
+    KRA-ADM-0016      TF±0  commissioned 02 May 2870  still serving
+    KRA-ADM-0016      TF±0  commissioned 02 May 2870  retired 02 Jan 2893  (22.8 yr service)
+    KRA-ADM-0017      TF±0  commissioned 02 Jan 2893  still serving
+    KRA-ADM-0017      TF±0  commissioned 02 Jan 2893  retired 06 Sep 2915  (22.8 yr service)
+    KRA-ADM-0018      TF±0  commissioned 06 Sep 2915  still serving
+    KRA-ADM-0018      TF±0  commissioned 06 Sep 2915  retired 09 May 2938  (22.8 yr service)
+    KRA-ADM-0019      TF±0  commissioned 09 May 2938  still serving
+    KRA-ADM-0019      TF±0  commissioned 09 May 2938  retired 09 Jan 2961  (22.8 yr service)
+    KRA-ADM-0020      TF±0  commissioned 09 Jan 2961  still serving
+    KRA-ADM-0020      TF±0  commissioned 09 Jan 2961  retired 12 Sep 2983  (22.8 yr service)
+    KRA-ADM-0021      TF±0  commissioned 12 Sep 2983  still serving
+    KRA-ADM-0021      TF±0  commissioned 12 Sep 2983  retired 16 May 3006  (22.8 yr service)
+    KRA-ADM-0022      TF±0  commissioned 16 May 3006  still serving
+
+  Nakhavi Reach
+    NAK-ADM-0001      TF+1  commissioned 12 Apr 2526  still serving
+    NAK-ADM-0001      TF+1  commissioned 12 Apr 2526  retired 30 Mar 2531  (5.0 yr service)
+    NAK-ADM-0002      TF+1  commissioned 30 Mar 2531  still serving
+    NAK-ADM-0002      TF+1  commissioned 30 Mar 2531  retired 25 May 2536  (5.2 yr service)
+    NAK-ADM-0003      TF+1  commissioned 25 May 2536  still serving
+    NAK-ADM-0003      TF+1  commissioned 25 May 2536  retired 21 Jul 2541  (5.2 yr service)
+    NAK-ADM-0004      TF+1  commissioned 21 Jul 2541  still serving
+    NAK-ADM-0004      TF+1  commissioned 21 Jul 2541  retired 16 Sep 2546  (5.2 yr service)
+    NAK-ADM-0005      TF+1  commissioned 16 Sep 2546  still serving
+    NAK-ADM-0005      TF+1  commissioned 16 Sep 2546  retired 12 Nov 2551  (5.2 yr service)
+    NAK-ADM-0006      TF+1  commissioned 12 Nov 2551  still serving
+    NAK-ADM-0006      TF+1  commissioned 12 Nov 2551  retired 07 Jan 2557  (5.2 yr service)
+    NAK-ADM-0007      TF+1  commissioned 07 Jan 2557  still serving
+    NAK-ADM-0007      TF+1  commissioned 07 Jan 2557  retired 05 Mar 2562  (5.2 yr service)
+    NAK-ADM-0008      TF+1  commissioned 05 Mar 2562  still serving
+    NAK-ADM-0008      TF+1  commissioned 05 Mar 2562  retired 01 May 2567  (5.2 yr service)
+    NAK-ADM-0009      TF+1  commissioned 01 May 2567  still serving
+    NAK-ADM-0009      TF+1  commissioned 01 May 2567  retired 26 Jun 2572  (5.2 yr service)
+    NAK-ADM-0010      TF+1  commissioned 26 Jun 2572  still serving
+    NAK-ADM-0010      TF+1  commissioned 26 Jun 2572  retired 22 Aug 2577  (5.2 yr service)
+    NAK-ADM-0011      TF+1  commissioned 22 Aug 2577  still serving
+    NAK-ADM-0011      TF+1  commissioned 22 Aug 2577  retired 18 Oct 2582  (5.2 yr service)
+    NAK-ADM-0012      TF+1  commissioned 18 Oct 2582  still serving
+    NAK-ADM-0012      TF+1  commissioned 18 Oct 2582  retired 14 Dec 2587  (5.2 yr service)
+    NAK-ADM-0013      TF+1  commissioned 14 Dec 2587  still serving
+    NAK-ADM-0013      TF+1  commissioned 14 Dec 2587  retired 08 Feb 2593  (5.2 yr service)
+    NAK-ADM-0014      TF+1  commissioned 08 Feb 2593  still serving
+    NAK-ADM-0014      TF+1  commissioned 08 Feb 2593  retired 06 Apr 2598  (5.2 yr service)
+    NAK-ADM-0015      TF+1  commissioned 06 Apr 2598  still serving
+    NAK-ADM-0015      TF+1  commissioned 06 Apr 2598  retired 03 Jun 2603  (5.2 yr service)
+    NAK-ADM-0016      TF+1  commissioned 03 Jun 2603  still serving
+    NAK-ADM-0016      TF+1  commissioned 03 Jun 2603  retired 29 Jul 2608  (5.2 yr service)
+    NAK-ADM-0017      TF+1  commissioned 29 Jul 2608  still serving
+    NAK-ADM-0017      TF+1  commissioned 29 Jul 2608  retired 24 Sep 2613  (5.2 yr service)
+    NAK-ADM-0018      TF+1  commissioned 24 Sep 2613  still serving
+    NAK-ADM-0018      TF+1  commissioned 24 Sep 2613  retired 20 Nov 2618  (5.2 yr service)
+    NAK-ADM-0019      TF+1  commissioned 20 Nov 2618  still serving
+    NAK-ADM-0019      TF+1  commissioned 20 Nov 2618  retired 16 Jan 2624  (5.2 yr service)
+    NAK-ADM-0020      TF+1  commissioned 16 Jan 2624  still serving
+    NAK-ADM-0020      TF+1  commissioned 16 Jan 2624  retired 13 Mar 2629  (5.2 yr service)
+    NAK-ADM-0021      TF+1  commissioned 13 Mar 2629  still serving
+    NAK-ADM-0021      TF+1  commissioned 13 Mar 2629  retired 09 May 2634  (5.2 yr service)
+    NAK-ADM-0022      TF+1  commissioned 09 May 2634  still serving
+    NAK-ADM-0022      TF+1  commissioned 09 May 2634  retired 05 Jul 2639  (5.2 yr service)
+    NAK-ADM-0023      TF+1  commissioned 05 Jul 2639  still serving
+    NAK-ADM-0023      TF+1  commissioned 05 Jul 2639  retired 30 Aug 2644  (5.2 yr service)
+    NAK-ADM-0024      TF+1  commissioned 30 Aug 2644  still serving
+    NAK-ADM-0024      TF+1  commissioned 30 Aug 2644  retired 26 Oct 2649  (5.2 yr service)
+    NAK-ADM-0025      TF+1  commissioned 26 Oct 2649  still serving
+    NAK-ADM-0025      TF+1  commissioned 26 Oct 2649  retired 22 Dec 2654  (5.2 yr service)
+    NAK-ADM-0026      TF+1  commissioned 22 Dec 2654  still serving
+    NAK-ADM-0026      TF+1  commissioned 22 Dec 2654  retired 17 Feb 2660  (5.2 yr service)
+    NAK-ADM-0027      TF+1  commissioned 17 Feb 2660  still serving
+    NAK-ADM-0027      TF+1  commissioned 17 Feb 2660  retired 14 Apr 2665  (5.2 yr service)
+    NAK-ADM-0028      TF+1  commissioned 14 Apr 2665  still serving
+    NAK-ADM-0028      TF+1  commissioned 14 Apr 2665  retired 10 Jun 2670  (5.2 yr service)
+    NAK-ADM-0029      TF+1  commissioned 10 Jun 2670  still serving
+    NAK-ADM-0029      TF+1  commissioned 10 Jun 2670  retired 06 Aug 2675  (5.2 yr service)
+    NAK-ADM-0030      TF+1  commissioned 06 Aug 2675  still serving
+    NAK-ADM-0030      TF+1  commissioned 06 Aug 2675  retired 01 Oct 2680  (5.2 yr service)
+    NAK-ADM-0031      TF+1  commissioned 01 Oct 2680  still serving
+    NAK-ADM-0031      TF+1  commissioned 01 Oct 2680  retired 27 Nov 2685  (5.2 yr service)
+    NAK-ADM-0032      TF+1  commissioned 27 Nov 2685  still serving
+    NAK-ADM-0032      TF+1  commissioned 27 Nov 2685  retired 23 Jan 2691  (5.2 yr service)
+    NAK-ADM-0033      TF+1  commissioned 23 Jan 2691  still serving
+    NAK-ADM-0033      TF+1  commissioned 23 Jan 2691  retired 20 Mar 2696  (5.2 yr service)
+    NAK-ADM-0034      TF+1  commissioned 20 Mar 2696  still serving
+    NAK-ADM-0034      TF+1  commissioned 20 Mar 2696  retired 17 May 2701  (5.2 yr service)
+    NAK-ADM-0035      TF+1  commissioned 17 May 2701  still serving
+    NAK-ADM-0035      TF+1  commissioned 17 May 2701  retired 13 Jul 2706  (5.2 yr service)
+    NAK-ADM-0036      TF+1  commissioned 13 Jul 2706  still serving
+    NAK-ADM-0036      TF+1  commissioned 13 Jul 2706  retired 08 Sep 2711  (5.2 yr service)
+    NAK-ADM-0037      TF+1  commissioned 08 Sep 2711  still serving
+    NAK-ADM-0037      TF+1  commissioned 08 Sep 2711  retired 03 Nov 2716  (5.2 yr service)
+    NAK-ADM-0038      TF+1  commissioned 03 Nov 2716  still serving
+    NAK-ADM-0038      TF+1  commissioned 03 Nov 2716  retired 30 Dec 2721  (5.2 yr service)
+    NAK-ADM-0039      TF+1  commissioned 30 Dec 2721  still serving
+    NAK-ADM-0039      TF+1  commissioned 30 Dec 2721  retired 25 Feb 2727  (5.2 yr service)
+    NAK-ADM-0040      TF+1  commissioned 25 Feb 2727  still serving
+    NAK-ADM-0040      TF+1  commissioned 25 Feb 2727  retired 22 Apr 2732  (5.2 yr service)
+    NAK-ADM-0041      TF+1  commissioned 22 Apr 2732  still serving
+    NAK-ADM-0041      TF+1  commissioned 22 Apr 2732  retired 18 Jun 2737  (5.2 yr service)
+    NAK-ADM-0042      TF+1  commissioned 18 Jun 2737  still serving
+    NAK-ADM-0042      TF+1  commissioned 18 Jun 2737  retired 14 Aug 2742  (5.2 yr service)
+    NAK-ADM-0043      TF+1  commissioned 14 Aug 2742  still serving
+    NAK-ADM-0043      TF+1  commissioned 14 Aug 2742  retired 10 Oct 2747  (5.2 yr service)
+    NAK-ADM-0044      TF+1  commissioned 10 Oct 2747  still serving
+    NAK-ADM-0044      TF+1  commissioned 10 Oct 2747  retired 05 Dec 2752  (5.2 yr service)
+    NAK-ADM-0045      TF+1  commissioned 05 Dec 2752  still serving
+    NAK-ADM-0045      TF+1  commissioned 05 Dec 2752  retired 31 Jan 2758  (5.2 yr service)
+    NAK-ADM-0046      TF+1  commissioned 31 Jan 2758  still serving
+    NAK-ADM-0046      TF+1  commissioned 31 Jan 2758  retired 29 Mar 2763  (5.2 yr service)
+    NAK-ADM-0047      TF+1  commissioned 29 Mar 2763  still serving
+    NAK-ADM-0047      TF+1  commissioned 29 Mar 2763  retired 24 May 2768  (5.2 yr service)
+    NAK-ADM-0048      TF+1  commissioned 24 May 2768  still serving
+    NAK-ADM-0048      TF+1  commissioned 24 May 2768  retired 20 Jul 2773  (5.2 yr service)
+    NAK-ADM-0049      TF+1  commissioned 20 Jul 2773  still serving
+    NAK-ADM-0049      TF+1  commissioned 20 Jul 2773  retired 15 Sep 2778  (5.2 yr service)
+    NAK-ADM-0050      TF+1  commissioned 15 Sep 2778  still serving
+    NAK-ADM-0050      TF+1  commissioned 15 Sep 2778  retired 11 Nov 2783  (5.2 yr service)
+    NAK-ADM-0051      TF+1  commissioned 11 Nov 2783  still serving
+    NAK-ADM-0051      TF+1  commissioned 11 Nov 2783  retired 06 Jan 2789  (5.2 yr service)
+    NAK-ADM-0052      TF+1  commissioned 06 Jan 2789  still serving
+    NAK-ADM-0052      TF+1  commissioned 06 Jan 2789  retired 04 Mar 2794  (5.2 yr service)
+    NAK-ADM-0053      TF+1  commissioned 04 Mar 2794  still serving
+    NAK-ADM-0053      TF+1  commissioned 04 Mar 2794  retired 30 Apr 2799  (5.2 yr service)
+    NAK-ADM-0054      TF+1  commissioned 30 Apr 2799  still serving
+    NAK-ADM-0054      TF+1  commissioned 30 Apr 2799  retired 25 Jun 2804  (5.2 yr service)
+    NAK-ADM-0055      TF+1  commissioned 25 Jun 2804  still serving
+    NAK-ADM-0055      TF+1  commissioned 25 Jun 2804  retired 21 Aug 2809  (5.2 yr service)
+    NAK-ADM-0056      TF+1  commissioned 21 Aug 2809  still serving
+    NAK-ADM-0056      TF+1  commissioned 21 Aug 2809  retired 17 Oct 2814  (5.2 yr service)
+    NAK-ADM-0057      TF+1  commissioned 17 Oct 2814  still serving
+    NAK-ADM-0057      TF+1  commissioned 17 Oct 2814  retired 13 Dec 2819  (5.2 yr service)
+    NAK-ADM-0058      TF+1  commissioned 13 Dec 2819  still serving
+    NAK-ADM-0058      TF+1  commissioned 13 Dec 2819  retired 07 Feb 2825  (5.2 yr service)
+    NAK-ADM-0059      TF+1  commissioned 07 Feb 2825  still serving
+    NAK-ADM-0059      TF+1  commissioned 07 Feb 2825  retired 05 Apr 2830  (5.2 yr service)
+    NAK-ADM-0060      TF+1  commissioned 05 Apr 2830  still serving
+    NAK-ADM-0060      TF+1  commissioned 05 Apr 2830  retired 01 Jun 2835  (5.2 yr service)
+    NAK-ADM-0061      TF+1  commissioned 01 Jun 2835  still serving
+    NAK-ADM-0061      TF+1  commissioned 01 Jun 2835  retired 27 Jul 2840  (5.2 yr service)
+    NAK-ADM-0062      TF+1  commissioned 27 Jul 2840  still serving
+    NAK-ADM-0062      TF+1  commissioned 27 Jul 2840  retired 22 Sep 2845  (5.2 yr service)
+    NAK-ADM-0063      TF+1  commissioned 22 Sep 2845  still serving
+    NAK-ADM-0063      TF+1  commissioned 22 Sep 2845  retired 18 Nov 2850  (5.2 yr service)
+    NAK-ADM-0064      TF+1  commissioned 18 Nov 2850  still serving
+    NAK-ADM-0064      TF+1  commissioned 18 Nov 2850  retired 14 Jan 2856  (5.2 yr service)
+    NAK-ADM-0065      TF+1  commissioned 14 Jan 2856  still serving
+    NAK-ADM-0065      TF+1  commissioned 14 Jan 2856  retired 11 Mar 2861  (5.2 yr service)
+    NAK-ADM-0066      TF+1  commissioned 11 Mar 2861  still serving
+    NAK-ADM-0066      TF+1  commissioned 11 Mar 2861  retired 07 May 2866  (5.2 yr service)
+    NAK-ADM-0067      TF+1  commissioned 07 May 2866  still serving
+    NAK-ADM-0067      TF+1  commissioned 07 May 2866  retired 03 Jul 2871  (5.2 yr service)
+    NAK-ADM-0068      TF+1  commissioned 03 Jul 2871  still serving
+    NAK-ADM-0068      TF+1  commissioned 03 Jul 2871  retired 28 Aug 2876  (5.2 yr service)
+    NAK-ADM-0069      TF+1  commissioned 28 Aug 2876  still serving
+    NAK-ADM-0069      TF+1  commissioned 28 Aug 2876  retired 24 Oct 2881  (5.2 yr service)
+    NAK-ADM-0070      TF+1  commissioned 24 Oct 2881  still serving
+    NAK-ADM-0070      TF+1  commissioned 24 Oct 2881  retired 20 Dec 2886  (5.2 yr service)
+    NAK-ADM-0071      TF+1  commissioned 20 Dec 2886  still serving
+    NAK-ADM-0071      TF+1  commissioned 20 Dec 2886  retired 15 Feb 2892  (5.2 yr service)
+    NAK-ADM-0072      TF+1  commissioned 15 Feb 2892  still serving
+    NAK-ADM-0072      TF+1  commissioned 15 Feb 2892  retired 12 Apr 2897  (5.2 yr service)
+    NAK-ADM-0073      TF+1  commissioned 12 Apr 2897  still serving
+    NAK-ADM-0073      TF+1  commissioned 12 Apr 2897  retired 09 Jun 2902  (5.2 yr service)
+    NAK-ADM-0074      TF+1  commissioned 09 Jun 2902  still serving
+    NAK-ADM-0074      TF+1  commissioned 09 Jun 2902  retired 05 Aug 2907  (5.2 yr service)
+    NAK-ADM-0075      TF+1  commissioned 05 Aug 2907  still serving
+    NAK-ADM-0075      TF+1  commissioned 05 Aug 2907  retired 30 Sep 2912  (5.2 yr service)
+    NAK-ADM-0076      TF+1  commissioned 30 Sep 2912  still serving
+    NAK-ADM-0076      TF+1  commissioned 30 Sep 2912  retired 26 Nov 2917  (5.2 yr service)
+    NAK-ADM-0077      TF+1  commissioned 26 Nov 2917  still serving
+    NAK-ADM-0077      TF+1  commissioned 26 Nov 2917  retired 22 Jan 2923  (5.2 yr service)
+    NAK-ADM-0078      TF+1  commissioned 22 Jan 2923  still serving
+    NAK-ADM-0078      TF+1  commissioned 22 Jan 2923  retired 19 Mar 2928  (5.2 yr service)
+    NAK-ADM-0079      TF+1  commissioned 19 Mar 2928  still serving
+    NAK-ADM-0079      TF+1  commissioned 19 Mar 2928  retired 15 May 2933  (5.2 yr service)
+    NAK-ADM-0080      TF+1  commissioned 15 May 2933  still serving
+    NAK-ADM-0080      TF+1  commissioned 15 May 2933  retired 11 Jul 2938  (5.2 yr service)
+    NAK-ADM-0081      TF+1  commissioned 11 Jul 2938  still serving
+    NAK-ADM-0081      TF+1  commissioned 11 Jul 2938  retired 06 Sep 2943  (5.2 yr service)
+    NAK-ADM-0082      TF+1  commissioned 06 Sep 2943  still serving
+    NAK-ADM-0082      TF+1  commissioned 06 Sep 2943  retired 01 Nov 2948  (5.2 yr service)
+    NAK-ADM-0083      TF+1  commissioned 01 Nov 2948  still serving
+    NAK-ADM-0083      TF+1  commissioned 01 Nov 2948  retired 28 Dec 2953  (5.2 yr service)
+    NAK-ADM-0084      TF+1  commissioned 28 Dec 2953  still serving
+    NAK-ADM-0084      TF+1  commissioned 28 Dec 2953  retired 23 Feb 2959  (5.2 yr service)
+    NAK-ADM-0085      TF+1  commissioned 23 Feb 2959  still serving
+    NAK-ADM-0085      TF+1  commissioned 23 Feb 2959  retired 20 Apr 2964  (5.2 yr service)
+    NAK-ADM-0086      TF+1  commissioned 20 Apr 2964  still serving
+    NAK-ADM-0086      TF+1  commissioned 20 Apr 2964  retired 16 Jun 2969  (5.2 yr service)
+    NAK-ADM-0087      TF+1  commissioned 16 Jun 2969  still serving
+    NAK-ADM-0087      TF+1  commissioned 16 Jun 2969  retired 12 Aug 2974  (5.2 yr service)
+    NAK-ADM-0088      TF+1  commissioned 12 Aug 2974  still serving
+    NAK-ADM-0088      TF+1  commissioned 12 Aug 2974  retired 08 Oct 2979  (5.2 yr service)
+    NAK-ADM-0089      TF+1  commissioned 08 Oct 2979  still serving
+    NAK-ADM-0089      TF+1  commissioned 08 Oct 2979  retired 03 Dec 2984  (5.2 yr service)
+    NAK-ADM-0090      TF+1  commissioned 03 Dec 2984  still serving
+    NAK-ADM-0090      TF+1  commissioned 03 Dec 2984  retired 29 Jan 2990  (5.2 yr service)
+    NAK-ADM-0091      TF+1  commissioned 29 Jan 2990  still serving
+    NAK-ADM-0091      TF+1  commissioned 29 Jan 2990  retired 27 Mar 2995  (5.2 yr service)
+    NAK-ADM-0092      TF+1  commissioned 27 Mar 2995  still serving
+    NAK-ADM-0092      TF+1  commissioned 27 Mar 2995  retired 23 May 3000  (5.2 yr service)
+    NAK-ADM-0093      TF+1  commissioned 23 May 3000  still serving
+    NAK-ADM-0093      TF+1  commissioned 23 May 3000  retired 19 Jul 3005  (5.2 yr service)
+    NAK-ADM-0094      TF+1  commissioned 19 Jul 3005  still serving
+    NAK-ADM-0094      TF+1  commissioned 19 Jul 3005  retired 14 Sep 3010  (5.2 yr service)
+    NAK-ADM-0095      TF+1  commissioned 14 Sep 3010  still serving
+    NAK-ADM-0095      TF+1  commissioned 14 Sep 3010  retired 10 Nov 3015  (5.2 yr service)
+    NAK-ADM-0096      TF+1  commissioned 10 Nov 3015  still serving
+    NAK-ADM-0096      TF+1  commissioned 10 Nov 3015  retired 05 Jan 3021  (5.2 yr service)
+    NAK-ADM-0097      TF+1  commissioned 05 Jan 3021  still serving
+
+  Skharri Pride
+    SKH-ADM-0001      TF-3  commissioned 12 Apr 2526  still serving
+    SKH-ADM-0001      TF-3  commissioned 12 Apr 2526  retired 30 Oct 2595  (69.8 yr service)
+    SKH-ADM-0002      TF-3  commissioned 30 Oct 2595  still serving
+    SKH-ADM-0002      TF-3  commissioned 30 Oct 2595  retired 05 Sep 2662  (67.1 yr service)
+    SKH-ADM-0003      TF-3  commissioned 05 Sep 2662  still serving
+    SKH-ADM-0003      TF-3  commissioned 05 Sep 2662  retired 12 Jul 2729  (67.1 yr service)
+    SKH-ADM-0004      TF-3  commissioned 12 Jul 2729  still serving
+    SKH-ADM-0004      TF-3  commissioned 12 Jul 2729  retired 17 May 2796  (67.1 yr service)
+    SKH-ADM-0005      TF-3  commissioned 17 May 2796  still serving
+    SKH-ADM-0005      TF-3  commissioned 17 May 2796  retired 23 Mar 2863  (67.1 yr service)
+    SKH-ADM-0006      TF-3  commissioned 23 Mar 2863  still serving
+    SKH-ADM-0006      TF-3  commissioned 23 Mar 2863  retired 27 Jan 2930  (67.1 yr service)
+    SKH-ADM-0007      TF-3  commissioned 27 Jan 2930  still serving
+    SKH-ADM-0007      TF-3  commissioned 27 Jan 2930  retired 02 Dec 2996  (67.1 yr service)
+    SKH-ADM-0008      TF-3  commissioned 02 Dec 2996  still serving
+
+  Vaelkhi Choth
+    VLK-ADM-0001      TF+1  commissioned 12 Apr 2526  still serving
+    VLK-ADM-0001      TF+1  commissioned 12 Apr 2526  retired 27 Mar 2550  (24.0 yr service)
+    VLK-ADM-0002      TF+1  commissioned 27 Mar 2550  still serving
+    VLK-ADM-0002      TF+1  commissioned 27 Mar 2550  retired 07 Jan 2574  (23.9 yr service)
+    VLK-ADM-0003      TF+1  commissioned 07 Jan 2574  still serving
+    VLK-ADM-0003      TF+1  commissioned 07 Jan 2574  retired 20 Oct 2597  (23.9 yr service)
+    VLK-ADM-0004      TF+1  commissioned 20 Oct 2597  still serving
+    VLK-ADM-0004      TF+1  commissioned 20 Oct 2597  retired 03 Aug 2621  (23.9 yr service)
+    VLK-ADM-0005      TF+1  commissioned 03 Aug 2621  still serving
+    VLK-ADM-0005      TF+1  commissioned 03 Aug 2621  retired 16 May 2645  (23.9 yr service)
+    VLK-ADM-0006      TF+1  commissioned 16 May 2645  still serving
+    VLK-ADM-0006      TF+1  commissioned 16 May 2645  retired 26 Feb 2669  (23.9 yr service)
+    VLK-ADM-0007      TF+1  commissioned 26 Feb 2669  still serving
+    VLK-ADM-0007      TF+1  commissioned 26 Feb 2669  retired 09 Dec 2692  (23.9 yr service)
+    VLK-ADM-0008      TF+1  commissioned 09 Dec 2692  still serving
+    VLK-ADM-0008      TF+1  commissioned 09 Dec 2692  retired 22 Sep 2716  (23.9 yr service)
+    VLK-ADM-0009      TF+1  commissioned 22 Sep 2716  still serving
+    VLK-ADM-0009      TF+1  commissioned 22 Sep 2716  retired 05 Jul 2740  (23.9 yr service)
+    VLK-ADM-0010      TF+1  commissioned 05 Jul 2740  still serving
+    VLK-ADM-0010      TF+1  commissioned 05 Jul 2740  retired 17 Apr 2764  (23.9 yr service)
+    VLK-ADM-0011      TF+1  commissioned 17 Apr 2764  still serving
+    VLK-ADM-0011      TF+1  commissioned 17 Apr 2764  retired 29 Jan 2788  (23.9 yr service)
+    VLK-ADM-0012      TF+1  commissioned 29 Jan 2788  still serving
+    VLK-ADM-0012      TF+1  commissioned 29 Jan 2788  retired 11 Nov 2811  (23.9 yr service)
+    VLK-ADM-0013      TF+1  commissioned 11 Nov 2811  still serving
+    VLK-ADM-0013      TF+1  commissioned 11 Nov 2811  retired 24 Aug 2835  (23.9 yr service)
+    VLK-ADM-0014      TF+1  commissioned 24 Aug 2835  still serving
+    VLK-ADM-0014      TF+1  commissioned 24 Aug 2835  retired 06 Jun 2859  (23.9 yr service)
+    VLK-ADM-0015      TF+1  commissioned 06 Jun 2859  still serving
+    VLK-ADM-0015      TF+1  commissioned 06 Jun 2859  retired 19 Mar 2883  (23.9 yr service)
+    VLK-ADM-0016      TF+1  commissioned 19 Mar 2883  still serving
+    VLK-ADM-0016      TF+1  commissioned 19 Mar 2883  retired 31 Dec 2906  (23.9 yr service)
+    VLK-ADM-0017      TF+1  commissioned 31 Dec 2906  still serving
+    VLK-ADM-0017      TF+1  commissioned 31 Dec 2906  retired 13 Oct 2930  (23.9 yr service)
+    VLK-ADM-0018      TF+1  commissioned 13 Oct 2930  still serving
+    VLK-ADM-0018      TF+1  commissioned 13 Oct 2930  retired 26 Jul 2954  (23.9 yr service)
+    VLK-ADM-0019      TF+1  commissioned 26 Jul 2954  still serving
+    VLK-ADM-0019      TF+1  commissioned 26 Jul 2954  retired 08 May 2978  (23.9 yr service)
+    VLK-ADM-0020      TF+1  commissioned 08 May 2978  still serving
+    VLK-ADM-0020      TF+1  commissioned 08 May 2978  retired 19 Feb 3002  (23.9 yr service)
+    VLK-ADM-0021      TF+1  commissioned 19 Feb 3002  still serving
+
+  Shekhari Exchange
+    SHK-ADM-0001      TF±0  commissioned 12 Apr 2526  still serving
+    SHK-ADM-0001      TF±0  commissioned 12 Apr 2526  retired 14 Jun 2554  (28.3 yr service)
+    SHK-ADM-0002      TF±0  commissioned 14 Jun 2554  still serving
+    SHK-ADM-0002      TF±0  commissioned 14 Jun 2554  retired 27 Dec 2582  (28.6 yr service)
+    SHK-ADM-0003      TF±0  commissioned 27 Dec 2582  still serving
+    SHK-ADM-0003      TF±0  commissioned 27 Dec 2582  retired 12 Jul 2611  (28.6 yr service)
+    SHK-ADM-0004      TF±0  commissioned 12 Jul 2611  still serving
+    SHK-ADM-0004      TF±0  commissioned 12 Jul 2611  retired 24 Jan 2640  (28.6 yr service)
+    SHK-ADM-0005      TF±0  commissioned 24 Jan 2640  still serving
+    SHK-ADM-0005      TF±0  commissioned 24 Jan 2640  retired 07 Aug 2668  (28.6 yr service)
+    SHK-ADM-0006      TF±0  commissioned 07 Aug 2668  still serving
+    SHK-ADM-0006      TF±0  commissioned 07 Aug 2668  retired 19 Feb 2697  (28.6 yr service)
+    SHK-ADM-0007      TF±0  commissioned 19 Feb 2697  still serving
+    SHK-ADM-0007      TF±0  commissioned 19 Feb 2697  retired 04 Sep 2725  (28.6 yr service)
+    SHK-ADM-0008      TF±0  commissioned 04 Sep 2725  still serving
+    SHK-ADM-0008      TF±0  commissioned 04 Sep 2725  retired 19 Mar 2754  (28.6 yr service)
+    SHK-ADM-0009      TF±0  commissioned 19 Mar 2754  still serving
+    SHK-ADM-0009      TF±0  commissioned 19 Mar 2754  retired 01 Oct 2782  (28.6 yr service)
+    SHK-ADM-0010      TF±0  commissioned 01 Oct 2782  still serving
+    SHK-ADM-0010      TF±0  commissioned 01 Oct 2782  retired 15 Apr 2811  (28.6 yr service)
+    SHK-ADM-0011      TF±0  commissioned 15 Apr 2811  still serving
+    SHK-ADM-0011      TF±0  commissioned 15 Apr 2811  retired 28 Oct 2839  (28.6 yr service)
+    SHK-ADM-0012      TF±0  commissioned 28 Oct 2839  still serving
+    SHK-ADM-0012      TF±0  commissioned 28 Oct 2839  retired 11 May 2868  (28.6 yr service)
+    SHK-ADM-0013      TF±0  commissioned 11 May 2868  still serving
+    SHK-ADM-0013      TF±0  commissioned 11 May 2868  retired 23 Nov 2896  (28.6 yr service)
+    SHK-ADM-0014      TF±0  commissioned 23 Nov 2896  still serving
+    SHK-ADM-0014      TF±0  commissioned 23 Nov 2896  retired 08 Jun 2925  (28.6 yr service)
+    SHK-ADM-0015      TF±0  commissioned 08 Jun 2925  still serving
+    SHK-ADM-0015      TF±0  commissioned 08 Jun 2925  retired 21 Dec 2953  (28.6 yr service)
+    SHK-ADM-0016      TF±0  commissioned 21 Dec 2953  still serving
+    SHK-ADM-0016      TF±0  commissioned 21 Dec 2953  retired 05 Jul 2982  (28.6 yr service)
+    SHK-ADM-0017      TF±0  commissioned 05 Jul 2982  still serving
+    SHK-ADM-0017      TF±0  commissioned 05 Jul 2982  retired 18 Jan 3011  (28.6 yr service)
+    SHK-ADM-0018      TF±0  commissioned 18 Jan 3011  still serving
+
+  Golvhaan Reach
+    GLV-ADM-0001      TF+3  commissioned 12 Apr 2526  still serving
+    GLV-ADM-0001      TF+3  commissioned 12 Apr 2526  retired 22 Aug 2566  (40.5 yr service)
+    GLV-ADM-0002      TF+1  commissioned 22 Aug 2566  still serving
+    GLV-ADM-0002      TF+1  commissioned 22 Aug 2566  retired 12 Oct 2604  (38.3 yr service)
+    GLV-ADM-0003      TF+1  commissioned 12 Oct 2604  still serving
+    GLV-ADM-0003      TF+1  commissioned 12 Oct 2604  retired 02 Dec 2642  (38.3 yr service)
+    GLV-ADM-0004      TF+1  commissioned 02 Dec 2642  still serving
+    GLV-ADM-0004      TF+1  commissioned 02 Dec 2642  retired 21 Jan 2681  (38.3 yr service)
+    GLV-ADM-0005      TF+1  commissioned 21 Jan 2681  still serving
+    GLV-ADM-0005      TF+1  commissioned 21 Jan 2681  retired 14 Mar 2719  (38.3 yr service)
+    GLV-ADM-0006      TF+1  commissioned 14 Mar 2719  still serving
+    GLV-ADM-0006      TF+1  commissioned 14 Mar 2719  retired 03 May 2757  (38.3 yr service)
+    GLV-ADM-0007      TF+1  commissioned 03 May 2757  still serving
+    GLV-ADM-0007      TF+1  commissioned 03 May 2757  retired 23 Jun 2795  (38.3 yr service)
+    GLV-ADM-0008      TF+1  commissioned 23 Jun 2795  still serving
+    GLV-ADM-0008      TF+1  commissioned 23 Jun 2795  retired 12 Aug 2833  (38.3 yr service)
+    GLV-ADM-0009      TF+1  commissioned 12 Aug 2833  still serving
+    GLV-ADM-0009      TF+1  commissioned 12 Aug 2833  retired 02 Oct 2871  (38.3 yr service)
+    GLV-ADM-0010      TF+1  commissioned 02 Oct 2871  still serving
+    GLV-ADM-0010      TF+1  commissioned 02 Oct 2871  retired 22 Nov 2909  (38.3 yr service)
+    GLV-ADM-0011      TF+1  commissioned 22 Nov 2909  still serving
+    GLV-ADM-0011      TF+1  commissioned 22 Nov 2909  retired 12 Jan 2948  (38.3 yr service)
+    GLV-ADM-0012      TF+1  commissioned 12 Jan 2948  still serving
+    GLV-ADM-0012      TF+1  commissioned 12 Jan 2948  retired 03 Mar 2986  (38.3 yr service)
+    GLV-ADM-0013      TF+1  commissioned 03 Mar 2986  still serving
+    GLV-ADM-0013      TF+1  commissioned 03 Mar 2986  retired 23 Apr 3024  (38.3 yr service)
+    GLV-ADM-0014      TF+1  commissioned 23 Apr 3024  still serving
+
+  Nhaveth Court A
+    NHV-ADM-0001      TF+3  commissioned 12 Apr 2526  still serving
+    NHV-ADM-0001      TF+3  commissioned 12 Apr 2526  retired 02 Dec 2727  (202.3 yr service)
+    NHV-ADM-0002      TF-3  commissioned 02 Dec 2727  still serving
+    NHV-ADM-0002      TF-3  commissioned 02 Dec 2727  retired 16 May 2881  (154.0 yr service)
+    NHV-ADM-0003      TF-3  commissioned 16 May 2881  still serving
+
+  Nhaveth Court B
+    NHV-ADM-0001      TF-3  commissioned 12 Apr 2526  still serving
+    NHV-ADM-0001      TF-3  commissioned 12 Apr 2526  retired 13 Jul 2734  (209.0 yr service)
+    NHV-ADM-0002      TF-3  commissioned 13 Jul 2734  still serving
+    NHV-ADM-0002      TF-3  commissioned 13 Jul 2734  retired 07 Jul 2919  (185.6 yr service)
+    NHV-ADM-0003      TF-3  commissioned 07 Jul 2919  still serving
+
+  Nhaveth Court C
+    NHV-ADM-0001      TF-2  commissioned 12 Apr 2526  still serving
+    NHV-ADM-0001      TF-2  commissioned 12 Apr 2526  retired 13 Apr 2734  (208.7 yr service)
+    NHV-ADM-0002      TF-3  commissioned 13 Apr 2734  still serving
+    NHV-ADM-0002      TF-3  commissioned 13 Apr 2734  retired 07 Feb 2944  (210.5 yr service)
+    NHV-ADM-0003      TF-3  commissioned 07 Feb 2944  still serving
+
+  Vardhek Roidhunate
+    VRD-ADM-0001      TF+3  commissioned 12 Apr 2526  still serving
+    VRD-ADM-0001      TF+3  commissioned 12 Apr 2526  retired 31 Jul 2561  (35.4 yr service)
+    VRD-ADM-0002      TF-2  commissioned 31 Jul 2561  still serving
+    VRD-ADM-0002      TF-2  commissioned 31 Jul 2561  retired 26 Aug 2596  (35.2 yr service)
+    VRD-ADM-0003      TF-2  commissioned 26 Aug 2596  still serving
+    VRD-ADM-0003      TF-2  commissioned 26 Aug 2596  retired 23 Sep 2631  (35.2 yr service)
+    VRD-ADM-0004      TF-2  commissioned 23 Sep 2631  still serving
+    VRD-ADM-0004      TF-2  commissioned 23 Sep 2631  retired 19 Oct 2666  (35.2 yr service)
+    VRD-ADM-0005      TF-2  commissioned 19 Oct 2666  still serving
+    VRD-ADM-0005      TF-2  commissioned 19 Oct 2666  retired 15 Nov 2701  (35.2 yr service)
+    VRD-ADM-0006      TF-2  commissioned 15 Nov 2701  still serving
+    VRD-ADM-0006      TF-2  commissioned 15 Nov 2701  retired 11 Dec 2736  (35.2 yr service)
+    VRD-ADM-0007      TF-2  commissioned 11 Dec 2736  still serving
+    VRD-ADM-0007      TF-2  commissioned 11 Dec 2736  retired 07 Jan 2772  (35.2 yr service)
+    VRD-ADM-0008      TF-2  commissioned 07 Jan 2772  still serving
+    VRD-ADM-0008      TF-2  commissioned 07 Jan 2772  retired 02 Feb 2807  (35.2 yr service)
+    VRD-ADM-0009      TF-2  commissioned 02 Feb 2807  still serving
+    VRD-ADM-0009      TF-2  commissioned 02 Feb 2807  retired 28 Feb 2842  (35.2 yr service)
+    VRD-ADM-0010      TF-2  commissioned 28 Feb 2842  still serving
+    VRD-ADM-0010      TF-2  commissioned 28 Feb 2842  retired 26 Mar 2877  (35.2 yr service)
+    VRD-ADM-0011      TF-2  commissioned 26 Mar 2877  still serving
+    VRD-ADM-0011      TF-2  commissioned 26 Mar 2877  retired 22 Apr 2912  (35.2 yr service)
+    VRD-ADM-0012      TF-2  commissioned 22 Apr 2912  still serving
+    VRD-ADM-0012      TF-2  commissioned 22 Apr 2912  retired 19 May 2947  (35.2 yr service)
+    VRD-ADM-0013      TF-2  commissioned 19 May 2947  still serving
+    VRD-ADM-0013      TF-2  commissioned 19 May 2947  retired 14 Jun 2982  (35.2 yr service)
+    VRD-ADM-0014      TF-2  commissioned 14 Jun 2982  still serving
+    VRD-ADM-0014      TF-2  commissioned 14 Jun 2982  retired 11 Jul 3017  (35.2 yr service)
+    VRD-ADM-0015      TF-2  commissioned 11 Jul 3017  still serving
+
+  Oceania
+    Winston           TF±0  commissioned 12 Apr 2526  still serving
+    Winston           TF±0  commissioned 12 Apr 2526  retired 25 Jul 2549  (23.4 yr service)
+    Withers           TF+1  commissioned 25 Jul 2549  still serving
+    Withers           TF+1  commissioned 25 Jul 2549  retired 31 Mar 2575  (25.8 yr service)
+    Aaronson          TF+1  commissioned 31 Mar 2575  still serving
+    Aaronson          TF+1  commissioned 31 Mar 2575  retired 05 Dec 2600  (25.8 yr service)
+    Comstock          TF+1  commissioned 05 Dec 2600  still serving
+    Comstock          TF+1  commissioned 05 Dec 2600  retired 11 Aug 2626  (25.8 yr service)
+    Weems             TF+1  commissioned 11 Aug 2626  still serving
+    Weems             TF+1  commissioned 11 Aug 2626  retired 16 Apr 2652  (25.8 yr service)
+    Zhukov            TF+1  commissioned 16 Apr 2652  still serving
+    Zhukov            TF+1  commissioned 16 Apr 2652  retired 21 Dec 2677  (25.8 yr service)
+    Vatutin           TF+1  commissioned 21 Dec 2677  still serving
+    Vatutin           TF+1  commissioned 21 Dec 2677  retired 28 Aug 2703  (25.8 yr service)
+    Tolbukhin         TF+1  commissioned 28 Aug 2703  still serving
+    Tolbukhin         TF+1  commissioned 28 Aug 2703  retired 03 May 2729  (25.8 yr service)
+    Bagramyan         TF+1  commissioned 03 May 2729  still serving
+    Bagramyan         TF+1  commissioned 03 May 2729  retired 07 Jan 2755  (25.8 yr service)
+    Tikhonov          TF+1  commissioned 07 Jan 2755  still serving
+    Tikhonov          TF+1  commissioned 07 Jan 2755  retired 12 Sep 2780  (25.8 yr service)
+    Peng Dehuai       TF+1  commissioned 12 Sep 2780  still serving
+    Peng Dehuai       TF+1  commissioned 12 Sep 2780  retired 19 May 2806  (25.8 yr service)
+    Zhu De            TF+1  commissioned 19 May 2806  still serving
+    Zhu De            TF+1  commissioned 19 May 2806  retired 23 Jan 2832  (25.8 yr service)
+    He Long           TF+1  commissioned 23 Jan 2832  still serving
+    He Long           TF+1  commissioned 23 Jan 2832  retired 28 Sep 2857  (25.8 yr service)
+    Wei Lihuang       TF+1  commissioned 28 Sep 2857  still serving
+    Wei Lihuang       TF+1  commissioned 28 Sep 2857  retired 04 Jun 2883  (25.8 yr service)
+    Bai Chongxi       TF+1  commissioned 04 Jun 2883  still serving
+    Bai Chongxi       TF+1  commissioned 04 Jun 2883  retired 08 Feb 2909  (25.8 yr service)
+    HUM-ADM-0016      TF+1  commissioned 08 Feb 2909  still serving
+    HUM-ADM-0016      TF+1  commissioned 08 Feb 2909  retired 15 Oct 2934  (25.8 yr service)
+    HUM-ADM-0017      TF+1  commissioned 15 Oct 2934  still serving
+    HUM-ADM-0017      TF+1  commissioned 15 Oct 2934  retired 20 Jun 2960  (25.8 yr service)
+    HUM-ADM-0018      TF+1  commissioned 20 Jun 2960  still serving
+    HUM-ADM-0018      TF+1  commissioned 20 Jun 2960  retired 24 Feb 2986  (25.8 yr service)
+    HUM-ADM-0019      TF+1  commissioned 24 Feb 2986  still serving
+    HUM-ADM-0019      TF+1  commissioned 24 Feb 2986  retired 01 Nov 3011  (25.8 yr service)
+    HUM-ADM-0020      TF+1  commissioned 01 Nov 3011  still serving
+
+  Eurasia
+    Julia             TF+1  commissioned 12 Apr 2526  still serving
+    Julia             TF+1  commissioned 12 Apr 2526  retired 02 Apr 2551  (25.1 yr service)
+    Rutherford        TF+3  commissioned 02 Apr 2551  still serving
+    Rutherford        TF+3  commissioned 02 Apr 2551  retired 16 Aug 2576  (25.5 yr service)
+    Tillotson         TF+3  commissioned 16 Aug 2576  still serving
+    Tillotson         TF+3  commissioned 16 Aug 2576  retired 01 Jan 2602  (25.5 yr service)
+    Ogilvy            TF+3  commissioned 01 Jan 2602  still serving
+    Ogilvy            TF+3  commissioned 01 Jan 2602  retired 18 May 2627  (25.5 yr service)
+    Fellowes          TF+3  commissioned 18 May 2627  still serving
+    Fellowes          TF+3  commissioned 18 May 2627  retired 01 Oct 2652  (25.5 yr service)
+    Rokossovsky       TF+3  commissioned 01 Oct 2652  still serving
+    Rokossovsky       TF+3  commissioned 01 Oct 2652  retired 15 Feb 2678  (25.5 yr service)
+    Chuikov           TF+3  commissioned 15 Feb 2678  still serving
+    Chuikov           TF+3  commissioned 15 Feb 2678  retired 03 Jul 2703  (25.5 yr service)
+    Yeremenko         TF+3  commissioned 03 Jul 2703  still serving
+    Yeremenko         TF+3  commissioned 03 Jul 2703  retired 16 Nov 2728  (25.5 yr service)
+    Govorov           TF+3  commissioned 16 Nov 2728  still serving
+    Govorov           TF+3  commissioned 16 Nov 2728  retired 02 Apr 2754  (25.5 yr service)
+    Sokolovsky        TF+3  commissioned 02 Apr 2754  still serving
+    Sokolovsky        TF+3  commissioned 02 Apr 2754  retired 17 Aug 2779  (25.5 yr service)
+    Lin Biao          TF+3  commissioned 17 Aug 2779  still serving
+    Lin Biao          TF+3  commissioned 17 Aug 2779  retired 31 Dec 2804  (25.5 yr service)
+    Liu Bocheng       TF+3  commissioned 31 Dec 2804  still serving
+    Liu Bocheng       TF+3  commissioned 31 Dec 2804  retired 17 May 2830  (25.5 yr service)
+    Nie Rongzhen      TF+3  commissioned 17 May 2830  still serving
+    Nie Rongzhen      TF+3  commissioned 17 May 2830  retired 01 Oct 2855  (25.5 yr service)
+    Ye Jianying       TF+3  commissioned 01 Oct 2855  still serving
+    Ye Jianying       TF+3  commissioned 01 Oct 2855  retired 14 Feb 2881  (25.5 yr service)
+    Zhang Xueliang    TF+3  commissioned 14 Feb 2881  still serving
+    Zhang Xueliang    TF+3  commissioned 14 Feb 2881  retired 02 Jul 2906  (25.5 yr service)
+    HUM-ADM-0016      TF+3  commissioned 02 Jul 2906  still serving
+    HUM-ADM-0016      TF+3  commissioned 02 Jul 2906  retired 16 Nov 2931  (25.5 yr service)
+    HUM-ADM-0017      TF+3  commissioned 16 Nov 2931  still serving
+    HUM-ADM-0017      TF+3  commissioned 16 Nov 2931  retired 01 Apr 2957  (25.5 yr service)
+    HUM-ADM-0018      TF+3  commissioned 01 Apr 2957  still serving
+    HUM-ADM-0018      TF+3  commissioned 01 Apr 2957  retired 16 Aug 2982  (25.5 yr service)
+    HUM-ADM-0019      TF+3  commissioned 16 Aug 2982  still serving
+    HUM-ADM-0019      TF+3  commissioned 16 Aug 2982  retired 01 Jan 3008  (25.5 yr service)
+    HUM-ADM-0020      TF+3  commissioned 01 Jan 3008  still serving
+
+  Eastasia
+    Goldstein         TF+3  commissioned 12 Apr 2526  still serving
+    Goldstein         TF+3  commissioned 12 Apr 2526  retired 26 Dec 2549  (23.8 yr service)
+    Ampleforth        TF+1  commissioned 26 Dec 2549  still serving
+    Ampleforth        TF+1  commissioned 26 Dec 2549  retired 01 Mar 2576  (26.3 yr service)
+    Jones             TF+1  commissioned 01 Mar 2576  still serving
+    Jones             TF+1  commissioned 01 Mar 2576  retired 07 May 2602  (26.3 yr service)
+    Bumstead          TF+1  commissioned 07 May 2602  still serving
+    Bumstead          TF+1  commissioned 07 May 2602  retired 11 Jul 2628  (26.3 yr service)
+    Griller           TF+1  commissioned 11 Jul 2628  still serving
+    Griller           TF+1  commissioned 11 Jul 2628  retired 15 Sep 2654  (26.3 yr service)
+    Konev             TF+1  commissioned 15 Sep 2654  still serving
+    Konev             TF+1  commissioned 15 Sep 2654  retired 19 Nov 2680  (26.3 yr service)
+    Malinovsky        TF+1  commissioned 19 Nov 2680  still serving
+    Malinovsky        TF+1  commissioned 19 Nov 2680  retired 25 Jan 2707  (26.3 yr service)
+    Meretskov         TF+1  commissioned 25 Jan 2707  still serving
+    Meretskov         TF+1  commissioned 25 Jan 2707  retired 31 Mar 2733  (26.3 yr service)
+    Popov             TF+1  commissioned 31 Mar 2733  still serving
+    Popov             TF+1  commissioned 31 Mar 2733  retired 05 Jun 2759  (26.3 yr service)
+    Volkov            TF+1  commissioned 05 Jun 2759  still serving
+    Volkov            TF+1  commissioned 05 Jun 2759  retired 09 Aug 2785  (26.3 yr service)
+    Chen Yi           TF+1  commissioned 09 Aug 2785  still serving
+    Chen Yi           TF+1  commissioned 09 Aug 2785  retired 14 Oct 2811  (26.3 yr service)
+    Su Yu             TF+1  commissioned 14 Oct 2811  still serving
+    Su Yu             TF+1  commissioned 14 Oct 2811  retired 18 Dec 2837  (26.3 yr service)
+    Xu Xiangqian      TF+1  commissioned 18 Dec 2837  still serving
+    Xu Xiangqian      TF+1  commissioned 18 Dec 2837  retired 22 Feb 2864  (26.3 yr service)
+    Xue Yue           TF+1  commissioned 22 Feb 2864  still serving
+    Xue Yue           TF+1  commissioned 22 Feb 2864  retired 28 Apr 2890  (26.3 yr service)
+    Fu Zuoyi          TF+1  commissioned 28 Apr 2890  still serving
+    Fu Zuoyi          TF+1  commissioned 28 Apr 2890  retired 03 Jul 2916  (26.3 yr service)
+    HUM-ADM-0016      TF+1  commissioned 03 Jul 2916  still serving
+    HUM-ADM-0016      TF+1  commissioned 03 Jul 2916  retired 07 Sep 2942  (26.3 yr service)
+    HUM-ADM-0017      TF+1  commissioned 07 Sep 2942  still serving
+    HUM-ADM-0017      TF+1  commissioned 07 Sep 2942  retired 11 Nov 2968  (26.3 yr service)
+    HUM-ADM-0018      TF+1  commissioned 11 Nov 2968  still serving
+    HUM-ADM-0018      TF+1  commissioned 11 Nov 2968  retired 16 Jan 2995  (26.3 yr service)
+    HUM-ADM-0019      TF+1  commissioned 16 Jan 2995  still serving
+    HUM-ADM-0019      TF+1  commissioned 16 Jan 2995  retired 23 Mar 3021  (26.3 yr service)
+    HUM-ADM-0020      TF+1  commissioned 23 Mar 3021  still serving
+
+
+══════════════════════════════════════════════════════════════════════
+  AGGREGATE YEARLY DIGEST
+══════════════════════════════════════════════════════════════════════
+
+  (Aggregate treasury, fleet size, and presences across all polities)
+
+  Year    Date              Treasury   Fleets   Presences
+  -------------------------------------------------------
+  2527    11 Apr 2527           5278       15          25
+  2528    09 Apr 2528          12969       15          25
+  2529    08 Apr 2529          22478       15          25
+  2530    07 Apr 2530          32813       15          25
+  2531    06 Apr 2531          44010       15          25
+  2532    04 Apr 2532          55613       15          25
+  2533    03 Apr 2533          67544       15          25
+  2534    02 Apr 2534          79556       15          25
+  2535    01 Apr 2535          91567       15          25
+  2536    30 Mar 2536         103714       15          25
+  2537    29 Mar 2537         115881       15          25
+  2538    28 Mar 2538         128049       15          25
+  2539    27 Mar 2539         140216       15          25
+  2540    25 Mar 2540         152384       15          25
+  2541    24 Mar 2541         164551       15          25
+  2542    23 Mar 2542         176719       15          25
+  2543    22 Mar 2543         188927       15          25
+  2544    20 Mar 2544         201328       15          25
+  2545    19 Mar 2545         213729       15          25
+  2546    18 Mar 2546         226131       15          25
+  2547    17 Mar 2547         238532       15          25
+  2548    15 Mar 2548         250934       15          25
+  2549    14 Mar 2549         263335       15          25
+  2550    13 Mar 2550         275737       15          25
+  2551    12 Mar 2551         288138       15          25
+  2552    10 Mar 2552         300540       15          25
+  2553    09 Mar 2553         312941       15          25
+  2554    08 Mar 2554         325343       15          25
+  2555    07 Mar 2555         337744       15          25
+  2556    05 Mar 2556         350146       15          25
+  2557    04 Mar 2557         362547       15          25
+  2558    03 Mar 2558         374949       15          25
+  2559    02 Mar 2559         387350       15          25
+  2560    29 Feb 2560         399752       15          25
+  2561    27 Feb 2561         412153       15          25
+  2562    26 Feb 2562         424555       15          25
+  2563    25 Feb 2563         436956       15          25
+  2564    24 Feb 2564         449358       15          25
+  2565    22 Feb 2565         461759       15          25
+  2566    21 Feb 2566         474161       15          25
+  2567    20 Feb 2567         486562       15          25
+  2568    19 Feb 2568         498964       15          25
+  2569    17 Feb 2569         511365       15          25
+  2570    16 Feb 2570         523766       15          25
+  2571    15 Feb 2571         536168       15          25
+  2572    14 Feb 2572         548569       15          25
+  2573    12 Feb 2573         560971       15          25
+  2574    11 Feb 2574         573372       15          25
+  2575    10 Feb 2575         585774       15          25
+  2576    09 Feb 2576         598175       15          25
+  2577    07 Feb 2577         610577       15          25
+  2578    06 Feb 2578         622978       15          25
+  2579    05 Feb 2579         635380       15          25
+  2580    04 Feb 2580         647781       15          25
+  2581    02 Feb 2581         660183       15          25
+  2582    01 Feb 2582         672584       15          25
+  2583    31 Jan 2583         684986       15          25
+  2584    30 Jan 2584         697387       15          25
+  2585    28 Jan 2585         709789       15          25
+  2586    27 Jan 2586         722190       15          25
+  2587    26 Jan 2587         734592       15          25
+  2588    25 Jan 2588         746993       15          25
+  2589    23 Jan 2589         759395       15          25
+  2590    22 Jan 2590         771796       15          25
+  2591    21 Jan 2591         784198       15          25
+  2592    20 Jan 2592         796599       15          25
+  2593    18 Jan 2593         809001       15          25
+  2594    17 Jan 2594         821402       15          25
+  2595    16 Jan 2595         833803       15          25
+  2596    15 Jan 2596         846205       15          25
+  2597    13 Jan 2597         858606       15          25
+  2598    12 Jan 2598         871008       15          25
+  2599    11 Jan 2599         883409       15          25
+  2600    10 Jan 2600         895811       15          25
+  2601    09 Jan 2601         908212       15          25
+  2602    08 Jan 2602         920614       15          25
+  2603    07 Jan 2603         933015       15          25
+  2604    06 Jan 2604         945417       15          25
+  2605    04 Jan 2605         957818       15          25
+  2606    03 Jan 2606         970220       15          25
+  2607    02 Jan 2607         982621       15          25
+  2608    01 Jan 2608         995023       15          25
+  2608    30 Dec 2608        1007424       15          25
+  2609    29 Dec 2609        1019826       15          25
+  2610    28 Dec 2610        1032227       15          25
+  2611    27 Dec 2611        1044629       15          25
+  2612    25 Dec 2612        1057030       15          25
+  2613    24 Dec 2613        1069432       15          25
+  2614    23 Dec 2614        1081833       15          25
+  2615    22 Dec 2615        1094235       15          25
+  2616    20 Dec 2616        1106636       15          25
+  2617    19 Dec 2617        1119038       15          25
+  2618    18 Dec 2618        1131439       15          25
+  2619    17 Dec 2619        1143840       15          25
+  2620    15 Dec 2620        1156242       15          25
+  2621    14 Dec 2621        1168643       15          25
+  2622    13 Dec 2622        1181045       15          25
+  2623    12 Dec 2623        1193446       15          25
+  2624    10 Dec 2624        1205848       15          25
+  2625    09 Dec 2625        1218249       15          25
+  2626    08 Dec 2626        1230651       15          25
+  2627    07 Dec 2627        1243052       15          25
+  2628    05 Dec 2628        1255454       15          25
+  2629    04 Dec 2629        1267855       15          25
+  2630    03 Dec 2630        1280257       15          25
+  2631    02 Dec 2631        1292658       15          25
+  2632    30 Nov 2632        1305060       15          25
+  2633    29 Nov 2633        1317461       15          25
+  2634    28 Nov 2634        1329863       15          25
+  2635    27 Nov 2635        1342264       15          25
+  2636    25 Nov 2636        1354666       15          25
+  2637    24 Nov 2637        1367067       15          25
+  2638    23 Nov 2638        1379469       15          25
+  2639    22 Nov 2639        1391870       15          25
+  2640    20 Nov 2640        1404272       15          25
+  2641    19 Nov 2641        1416673       15          25
+  2642    18 Nov 2642        1429075       15          25
+  2643    17 Nov 2643        1441476       15          25
+  2644    15 Nov 2644        1453877       15          25
+  2645    14 Nov 2645        1466279       15          25
+  2646    13 Nov 2646        1478680       15          25
+  2647    12 Nov 2647        1491082       15          25
+  2648    10 Nov 2648        1503483       15          25
+  2649    09 Nov 2649        1515885       15          25
+  2650    08 Nov 2650        1528286       15          25
+  2651    07 Nov 2651        1540688       15          25
+  2652    05 Nov 2652        1553089       15          25
+  2653    04 Nov 2653        1565491       15          25
+  2654    03 Nov 2654        1577892       15          25
+  2655    02 Nov 2655        1590294       15          25
+  2656    31 Oct 2656        1602695       15          25
+  2657    30 Oct 2657        1615097       15          25
+  2658    29 Oct 2658        1627498       15          25
+  2659    28 Oct 2659        1639900       15          25
+  2660    26 Oct 2660        1652301       15          25
+  2661    25 Oct 2661        1664703       15          25
+  2662    24 Oct 2662        1677104       15          25
+  2663    23 Oct 2663        1689506       15          25
+  2664    21 Oct 2664        1701907       15          25
+  2665    20 Oct 2665        1714309       15          25
+  2666    19 Oct 2666        1726710       15          25
+  2667    18 Oct 2667        1739112       15          25
+  2668    16 Oct 2668        1751513       15          25
+  2669    15 Oct 2669        1763914       15          25
+  2670    14 Oct 2670        1776316       15          25
+  2671    13 Oct 2671        1788717       15          25
+  2672    11 Oct 2672        1801119       15          25
+  2673    10 Oct 2673        1813520       15          25
+  2674    09 Oct 2674        1825922       15          25
+  2675    08 Oct 2675        1838323       15          25
+  2676    06 Oct 2676        1850725       15          25
+  2677    05 Oct 2677        1863126       15          25
+  2678    04 Oct 2678        1875528       15          25
+  2679    03 Oct 2679        1887929       15          25
+  2680    01 Oct 2680        1900331       15          25
+  2681    30 Sep 2681        1912732       15          25
+  2682    29 Sep 2682        1925134       15          25
+  2683    28 Sep 2683        1937535       15          25
+  2684    26 Sep 2684        1949937       15          25
+  2685    25 Sep 2685        1962338       15          25
+  2686    24 Sep 2686        1974740       15          25
+  2687    23 Sep 2687        1987141       15          25
+  2688    21 Sep 2688        1999543       15          25
+  2689    20 Sep 2689        2011944       15          25
+  2690    19 Sep 2690        2024346       15          25
+  2691    18 Sep 2691        2036747       15          25
+  2692    16 Sep 2692        2049149       15          25
+  2693    15 Sep 2693        2061550       15          25
+  2694    14 Sep 2694        2073951       15          25
+  2695    13 Sep 2695        2086353       15          25
+  2696    11 Sep 2696        2098754       15          25
+  2697    10 Sep 2697        2111156       15          25
+  2698    09 Sep 2698        2123557       15          25
+  2699    08 Sep 2699        2135959       15          25
+  2700    07 Sep 2700        2148360       15          25
+  2701    06 Sep 2701        2160762       15          25
+  2702    05 Sep 2702        2173163       15          25
+  2703    04 Sep 2703        2185565       15          25
+  2704    02 Sep 2704        2197966       15          25
+  2705    01 Sep 2705        2210368       15          25
+  2706    31 Aug 2706        2222769       15          25
+  2707    30 Aug 2707        2235171       15          25
+  2708    28 Aug 2708        2247572       15          25
+  2709    27 Aug 2709        2259974       15          25
+  2710    26 Aug 2710        2272375       15          25
+  2711    25 Aug 2711        2284777       15          25
+  2712    23 Aug 2712        2297178       15          25
+  2713    22 Aug 2713        2309580       15          25
+  2714    21 Aug 2714        2321981       15          25
+  2715    20 Aug 2715        2334383       15          25
+  2716    18 Aug 2716        2346784       15          25
+  2717    17 Aug 2717        2359186       15          25
+  2718    16 Aug 2718        2371587       15          25
+  2719    15 Aug 2719        2383988       15          25
+  2720    13 Aug 2720        2396390       15          25
+  2721    12 Aug 2721        2408791       15          25
+  2722    11 Aug 2722        2421193       15          25
+  2723    10 Aug 2723        2433594       15          25
+  2724    08 Aug 2724        2445996       15          25
+  2725    07 Aug 2725        2458397       15          25
+  2726    06 Aug 2726        2470799       15          25
+  2727    05 Aug 2727        2483200       15          25
+  2728    03 Aug 2728        2495602       15          25
+  2729    02 Aug 2729        2508003       15          25
+  2730    01 Aug 2730        2520405       15          25
+  2731    31 Jul 2731        2532806       15          25
+  2732    29 Jul 2732        2545208       15          25
+  2733    28 Jul 2733        2557609       15          25
+  2734    27 Jul 2734        2570011       15          25
+  2735    26 Jul 2735        2582412       15          25
+  2736    24 Jul 2736        2594814       15          25
+  2737    23 Jul 2737        2607215       15          25
+  2738    22 Jul 2738        2619617       15          25
+  2739    21 Jul 2739        2632018       15          25
+  2740    19 Jul 2740        2644420       15          25
+  2741    18 Jul 2741        2656821       15          25
+  2742    17 Jul 2742        2669223       15          25
+  2743    16 Jul 2743        2681624       15          25
+  2744    14 Jul 2744        2694025       15          25
+  2745    13 Jul 2745        2706427       15          25
+  2746    12 Jul 2746        2718828       15          25
+  2747    11 Jul 2747        2731230       15          25
+  2748    09 Jul 2748        2743631       15          25
+  2749    08 Jul 2749        2756033       15          25
+  2750    07 Jul 2750        2768434       15          25
+  2751    06 Jul 2751        2780836       15          25
+  2752    04 Jul 2752        2793237       15          25
+  2753    03 Jul 2753        2805639       15          25
+  2754    02 Jul 2754        2818040       15          25
+  2755    01 Jul 2755        2830442       15          25
+  2756    29 Jun 2756        2842843       15          25
+  2757    28 Jun 2757        2855245       15          25
+  2758    27 Jun 2758        2867646       15          25
+  2759    26 Jun 2759        2880048       15          25
+  2760    24 Jun 2760        2892449       15          25
+  2761    23 Jun 2761        2904851       15          25
+  2762    22 Jun 2762        2917252       15          25
+  2763    21 Jun 2763        2929654       15          25
+  2764    19 Jun 2764        2942055       15          25
+  2765    18 Jun 2765        2954457       15          25
+  2766    17 Jun 2766        2966858       15          25
+  2767    16 Jun 2767        2979260       15          25
+  2768    14 Jun 2768        2991661       15          25
+  2769    13 Jun 2769        3004062       15          25
+  2770    12 Jun 2770        3016464       15          25
+  2771    11 Jun 2771        3028865       15          25
+  2772    09 Jun 2772        3041267       15          25
+  2773    08 Jun 2773        3053668       15          25
+  2774    07 Jun 2774        3066070       15          25
+  2775    06 Jun 2775        3078471       15          25
+  2776    04 Jun 2776        3090873       15          25
+  2777    03 Jun 2777        3103274       15          25
+  2778    02 Jun 2778        3115676       15          25
+  2779    01 Jun 2779        3128077       15          25
+  2780    30 May 2780        3140479       15          25
+  2781    29 May 2781        3152880       15          25
+  2782    28 May 2782        3165282       15          25
+  2783    27 May 2783        3177683       15          25
+  2784    25 May 2784        3190085       15          25
+  2785    24 May 2785        3202486       15          25
+  2786    23 May 2786        3214888       15          25
+  2787    22 May 2787        3227289       15          25
+  2788    20 May 2788        3239691       15          25
+  2789    19 May 2789        3252092       15          25
+  2790    18 May 2790        3264494       15          25
+  2791    17 May 2791        3276895       15          25
+  2792    15 May 2792        3289297       15          25
+  2793    14 May 2793        3301698       15          25
+  2794    13 May 2794        3314099       15          25
+  2795    12 May 2795        3326501       15          25
+  2796    10 May 2796        3338902       15          25
+  2797    09 May 2797        3351304       15          25
+  2798    08 May 2798        3363705       15          25
+  2799    07 May 2799        3376107       15          25
+  2800    05 May 2800        3388508       15          25
+  2801    04 May 2801        3400910       15          25
+  2802    03 May 2802        3413311       15          25
+  2803    02 May 2803        3425713       15          25
+  2804    30 Apr 2804        3438114       15          25
+  2805    29 Apr 2805        3450516       15          25
+  2806    28 Apr 2806        3462917       15          25
+  2807    27 Apr 2807        3475319       15          25
+  2808    25 Apr 2808        3487720       15          25
+  2809    24 Apr 2809        3500122       15          25
+  2810    23 Apr 2810        3512523       15          25
+  2811    22 Apr 2811        3524925       15          25
+  2812    20 Apr 2812        3537326       15          25
+  2813    19 Apr 2813        3549728       15          25
+  2814    18 Apr 2814        3562129       15          25
+  2815    17 Apr 2815        3574531       15          25
+  2816    15 Apr 2816        3586932       15          25
+  2817    14 Apr 2817        3599334       15          25
+  2818    13 Apr 2818        3611735       15          25
+  2819    12 Apr 2819        3624136       15          25
+  2820    10 Apr 2820        3636538       15          25
+  2821    09 Apr 2821        3648939       15          25
+  2822    08 Apr 2822        3661341       15          25
+  2823    07 Apr 2823        3673742       15          25
+  2824    05 Apr 2824        3686144       15          25
+  2825    04 Apr 2825        3698545       15          25
+  2826    03 Apr 2826        3710947       15          25
+  2827    02 Apr 2827        3723348       15          25
+  2828    31 Mar 2828        3735750       15          25
+  2829    30 Mar 2829        3748151       15          25
+  2830    29 Mar 2830        3760553       15          25
+  2831    28 Mar 2831        3772954       15          25
+  2832    26 Mar 2832        3785356       15          25
+  2833    25 Mar 2833        3797757       15          25
+  2834    24 Mar 2834        3810159       15          25
+  2835    23 Mar 2835        3822560       15          25
+  2836    21 Mar 2836        3834962       15          25
+  2837    20 Mar 2837        3847363       15          25
+  2838    19 Mar 2838        3859765       15          25
+  2839    18 Mar 2839        3872166       15          25
+  2840    16 Mar 2840        3884568       15          25
+  2841    15 Mar 2841        3896969       15          25
+  2842    14 Mar 2842        3909371       15          25
+  2843    13 Mar 2843        3921772       15          25
+  2844    11 Mar 2844        3934173       15          25
+  2845    10 Mar 2845        3946575       15          25
+  2846    09 Mar 2846        3958976       15          25
+  2847    08 Mar 2847        3971378       15          25
+  2848    06 Mar 2848        3983779       15          25
+  2849    05 Mar 2849        3996181       15          25
+  2850    04 Mar 2850        4008582       15          25
+  2851    03 Mar 2851        4020984       15          25
+  2852    01 Mar 2852        4033385       15          25
+  2853    28 Feb 2853        4045787       15          25
+  2854    27 Feb 2854        4058188       15          25
+  2855    26 Feb 2855        4070590       15          25
+  2856    25 Feb 2856        4082991       15          25
+  2857    23 Feb 2857        4095393       15          25
+  2858    22 Feb 2858        4107794       15          25
+  2859    21 Feb 2859        4120196       15          25
+  2860    20 Feb 2860        4132597       15          25
+  2861    18 Feb 2861        4144999       15          25
+  2862    17 Feb 2862        4157400       15          25
+  2863    16 Feb 2863        4169802       15          25
+  2864    15 Feb 2864        4182203       15          25
+  2865    13 Feb 2865        4194605       15          25
+  2866    12 Feb 2866        4207006       15          25
+  2867    11 Feb 2867        4219408       15          25
+  2868    10 Feb 2868        4231809       15          25
+  2869    08 Feb 2869        4244210       15          25
+  2870    07 Feb 2870        4256612       15          25
+  2871    06 Feb 2871        4269013       15          25
+  2872    05 Feb 2872        4281415       15          25
+  2873    03 Feb 2873        4293816       15          25
+  2874    02 Feb 2874        4306218       15          25
+  2875    01 Feb 2875        4318619       15          25
+  2876    31 Jan 2876        4331021       15          25
+  2877    29 Jan 2877        4343422       15          25
+  2878    28 Jan 2878        4355824       15          25
+  2879    27 Jan 2879        4368225       15          25
+  2880    26 Jan 2880        4380627       15          25
+  2881    24 Jan 2881        4393028       15          25
+  2882    23 Jan 2882        4405430       15          25
+  2883    22 Jan 2883        4417831       15          25
+  2884    21 Jan 2884        4430233       15          25
+  2885    19 Jan 2885        4442634       15          25
+  2886    18 Jan 2886        4455036       15          25
+  2887    17 Jan 2887        4467437       15          25
+  2888    16 Jan 2888        4479839       15          25
+  2889    14 Jan 2889        4492240       15          25
+  2890    13 Jan 2890        4504642       15          25
+  2891    12 Jan 2891        4517043       15          25
+  2892    11 Jan 2892        4529445       15          25
+  2893    09 Jan 2893        4541846       15          25
+  2894    08 Jan 2894        4554247       15          25
+  2895    07 Jan 2895        4566649       15          25
+  2896    06 Jan 2896        4579050       15          25
+  2897    04 Jan 2897        4591452       15          25
+  2898    03 Jan 2898        4603853       15          25
+  2899    02 Jan 2899        4616255       15          25
+  2900    01 Jan 2900        4628656       15          25
+  2900    31 Dec 2900        4641058       15          25
+  2901    30 Dec 2901        4653459       15          25
+  2902    29 Dec 2902        4665861       15          25
+  2903    28 Dec 2903        4678262       15          25
+  2904    26 Dec 2904        4690664       15          25
+  2905    25 Dec 2905        4703065       15          25
+  2906    24 Dec 2906        4715467       15          25
+  2907    23 Dec 2907        4727868       15          25
+  2908    21 Dec 2908        4740270       15          25
+  2909    20 Dec 2909        4752671       15          25
+  2910    19 Dec 2910        4765073       15          25
+  2911    18 Dec 2911        4777474       15          25
+  2912    16 Dec 2912        4789876       15          25
+  2913    15 Dec 2913        4802277       15          25
+  2914    14 Dec 2914        4814679       15          25
+  2915    13 Dec 2915        4827080       15          25
+  2916    11 Dec 2916        4839482       15          25
+  2917    10 Dec 2917        4851883       15          25
+  2918    09 Dec 2918        4864284       15          25
+  2919    08 Dec 2919        4876686       15          25
+  2920    06 Dec 2920        4889087       15          25
+  2921    05 Dec 2921        4901489       15          25
+  2922    04 Dec 2922        4913890       15          25
+  2923    03 Dec 2923        4926292       15          25
+  2924    01 Dec 2924        4938693       15          25
+  2925    30 Nov 2925        4951095       15          25
+  2926    29 Nov 2926        4963496       15          25
+  2927    28 Nov 2927        4975898       15          25
+  2928    26 Nov 2928        4988299       15          25
+  2929    25 Nov 2929        5000701       15          25
+  2930    24 Nov 2930        5013102       15          25
+  2931    23 Nov 2931        5025504       15          25
+  2932    21 Nov 2932        5037905       15          25
+  2933    20 Nov 2933        5050307       15          25
+  2934    19 Nov 2934        5062708       15          25
+  2935    18 Nov 2935        5075110       15          25
+  2936    16 Nov 2936        5087511       15          25
+  2937    15 Nov 2937        5099913       15          25
+  2938    14 Nov 2938        5112314       15          25
+  2939    13 Nov 2939        5124716       15          25
+  2940    11 Nov 2940        5137117       15          25
+  2941    10 Nov 2941        5149519       15          25
+  2942    09 Nov 2942        5161920       15          25
+  2943    08 Nov 2943        5174321       15          25
+  2944    06 Nov 2944        5186723       15          25
+  2945    05 Nov 2945        5199124       15          25
+  2946    04 Nov 2946        5211526       15          25
+  2947    03 Nov 2947        5223927       15          25
+  2948    01 Nov 2948        5236329       15          25
+  2949    31 Oct 2949        5248730       15          25
+  2950    30 Oct 2950        5261132       15          25
+  2951    29 Oct 2951        5273533       15          25
+  2952    27 Oct 2952        5285935       15          25
+  2953    26 Oct 2953        5298336       15          25
+  2954    25 Oct 2954        5310738       15          25
+  2955    24 Oct 2955        5323139       15          25
+  2956    22 Oct 2956        5335541       15          25
+  2957    21 Oct 2957        5347942       15          25
+  2958    20 Oct 2958        5360344       15          25
+  2959    19 Oct 2959        5372745       15          25
+  2960    17 Oct 2960        5385147       15          25
+  2961    16 Oct 2961        5397548       15          25
+  2962    15 Oct 2962        5409950       15          25
+  2963    14 Oct 2963        5422351       15          25
+  2964    12 Oct 2964        5434753       15          25
+  2965    11 Oct 2965        5447154       15          25
+  2966    10 Oct 2966        5459556       15          25
+  2967    09 Oct 2967        5471957       15          25
+  2968    07 Oct 2968        5484358       15          25
+  2969    06 Oct 2969        5496760       15          25
+  2970    05 Oct 2970        5509161       15          25
+  2971    04 Oct 2971        5521563       15          25
+  2972    02 Oct 2972        5533964       15          25
+  2973    01 Oct 2973        5546366       15          25
+  2974    30 Sep 2974        5558767       15          25
+  2975    29 Sep 2975        5571169       15          25
+  2976    27 Sep 2976        5583570       15          25
+  2977    26 Sep 2977        5595972       15          25
+  2978    25 Sep 2978        5608373       15          25
+  2979    24 Sep 2979        5620775       15          25
+  2980    22 Sep 2980        5633176       15          25
+  2981    21 Sep 2981        5645578       15          25
+  2982    20 Sep 2982        5657979       15          25
+  2983    19 Sep 2983        5670381       15          25
+  2984    17 Sep 2984        5682782       15          25
+  2985    16 Sep 2985        5695184       15          25
+  2986    15 Sep 2986        5707585       15          25
+  2987    14 Sep 2987        5719987       15          25
+  2988    12 Sep 2988        5732388       15          25
+  2989    11 Sep 2989        5744790       15          25
+  2990    10 Sep 2990        5757191       15          25
+  2991    09 Sep 2991        5769593       15          25
+  2992    07 Sep 2992        5781994       15          25
+  2993    06 Sep 2993        5794395       15          25
+  2994    05 Sep 2994        5806797       15          25
+  2995    04 Sep 2995        5819198       15          25
+  2996    02 Sep 2996        5831600       15          25
+  2997    01 Sep 2997        5844001       15          25
+  2998    31 Aug 2998        5856403       15          25
+  2999    30 Aug 2999        5868804       15          25
+  3000    29 Aug 3000        5881206       15          25
+  3001    28 Aug 3001        5893607       15          25
+  3002    27 Aug 3002        5906009       15          25
+  3003    26 Aug 3003        5918410       15          25
+  3004    24 Aug 3004        5930812       15          25
+  3005    23 Aug 3005        5943213       15          25
+  3006    22 Aug 3006        5955615       15          25
+  3007    21 Aug 3007        5968016       15          25
+  3008    19 Aug 3008        5980418       15          25
+  3009    18 Aug 3009        5992819       15          25
+  3010    17 Aug 3010        6005221       15          25
+  3011    16 Aug 3011        6017622       15          25
+  3012    14 Aug 3012        6030024       15          25
+  3013    13 Aug 3013        6042425       15          25
+  3014    12 Aug 3014        6054827       15          25
+  3015    11 Aug 3015        6067228       15          25
+  3016    09 Aug 3016        6079630       15          25
+  3017    08 Aug 3017        6092031       15          25
+  3018    07 Aug 3018        6104432       15          25
+  3019    06 Aug 3019        6116834       15          25
+  3020    04 Aug 3020        6129235       15          25
+  3021    03 Aug 3021        6141637       15          25
+  3022    02 Aug 3022        6154038       15          25
+  3023    01 Aug 3023        6166440       15          25
+  3024    30 Jul 3024        6178841       15          25
+
+══════════════════════════════════════════════════════════════════════
+  SIGNIFICANT EVENTS — FULL TIMELINE
+══════════════════════════════════════════════════════════════════════
+
+  (Excludes monthly summaries and routine hull builds)
+
+
+  ── 2526 ──
+  12 Apr 2526  colony established  Kreeth Dominion                           Kreeth Dominion founded at system 898454
+  12 Apr 2526  colony established  Vashori Compact                           Vashori Compact founded at system 1066934
+  12 Apr 2526  colony established  Kraathi Crusade                           Kraathi Crusade founded at system 918040
+  12 Apr 2526  colony established  Nakhavi Reach                             Nakhavi Reach founded at system 1036727
+  12 Apr 2526  colony established  Skharri Pride                             Skharri Pride founded at system 911133
+  12 Apr 2526  colony established  Vaelkhi Choth                             Vaelkhi Choth founded at system 1158848
+  12 Apr 2526  colony established  Shekhari Exchange                         Shekhari Exchange founded at system 1061677
+  12 Apr 2526  colony established  Golvhaan Reach                            Golvhaan Reach founded at system 987309
+  12 Apr 2526  colony established  Nhaveth Court A                           Nhaveth Court A founded at system 1130253
+  12 Apr 2526  colony established  Nhaveth Court B                           Nhaveth Court B founded at system 1130253
+  12 Apr 2526  colony established  Nhaveth Court C                           Nhaveth Court C founded at system 1130253
+  12 Apr 2526  colony established  Vardhek Roidhunate                        Vardhek Roidhunate founded at system 942565
+  12 Apr 2526  colony established  Oceania                                   Oceania founded at system 1157617
+  12 Apr 2526  colony established  Eurasia                                   Eurasia founded at system 1157617
+  12 Apr 2526  colony established  Eastasia                                  Eastasia founded at system 1157617
+  26 Apr 2526  colony established  Kraathi Crusade                           Kraathi Crusade established outpost at system 921316
+  26 Apr 2526  colony established  Golvhaan Reach                            Golvhaan Reach established outpost at system 989661
+  26 Apr 2526  contact             Oceania / Eurasia                         First contact between polity 13 and polity 14 at system 1162
+  26 Apr 2526  colony established  Oceania                                   Oceania established outpost at system 1162492
+  26 Apr 2526  colony established  Eurasia                                   Eurasia established outpost at system 1162492
+  26 Apr 2526  colony established  Eastasia                                  Eastasia established outpost at system 1156112
+  03 May 2526  war declared        Oceania / Eurasia                         HUM-WAR-0003: polity 13 declares war (polity_a=13 polity_b=1
+  10 May 2526  contact             Oceania / Eastasia                        First contact between polity 13 and polity 15 at system 1157
+  10 May 2526  contact             Eurasia / Eastasia                        First contact between polity 14 and polity 15 at system 1157
+  10 May 2526  combat              Oceania / Eurasia                         system=1157617 polity_a=13 polity_b=14 hits_on_a=0 hits_on_b
+  10 May 2526  disengage           Eurasia                                   Polity 14 disengaged from system 1157617 to system 1157617
+  10 May 2526  pursuit             Oceania / Eurasia                         Polity 13 pursues polity 14 at system 1157617: 1 pursuit hit
+  17 May 2526  war declared        Oceania / Eastasia                        HUM-WAR-0005: polity 13 declares war (polity_a=13 polity_b=1
+  17 May 2526  war declared        Eurasia / Eastasia                        HUM-WAR-0005: polity 14 declares war (polity_a=14 polity_b=1
+  17 May 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  17 May 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  17 May 2526  combat              Oceania / Eurasia                         ground_assault system=1157617 body=532 attacker=13 defender=
+  17 May 2526  combat              Oceania / Eastasia                        ground_assault system=1157617 body=532 attacker=13 defender=
+  17 May 2526  budget shortfall    Oceania                                   Oceania: treasury deficit — scrapping idle logistics hulls
+  24 May 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  24 May 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  31 May 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  31 May 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  07 Jun 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  07 Jun 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  14 Jun 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  14 Jun 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  14 Jun 2526  budget shortfall    Oceania                                   Oceania: treasury deficit — scrapping idle logistics hulls
+  21 Jun 2526  colony established  Skharri Pride                             Skharri Pride established outpost at system 917145
+  21 Jun 2526  combat              Oceania / Eastasia                        system=1157617 polity_a=13 polity_b=15 hits_on_a=0 hits_on_b
+  21 Jun 2526  budget shortfall    Oceania                                   Oceania: treasury deficit — scrapping idle logistics hulls
+  28 Jun 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  28 Jun 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  28 Jun 2526  budget shortfall    Kraathi Crusade                           Kraathi Crusade: treasury deficit — scrapping idle logistics
+  05 Jul 2526  jump upgrade        Nhaveth Court C                           Nhaveth Court C: scout jump J10→J12
+  05 Jul 2526  colony established  Nhaveth Court C                           Nhaveth Court C established outpost at system 1099225
+  05 Jul 2526  colony established  Eastasia                                  Eastasia established outpost at system 1162492
+  05 Jul 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  05 Jul 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  05 Jul 2526  budget shortfall    Kraathi Crusade                           Kraathi Crusade: treasury deficit — scrapping idle logistics
+  12 Jul 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  12 Jul 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  12 Jul 2526  budget shortfall    Kraathi Crusade                           Kraathi Crusade: treasury deficit — scrapping idle logistics
+  19 Jul 2526  colony established  Nhaveth Court C                           Nhaveth Court C established outpost at system 1105767
+  19 Jul 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  19 Jul 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  26 Jul 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  26 Jul 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  02 Aug 2526  colony established  Nhaveth Court C                           Nhaveth Court C established outpost at system 1106201
+  02 Aug 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=11 ground
+  02 Aug 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  09 Aug 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  09 Aug 2526  control change      Oceania / Eastasia                        system=1157617 body=532: controlled→contested (polity 15 gro
+  09 Aug 2526  bombardment         Oceania / Eastasia                        system=1157617 attacker=13 defender=15 net_bombard=15 ground
+  16 Aug 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  16 Aug 2526  budget shortfall    Eastasia                                  Eastasia: treasury deficit — scrapping idle logistics hulls
+  23 Aug 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  23 Aug 2526  budget shortfall    Eastasia                                  Eastasia: treasury deficit — scrapping idle logistics hulls
+  30 Aug 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  06 Sep 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  13 Sep 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  20 Sep 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  27 Sep 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+  04 Oct 2526  control change      Oceania / Eurasia                         system=1157617 body=532: controlled→contested (polity 14 gro
+  04 Oct 2526  bombardment         Oceania / Eurasia                         system=1157617 attacker=13 defender=14 net_bombard=13 ground
+
+  ── 2529 ──
+  30 Sep 2529  admiral retired     Kreeth Dominion                           admiral_id=1 name=KRT-ADM-0001 polity=1 tactical_factor=2
+
+  ── 2531 ──
+  30 Mar 2531  admiral retired     Nakhavi Reach                             admiral_id=4 name=NAK-ADM-0001 polity=4 tactical_factor=1
+
+  ── 2533 ──
+  18 Sep 2533  admiral retired     Kreeth Dominion                           admiral_id=16 name=KRT-ADM-0002 polity=1 tactical_factor=2
+
+  ── 2536 ──
+  25 May 2536  admiral retired     Nakhavi Reach                             admiral_id=17 name=NAK-ADM-0002 polity=4 tactical_factor=1
+
+  ── 2537 ──
+  06 Sep 2537  admiral retired     Kreeth Dominion                           admiral_id=18 name=KRT-ADM-0003 polity=1 tactical_factor=2
+
+  ── 2541 ──
+  21 Jul 2541  admiral retired     Nakhavi Reach                             admiral_id=19 name=NAK-ADM-0003 polity=4 tactical_factor=1
+  25 Aug 2541  admiral retired     Kreeth Dominion                           admiral_id=20 name=KRT-ADM-0004 polity=1 tactical_factor=2
+
+  ── 2545 ──
+  13 Aug 2545  admiral retired     Kreeth Dominion                           admiral_id=22 name=KRT-ADM-0005 polity=1 tactical_factor=2
+
+  ── 2546 ──
+  16 Sep 2546  admiral retired     Nakhavi Reach                             admiral_id=21 name=NAK-ADM-0004 polity=4 tactical_factor=1
+
+  ── 2549 ──
+  25 Jul 2549  admiral retired     Oceania                                   admiral_id=13 name=Winston polity=13 tactical_factor=0
+  01 Aug 2549  admiral retired     Kreeth Dominion                           admiral_id=23 name=KRT-ADM-0006 polity=1 tactical_factor=2
+  26 Dec 2549  admiral retired     Eastasia                                  admiral_id=15 name=Goldstein polity=15 tactical_factor=3
+
+  ── 2550 ──
+  27 Mar 2550  admiral retired     Vaelkhi Choth                             admiral_id=6 name=VLK-ADM-0001 polity=6 tactical_factor=1
+
+  ── 2551 ──
+  02 Apr 2551  admiral retired     Eurasia                                   admiral_id=14 name=Julia polity=14 tactical_factor=1
+  12 Nov 2551  admiral retired     Nakhavi Reach                             admiral_id=24 name=NAK-ADM-0005 polity=4 tactical_factor=1
+
+  ── 2552 ──
+  01 Dec 2552  admiral retired     Kraathi Crusade                           admiral_id=3 name=KRA-ADM-0001 polity=3 tactical_factor=-3
+
+  ── 2553 ──
+  20 Jul 2553  admiral retired     Kreeth Dominion                           admiral_id=26 name=KRT-ADM-0007 polity=1 tactical_factor=2
+
+  ── 2554 ──
+  14 Jun 2554  admiral retired     Shekhari Exchange                         admiral_id=7 name=SHK-ADM-0001 polity=7 tactical_factor=0
+
+  ── 2557 ──
+  07 Jan 2557  admiral retired     Nakhavi Reach                             admiral_id=30 name=NAK-ADM-0006 polity=4 tactical_factor=1
+  08 Jul 2557  admiral retired     Kreeth Dominion                           admiral_id=32 name=KRT-ADM-0008 polity=1 tactical_factor=2
+
+  ── 2558 ──
+  08 Sep 2558  admiral retired     Vashori Compact                           admiral_id=2 name=VSH-ADM-0001 polity=2 tactical_factor=-3
+
+  ── 2561 ──
+  26 Jun 2561  admiral retired     Kreeth Dominion                           admiral_id=35 name=KRT-ADM-0009 polity=1 tactical_factor=2
+  31 Jul 2561  admiral retired     Vardhek Roidhunate                        admiral_id=12 name=VRD-ADM-0001 polity=12 tactical_factor=3
+
+  ── 2562 ──
+  05 Mar 2562  admiral retired     Nakhavi Reach                             admiral_id=34 name=NAK-ADM-0007 polity=4 tactical_factor=1
+
+  ── 2565 ──
+  14 Jun 2565  admiral retired     Kreeth Dominion                           admiral_id=37 name=KRT-ADM-0010 polity=1 tactical_factor=2
+
+  ── 2566 ──
+  22 Aug 2566  admiral retired     Golvhaan Reach                            admiral_id=8 name=GLV-ADM-0001 polity=8 tactical_factor=3
+
+  ── 2567 ──
+  01 May 2567  admiral retired     Nakhavi Reach                             admiral_id=39 name=NAK-ADM-0008 polity=4 tactical_factor=1
+
+  ── 2569 ──
+  02 Jun 2569  admiral retired     Kreeth Dominion                           admiral_id=40 name=KRT-ADM-0011 polity=1 tactical_factor=2
+
+  ── 2572 ──
+  26 Jun 2572  admiral retired     Nakhavi Reach                             admiral_id=42 name=NAK-ADM-0009 polity=4 tactical_factor=1
+
+  ── 2573 ──
+  21 May 2573  admiral retired     Kreeth Dominion                           admiral_id=43 name=KRT-ADM-0012 polity=1 tactical_factor=2
+
+  ── 2574 ──
+  07 Jan 2574  admiral retired     Vaelkhi Choth                             admiral_id=28 name=VLK-ADM-0002 polity=6 tactical_factor=1
+
+  ── 2575 ──
+  31 Mar 2575  admiral retired     Oceania                                   admiral_id=25 name=Withers polity=13 tactical_factor=1
+  04 Aug 2575  admiral retired     Kraathi Crusade                           admiral_id=31 name=KRA-ADM-0002 polity=3 tactical_factor=0
+
+  ── 2576 ──
+  01 Mar 2576  admiral retired     Eastasia                                  admiral_id=27 name=Ampleforth polity=15 tactical_factor=1
+  16 Aug 2576  admiral retired     Eurasia                                   admiral_id=29 name=Rutherford polity=14 tactical_factor=3
+
+  ── 2577 ──
+  09 May 2577  admiral retired     Kreeth Dominion                           admiral_id=45 name=KRT-ADM-0013 polity=1 tactical_factor=2
+  22 Aug 2577  admiral retired     Nakhavi Reach                             admiral_id=44 name=NAK-ADM-0010 polity=4 tactical_factor=1
+
+  ── 2581 ──
+  27 Apr 2581  admiral retired     Kreeth Dominion                           admiral_id=51 name=KRT-ADM-0014 polity=1 tactical_factor=2
+
+  ── 2582 ──
+  18 Oct 2582  admiral retired     Nakhavi Reach                             admiral_id=52 name=NAK-ADM-0011 polity=4 tactical_factor=1
+  27 Dec 2582  admiral retired     Shekhari Exchange                         admiral_id=33 name=SHK-ADM-0002 polity=7 tactical_factor=0
+
+  ── 2585 ──
+  15 Apr 2585  admiral retired     Kreeth Dominion                           admiral_id=53 name=KRT-ADM-0015 polity=1 tactical_factor=2
+
+  ── 2587 ──
+  14 Dec 2587  admiral retired     Nakhavi Reach                             admiral_id=54 name=NAK-ADM-0012 polity=4 tactical_factor=1
+
+  ── 2588 ──
+  14 Mar 2588  admiral retired     Vashori Compact                           admiral_id=36 name=VSH-ADM-0002 polity=2 tactical_factor=3
+
+  ── 2589 ──
+  03 Apr 2589  admiral retired     Kreeth Dominion                           admiral_id=56 name=KRT-ADM-0016 polity=1 tactical_factor=2
+
+  ── 2593 ──
+  08 Feb 2593  admiral retired     Nakhavi Reach                             admiral_id=57 name=NAK-ADM-0013 polity=4 tactical_factor=1
+  22 Mar 2593  admiral retired     Kreeth Dominion                           admiral_id=59 name=KRT-ADM-0017 polity=1 tactical_factor=2
+
+  ── 2595 ──
+  30 Oct 2595  admiral retired     Skharri Pride                             admiral_id=5 name=SKH-ADM-0001 polity=5 tactical_factor=-3
+
+  ── 2596 ──
+  26 Aug 2596  admiral retired     Vardhek Roidhunate                        admiral_id=38 name=VRD-ADM-0002 polity=12 tactical_factor=-2
+
+  ── 2597 ──
+  10 Mar 2597  admiral retired     Kreeth Dominion                           admiral_id=61 name=KRT-ADM-0018 polity=1 tactical_factor=2
+  20 Oct 2597  admiral retired     Vaelkhi Choth                             admiral_id=46 name=VLK-ADM-0003 polity=6 tactical_factor=1
+
+  ── 2598 ──
+  06 Apr 2598  admiral retired     Kraathi Crusade                           admiral_id=48 name=KRA-ADM-0003 polity=3 tactical_factor=0
+  06 Apr 2598  admiral retired     Nakhavi Reach                             admiral_id=60 name=NAK-ADM-0014 polity=4 tactical_factor=1
+
+  ── 2600 ──
+  05 Dec 2600  admiral retired     Oceania                                   admiral_id=47 name=Aaronson polity=13 tactical_factor=1
+
+  ── 2601 ──
+  27 Feb 2601  admiral retired     Kreeth Dominion                           admiral_id=64 name=KRT-ADM-0019 polity=1 tactical_factor=2
+
+  ── 2602 ──
+  01 Jan 2602  admiral retired     Eurasia                                   admiral_id=50 name=Tillotson polity=14 tactical_factor=3
+  07 May 2602  admiral retired     Eastasia                                  admiral_id=49 name=Jones polity=15 tactical_factor=1
+
+  ── 2603 ──
+  03 Jun 2603  admiral retired     Nakhavi Reach                             admiral_id=67 name=NAK-ADM-0015 polity=4 tactical_factor=1
+
+  ── 2604 ──
+  12 Oct 2604  admiral retired     Golvhaan Reach                            admiral_id=41 name=GLV-ADM-0002 polity=8 tactical_factor=1
+
+  ── 2605 ──
+  15 Feb 2605  admiral retired     Kreeth Dominion                           admiral_id=69 name=KRT-ADM-0020 polity=1 tactical_factor=2
+
+  ── 2608 ──
+  29 Jul 2608  admiral retired     Nakhavi Reach                             admiral_id=72 name=NAK-ADM-0016 polity=4 tactical_factor=1
+
+  ── 2609 ──
+  03 Feb 2609  admiral retired     Kreeth Dominion                           admiral_id=74 name=KRT-ADM-0021 polity=1 tactical_factor=2
+
+  ── 2611 ──
+  12 Jul 2611  admiral retired     Shekhari Exchange                         admiral_id=55 name=SHK-ADM-0003 polity=7 tactical_factor=0
+
+  ── 2613 ──
+  22 Jan 2613  admiral retired     Kreeth Dominion                           admiral_id=76 name=KRT-ADM-0022 polity=1 tactical_factor=2
+  24 Sep 2613  admiral retired     Nakhavi Reach                             admiral_id=75 name=NAK-ADM-0017 polity=4 tactical_factor=1
+
+  ── 2617 ──
+  10 Jan 2617  admiral retired     Kreeth Dominion                           admiral_id=78 name=KRT-ADM-0023 polity=1 tactical_factor=2
+  19 Sep 2617  admiral retired     Vashori Compact                           admiral_id=58 name=VSH-ADM-0003 polity=2 tactical_factor=3
+
+  ── 2618 ──
+  20 Nov 2618  admiral retired     Nakhavi Reach                             admiral_id=79 name=NAK-ADM-0018 polity=4 tactical_factor=1
+
+  ── 2620 ──
+  08 Dec 2620  admiral retired     Kraathi Crusade                           admiral_id=66 name=KRA-ADM-0004 polity=3 tactical_factor=0
+  29 Dec 2620  admiral retired     Kreeth Dominion                           admiral_id=80 name=KRT-ADM-0024 polity=1 tactical_factor=2
+
+  ── 2621 ──
+  03 Aug 2621  admiral retired     Vaelkhi Choth                             admiral_id=65 name=VLK-ADM-0004 polity=6 tactical_factor=1
+
+  ── 2624 ──
+  16 Jan 2624  admiral retired     Nakhavi Reach                             admiral_id=82 name=NAK-ADM-0019 polity=4 tactical_factor=1
+  17 Dec 2624  admiral retired     Kreeth Dominion                           admiral_id=84 name=KRT-ADM-0025 polity=1 tactical_factor=2
+
+  ── 2626 ──
+  11 Aug 2626  admiral retired     Oceania                                   admiral_id=68 name=Comstock polity=13 tactical_factor=1
+
+  ── 2627 ──
+  18 May 2627  admiral retired     Eurasia                                   admiral_id=70 name=Ogilvy polity=14 tactical_factor=3
+
+  ── 2628 ──
+  11 Jul 2628  admiral retired     Eastasia                                  admiral_id=71 name=Bumstead polity=15 tactical_factor=1
+  05 Dec 2628  admiral retired     Kreeth Dominion                           admiral_id=87 name=KRT-ADM-0026 polity=1 tactical_factor=2
+
+  ── 2629 ──
+  13 Mar 2629  admiral retired     Nakhavi Reach                             admiral_id=86 name=NAK-ADM-0020 polity=4 tactical_factor=1
+
+  ── 2631 ──
+  23 Sep 2631  admiral retired     Vardhek Roidhunate                        admiral_id=63 name=VRD-ADM-0003 polity=12 tactical_factor=-2
+
+  ── 2632 ──
+  23 Nov 2632  admiral retired     Kreeth Dominion                           admiral_id=91 name=KRT-ADM-0027 polity=1 tactical_factor=2
+
+  ── 2634 ──
+  09 May 2634  admiral retired     Nakhavi Reach                             admiral_id=92 name=NAK-ADM-0021 polity=4 tactical_factor=1
+
+  ── 2636 ──
+  11 Nov 2636  admiral retired     Kreeth Dominion                           admiral_id=94 name=KRT-ADM-0028 polity=1 tactical_factor=2
+
+  ── 2639 ──
+  05 Jul 2639  admiral retired     Nakhavi Reach                             admiral_id=95 name=NAK-ADM-0022 polity=4 tactical_factor=1
+
+  ── 2640 ──
+  24 Jan 2640  admiral retired     Shekhari Exchange                         admiral_id=77 name=SHK-ADM-0004 polity=7 tactical_factor=0
+  30 Oct 2640  admiral retired     Kreeth Dominion                           admiral_id=96 name=KRT-ADM-0029 polity=1 tactical_factor=2
+
+  ── 2642 ──
+  02 Dec 2642  admiral retired     Golvhaan Reach                            admiral_id=73 name=GLV-ADM-0003 polity=8 tactical_factor=1
+
+  ── 2643 ──
+  11 Aug 2643  admiral retired     Kraathi Crusade                           admiral_id=83 name=KRA-ADM-0005 polity=3 tactical_factor=0
+
+  ── 2644 ──
+  30 Aug 2644  admiral retired     Nakhavi Reach                             admiral_id=97 name=NAK-ADM-0023 polity=4 tactical_factor=1
+  18 Oct 2644  admiral retired     Kreeth Dominion                           admiral_id=99 name=KRT-ADM-0030 polity=1 tactical_factor=2
+
+  ── 2645 ──
+  16 May 2645  admiral retired     Vaelkhi Choth                             admiral_id=85 name=VLK-ADM-0005 polity=6 tactical_factor=1
+
+  ── 2647 ──
+  26 Mar 2647  admiral retired     Vashori Compact                           admiral_id=81 name=VSH-ADM-0004 polity=2 tactical_factor=3
+
+  ── 2648 ──
+  06 Oct 2648  admiral retired     Kreeth Dominion                           admiral_id=103 name=KRT-ADM-0031 polity=1 tactical_factor=2
+
+  ── 2649 ──
+  26 Oct 2649  admiral retired     Nakhavi Reach                             admiral_id=102 name=NAK-ADM-0024 polity=4 tactical_factor=1
+
+  ── 2652 ──
+  16 Apr 2652  admiral retired     Oceania                                   admiral_id=88 name=Weems polity=13 tactical_factor=1
+  24 Sep 2652  admiral retired     Kreeth Dominion                           admiral_id=106 name=KRT-ADM-0032 polity=1 tactical_factor=2
+  01 Oct 2652  admiral retired     Eurasia                                   admiral_id=89 name=Fellowes polity=14 tactical_factor=3
+
+  ── 2654 ──
+  15 Sep 2654  admiral retired     Eastasia                                  admiral_id=90 name=Griller polity=15 tactical_factor=1
+  22 Dec 2654  admiral retired     Nakhavi Reach                             admiral_id=107 name=NAK-ADM-0025 polity=4 tactical_factor=1
+
+  ── 2656 ──
+  12 Sep 2656  admiral retired     Kreeth Dominion                           admiral_id=109 name=KRT-ADM-0033 polity=1 tactical_factor=2
+
+  ── 2660 ──
+  17 Feb 2660  admiral retired     Nakhavi Reach                             admiral_id=112 name=NAK-ADM-0026 polity=4 tactical_factor=1
+  31 Aug 2660  admiral retired     Kreeth Dominion                           admiral_id=113 name=KRT-ADM-0034 polity=1 tactical_factor=2
+
+  ── 2662 ──
+  05 Sep 2662  admiral retired     Skharri Pride                             admiral_id=62 name=SKH-ADM-0002 polity=5 tactical_factor=-3
+
+  ── 2664 ──
+  19 Aug 2664  admiral retired     Kreeth Dominion                           admiral_id=115 name=KRT-ADM-0035 polity=1 tactical_factor=2
+
+  ── 2665 ──
+  14 Apr 2665  admiral retired     Nakhavi Reach                             admiral_id=114 name=NAK-ADM-0027 polity=4 tactical_factor=1
+
+  ── 2666 ──
+  13 Apr 2666  admiral retired     Kraathi Crusade                           admiral_id=101 name=KRA-ADM-0006 polity=3 tactical_factor=0
+  19 Oct 2666  admiral retired     Vardhek Roidhunate                        admiral_id=93 name=VRD-ADM-0004 polity=12 tactical_factor=-2
+
+  ── 2668 ──
+  07 Aug 2668  admiral retired     Kreeth Dominion                           admiral_id=117 name=KRT-ADM-0036 polity=1 tactical_factor=2
+  07 Aug 2668  admiral retired     Shekhari Exchange                         admiral_id=98 name=SHK-ADM-0005 polity=7 tactical_factor=0
+
+  ── 2669 ──
+  26 Feb 2669  admiral retired     Vaelkhi Choth                             admiral_id=104 name=VLK-ADM-0006 polity=6 tactical_factor=1
+
+  ── 2670 ──
+  10 Jun 2670  admiral retired     Nakhavi Reach                             admiral_id=118 name=NAK-ADM-0028 polity=4 tactical_factor=1
+
+  ── 2672 ──
+  26 Jul 2672  admiral retired     Kreeth Dominion                           admiral_id=121 name=KRT-ADM-0037 polity=1 tactical_factor=2
+
+  ── 2675 ──
+  06 Aug 2675  admiral retired     Nakhavi Reach                             admiral_id=124 name=NAK-ADM-0029 polity=4 tactical_factor=1
+
+  ── 2676 ──
+  14 Jul 2676  admiral retired     Kreeth Dominion                           admiral_id=125 name=KRT-ADM-0038 polity=1 tactical_factor=2
+  29 Sep 2676  admiral retired     Vashori Compact                           admiral_id=105 name=VSH-ADM-0005 polity=2 tactical_factor=3
+
+  ── 2677 ──
+  21 Dec 2677  admiral retired     Oceania                                   admiral_id=108 name=Zhukov polity=13 tactical_factor=1
+
+  ── 2678 ──
+  15 Feb 2678  admiral retired     Eurasia                                   admiral_id=110 name=Rokossovsky polity=14 tactical_factor=3
+
+  ── 2680 ──
+  02 Jul 2680  admiral retired     Kreeth Dominion                           admiral_id=127 name=KRT-ADM-0039 polity=1 tactical_factor=2
+  01 Oct 2680  admiral retired     Nakhavi Reach                             admiral_id=126 name=NAK-ADM-0030 polity=4 tactical_factor=1
+  19 Nov 2680  admiral retired     Eastasia                                  admiral_id=111 name=Konev polity=15 tactical_factor=1
+
+  ── 2681 ──
+  21 Jan 2681  admiral retired     Golvhaan Reach                            admiral_id=100 name=GLV-ADM-0004 polity=8 tactical_factor=1
+
+  ── 2684 ──
+  20 Jun 2684  admiral retired     Kreeth Dominion                           admiral_id=131 name=KRT-ADM-0040 polity=1 tactical_factor=2
+
+  ── 2685 ──
+  27 Nov 2685  admiral retired     Nakhavi Reach                             admiral_id=132 name=NAK-ADM-0031 polity=4 tactical_factor=1
+
+  ── 2688 ──
+  08 Jun 2688  admiral retired     Kreeth Dominion                           admiral_id=135 name=KRT-ADM-0041 polity=1 tactical_factor=2
+  14 Dec 2688  admiral retired     Kraathi Crusade                           admiral_id=119 name=KRA-ADM-0007 polity=3 tactical_factor=0
+
+  ── 2691 ──
+  23 Jan 2691  admiral retired     Nakhavi Reach                             admiral_id=136 name=NAK-ADM-0032 polity=4 tactical_factor=1
+
+  ── 2692 ──
+  27 May 2692  admiral retired     Kreeth Dominion                           admiral_id=137 name=KRT-ADM-0042 polity=1 tactical_factor=2
+  09 Dec 2692  admiral retired     Vaelkhi Choth                             admiral_id=123 name=VLK-ADM-0007 polity=6 tactical_factor=1
+
+  ── 2696 ──
+  20 Mar 2696  admiral retired     Nakhavi Reach                             admiral_id=139 name=NAK-ADM-0033 polity=4 tactical_factor=1
+  15 May 2696  admiral retired     Kreeth Dominion                           admiral_id=140 name=KRT-ADM-0043 polity=1 tactical_factor=2
+
+  ── 2697 ──
+  19 Feb 2697  admiral retired     Shekhari Exchange                         admiral_id=122 name=SHK-ADM-0006 polity=7 tactical_factor=0
+
+  ── 2700 ──
+  04 May 2700  admiral retired     Kreeth Dominion                           admiral_id=143 name=KRT-ADM-0044 polity=1 tactical_factor=2
+
+  ── 2701 ──
+  17 May 2701  admiral retired     Nakhavi Reach                             admiral_id=142 name=NAK-ADM-0034 polity=4 tactical_factor=1
+  15 Nov 2701  admiral retired     Vardhek Roidhunate                        admiral_id=120 name=VRD-ADM-0005 polity=12 tactical_factor=-
+
+  ── 2703 ──
+  03 Jul 2703  admiral retired     Eurasia                                   admiral_id=130 name=Chuikov polity=14 tactical_factor=3
+  28 Aug 2703  admiral retired     Oceania                                   admiral_id=129 name=Vatutin polity=13 tactical_factor=1
+
+  ── 2704 ──
+  22 Apr 2704  admiral retired     Kreeth Dominion                           admiral_id=145 name=KRT-ADM-0045 polity=1 tactical_factor=2
+
+  ── 2706 ──
+  06 Apr 2706  admiral retired     Vashori Compact                           admiral_id=128 name=VSH-ADM-0006 polity=2 tactical_factor=3
+  13 Jul 2706  admiral retired     Nakhavi Reach                             admiral_id=146 name=NAK-ADM-0035 polity=4 tactical_factor=1
+
+  ── 2707 ──
+  25 Jan 2707  admiral retired     Eastasia                                  admiral_id=133 name=Malinovsky polity=15 tactical_factor=1
+
+  ── 2708 ──
+  10 Apr 2708  admiral retired     Kreeth Dominion                           admiral_id=150 name=KRT-ADM-0046 polity=1 tactical_factor=2
+
+  ── 2711 ──
+  18 Aug 2711  admiral retired     Kraathi Crusade                           admiral_id=138 name=KRA-ADM-0008 polity=3 tactical_factor=0
+  08 Sep 2711  admiral retired     Nakhavi Reach                             admiral_id=152 name=NAK-ADM-0036 polity=4 tactical_factor=1
+
+  ── 2712 ──
+  29 Mar 2712  admiral retired     Kreeth Dominion                           admiral_id=154 name=KRT-ADM-0047 polity=1 tactical_factor=2
+
+  ── 2716 ──
+  17 Mar 2716  admiral retired     Kreeth Dominion                           admiral_id=157 name=KRT-ADM-0048 polity=1 tactical_factor=2
+  22 Sep 2716  admiral retired     Vaelkhi Choth                             admiral_id=141 name=VLK-ADM-0008 polity=6 tactical_factor=1
+  03 Nov 2716  admiral retired     Nakhavi Reach                             admiral_id=156 name=NAK-ADM-0037 polity=4 tactical_factor=1
+
+  ── 2719 ──
+  14 Mar 2719  admiral retired     Golvhaan Reach                            admiral_id=134 name=GLV-ADM-0005 polity=8 tactical_factor=1
+
+  ── 2720 ──
+  05 Mar 2720  admiral retired     Kreeth Dominion                           admiral_id=158 name=KRT-ADM-0049 polity=1 tactical_factor=2
+
+  ── 2721 ──
+  30 Dec 2721  admiral retired     Nakhavi Reach                             admiral_id=160 name=NAK-ADM-0038 polity=4 tactical_factor=1
+
+  ── 2724 ──
+  22 Feb 2724  admiral retired     Kreeth Dominion                           admiral_id=162 name=KRT-ADM-0050 polity=1 tactical_factor=2
+
+  ── 2725 ──
+  04 Sep 2725  admiral retired     Shekhari Exchange                         admiral_id=144 name=SHK-ADM-0007 polity=7 tactical_factor=0
+
+  ── 2727 ──
+  25 Feb 2727  admiral retired     Nakhavi Reach                             admiral_id=163 name=NAK-ADM-0039 polity=4 tactical_factor=1
+  02 Dec 2727  admiral retired     Nhaveth Court A                           admiral_id=9 name=NHV-ADM-0001 polity=9 tactical_factor=3
+
+  ── 2728 ──
+  10 Feb 2728  admiral retired     Kreeth Dominion                           admiral_id=164 name=KRT-ADM-0051 polity=1 tactical_factor=2
+  16 Nov 2728  admiral retired     Eurasia                                   admiral_id=148 name=Yeremenko polity=14 tactical_factor=3
+
+  ── 2729 ──
+  03 May 2729  admiral retired     Oceania                                   admiral_id=149 name=Tolbukhin polity=13 tactical_factor=1
+  12 Jul 2729  admiral retired     Skharri Pride                             admiral_id=116 name=SKH-ADM-0003 polity=5 tactical_factor=-3
+
+  ── 2732 ──
+  29 Jan 2732  admiral retired     Kreeth Dominion                           admiral_id=168 name=KRT-ADM-0052 polity=1 tactical_factor=2
+  22 Apr 2732  admiral retired     Nakhavi Reach                             admiral_id=166 name=NAK-ADM-0040 polity=4 tactical_factor=1
+
+  ── 2733 ──
+  31 Mar 2733  admiral retired     Eastasia                                  admiral_id=153 name=Meretskov polity=15 tactical_factor=1
+
+  ── 2734 ──
+  13 Apr 2734  admiral retired     Nhaveth Court C                           admiral_id=11 name=NHV-ADM-0001 polity=11 tactical_factor=-2
+  20 Apr 2734  admiral retired     Kraathi Crusade                           admiral_id=155 name=KRA-ADM-0009 polity=3 tactical_factor=0
+  13 Jul 2734  admiral retired     Nhaveth Court B                           admiral_id=10 name=NHV-ADM-0001 polity=10 tactical_factor=-3
+
+  ── 2735 ──
+  11 Oct 2735  admiral retired     Vashori Compact                           admiral_id=151 name=VSH-ADM-0007 polity=2 tactical_factor=3
+
+  ── 2736 ──
+  17 Jan 2736  admiral retired     Kreeth Dominion                           admiral_id=172 name=KRT-ADM-0053 polity=1 tactical_factor=2
+  11 Dec 2736  admiral retired     Vardhek Roidhunate                        admiral_id=147 name=VRD-ADM-0006 polity=12 tactical_factor=-
+
+  ── 2737 ──
+  18 Jun 2737  admiral retired     Nakhavi Reach                             admiral_id=173 name=NAK-ADM-0041 polity=4 tactical_factor=1
+
+  ── 2740 ──
+  05 Jan 2740  admiral retired     Kreeth Dominion                           admiral_id=179 name=KRT-ADM-0054 polity=1 tactical_factor=2
+  05 Jul 2740  admiral retired     Vaelkhi Choth                             admiral_id=159 name=VLK-ADM-0009 polity=6 tactical_factor=1
+
+  ── 2742 ──
+  14 Aug 2742  admiral retired     Nakhavi Reach                             admiral_id=181 name=NAK-ADM-0042 polity=4 tactical_factor=1
+
+  ── 2743 ──
+  24 Dec 2743  admiral retired     Kreeth Dominion                           admiral_id=182 name=KRT-ADM-0055 polity=1 tactical_factor=2
+
+  ── 2747 ──
+  10 Oct 2747  admiral retired     Nakhavi Reach                             admiral_id=184 name=NAK-ADM-0043 polity=4 tactical_factor=1
+  12 Dec 2747  admiral retired     Kreeth Dominion                           admiral_id=185 name=KRT-ADM-0056 polity=1 tactical_factor=2
+
+  ── 2751 ──
+  30 Nov 2751  admiral retired     Kreeth Dominion                           admiral_id=187 name=KRT-ADM-0057 polity=1 tactical_factor=2
+
+  ── 2752 ──
+  05 Dec 2752  admiral retired     Nakhavi Reach                             admiral_id=186 name=NAK-ADM-0044 polity=4 tactical_factor=1
+
+  ── 2754 ──
+  19 Mar 2754  admiral retired     Shekhari Exchange                         admiral_id=165 name=SHK-ADM-0008 polity=7 tactical_factor=0
+  02 Apr 2754  admiral retired     Eurasia                                   admiral_id=169 name=Govorov polity=14 tactical_factor=3
+
+  ── 2755 ──
+  07 Jan 2755  admiral retired     Oceania                                   admiral_id=170 name=Bagramyan polity=13 tactical_factor=1
+  18 Nov 2755  admiral retired     Kreeth Dominion                           admiral_id=188 name=KRT-ADM-0058 polity=1 tactical_factor=2
+
+  ── 2756 ──
+  21 Dec 2756  admiral retired     Kraathi Crusade                           admiral_id=176 name=KRA-ADM-0010 polity=3 tactical_factor=0
+
+  ── 2757 ──
+  03 May 2757  admiral retired     Golvhaan Reach                            admiral_id=161 name=GLV-ADM-0006 polity=8 tactical_factor=1
+
+  ── 2758 ──
+  31 Jan 2758  admiral retired     Nakhavi Reach                             admiral_id=189 name=NAK-ADM-0045 polity=4 tactical_factor=1
+
+  ── 2759 ──
+  05 Jun 2759  admiral retired     Eastasia                                  admiral_id=174 name=Popov polity=15 tactical_factor=1
+  06 Nov 2759  admiral retired     Kreeth Dominion                           admiral_id=193 name=KRT-ADM-0059 polity=1 tactical_factor=2
+
+  ── 2763 ──
+  29 Mar 2763  admiral retired     Nakhavi Reach                             admiral_id=196 name=NAK-ADM-0046 polity=4 tactical_factor=1
+  25 Oct 2763  admiral retired     Kreeth Dominion                           admiral_id=198 name=KRT-ADM-0060 polity=1 tactical_factor=2
+
+  ── 2764 ──
+  17 Apr 2764  admiral retired     Vaelkhi Choth                             admiral_id=183 name=VLK-ADM-0010 polity=6 tactical_factor=1
+
+  ── 2765 ──
+  16 Apr 2765  admiral retired     Vashori Compact                           admiral_id=178 name=VSH-ADM-0008 polity=2 tactical_factor=3
+
+  ── 2767 ──
+  13 Oct 2767  admiral retired     Kreeth Dominion                           admiral_id=200 name=KRT-ADM-0061 polity=1 tactical_factor=2
+
+  ── 2768 ──
+  24 May 2768  admiral retired     Nakhavi Reach                             admiral_id=199 name=NAK-ADM-0047 polity=4 tactical_factor=1
+
+  ── 2771 ──
+  01 Oct 2771  admiral retired     Kreeth Dominion                           admiral_id=203 name=KRT-ADM-0062 polity=1 tactical_factor=2
+
+  ── 2772 ──
+  07 Jan 2772  admiral retired     Vardhek Roidhunate                        admiral_id=180 name=VRD-ADM-0007 polity=12 tactical_factor=-
+
+  ── 2773 ──
+  20 Jul 2773  admiral retired     Nakhavi Reach                             admiral_id=204 name=NAK-ADM-0048 polity=4 tactical_factor=1
+
+  ── 2775 ──
+  19 Sep 2775  admiral retired     Kreeth Dominion                           admiral_id=205 name=KRT-ADM-0063 polity=1 tactical_factor=2
+
+  ── 2778 ──
+  15 Sep 2778  admiral retired     Nakhavi Reach                             admiral_id=207 name=NAK-ADM-0049 polity=4 tactical_factor=1
+
+  ── 2779 ──
+  17 Aug 2779  admiral retired     Eurasia                                   admiral_id=191 name=Sokolovsky polity=14 tactical_factor=3
+  24 Aug 2779  admiral retired     Kraathi Crusade                           admiral_id=194 name=KRA-ADM-0011 polity=3 tactical_factor=0
+  07 Sep 2779  admiral retired     Kreeth Dominion                           admiral_id=208 name=KRT-ADM-0064 polity=1 tactical_factor=2
+
+  ── 2780 ──
+  12 Sep 2780  admiral retired     Oceania                                   admiral_id=192 name=Tikhonov polity=13 tactical_factor=1
+
+  ── 2782 ──
+  01 Oct 2782  admiral retired     Shekhari Exchange                         admiral_id=190 name=SHK-ADM-0009 polity=7 tactical_factor=0
+
+  ── 2783 ──
+  26 Aug 2783  admiral retired     Kreeth Dominion                           admiral_id=212 name=KRT-ADM-0065 polity=1 tactical_factor=2
+  11 Nov 2783  admiral retired     Nakhavi Reach                             admiral_id=209 name=NAK-ADM-0050 polity=4 tactical_factor=1
+
+  ── 2785 ──
+  09 Aug 2785  admiral retired     Eastasia                                  admiral_id=197 name=Volkov polity=15 tactical_factor=1
+
+  ── 2787 ──
+  14 Aug 2787  admiral retired     Kreeth Dominion                           admiral_id=215 name=KRT-ADM-0066 polity=1 tactical_factor=2
+
+  ── 2788 ──
+  29 Jan 2788  admiral retired     Vaelkhi Choth                             admiral_id=201 name=VLK-ADM-0011 polity=6 tactical_factor=1
+
+  ── 2789 ──
+  06 Jan 2789  admiral retired     Nakhavi Reach                             admiral_id=216 name=NAK-ADM-0051 polity=4 tactical_factor=1
+
+  ── 2791 ──
+  02 Aug 2791  admiral retired     Kreeth Dominion                           admiral_id=218 name=KRT-ADM-0067 polity=1 tactical_factor=2
+
+  ── 2794 ──
+  04 Mar 2794  admiral retired     Nakhavi Reach                             admiral_id=220 name=NAK-ADM-0052 polity=4 tactical_factor=1
+  21 Oct 2794  admiral retired     Vashori Compact                           admiral_id=202 name=VSH-ADM-0009 polity=2 tactical_factor=3
+
+  ── 2795 ──
+  23 Jun 2795  admiral retired     Golvhaan Reach                            admiral_id=195 name=GLV-ADM-0007 polity=8 tactical_factor=1
+  21 Jul 2795  admiral retired     Kreeth Dominion                           admiral_id=221 name=KRT-ADM-0068 polity=1 tactical_factor=2
+
+  ── 2796 ──
+  17 May 2796  admiral retired     Skharri Pride                             admiral_id=171 name=SKH-ADM-0004 polity=5 tactical_factor=-3
+
+  ── 2799 ──
+  30 Apr 2799  admiral retired     Nakhavi Reach                             admiral_id=222 name=NAK-ADM-0053 polity=4 tactical_factor=1
+  09 Jul 2799  admiral retired     Kreeth Dominion                           admiral_id=225 name=KRT-ADM-0069 polity=1 tactical_factor=2
+
+  ── 2802 ──
+  26 Apr 2802  admiral retired     Kraathi Crusade                           admiral_id=211 name=KRA-ADM-0012 polity=3 tactical_factor=0
+
+  ── 2803 ──
+  27 Jun 2803  admiral retired     Kreeth Dominion                           admiral_id=228 name=KRT-ADM-0070 polity=1 tactical_factor=2
+
+  ── 2804 ──
+  25 Jun 2804  admiral retired     Nakhavi Reach                             admiral_id=227 name=NAK-ADM-0054 polity=4 tactical_factor=1
+  31 Dec 2804  admiral retired     Eurasia                                   admiral_id=210 name=Lin Biao polity=14 tactical_factor=3
+
+  ── 2806 ──
+  19 May 2806  admiral retired     Oceania                                   admiral_id=213 name=Peng Dehuai polity=13 tactical_factor=1
+
+  ── 2807 ──
+  02 Feb 2807  admiral retired     Vardhek Roidhunate                        admiral_id=206 name=VRD-ADM-0008 polity=12 tactical_factor=-
+  15 Jun 2807  admiral retired     Kreeth Dominion                           admiral_id=230 name=KRT-ADM-0071 polity=1 tactical_factor=2
+
+  ── 2809 ──
+  21 Aug 2809  admiral retired     Nakhavi Reach                             admiral_id=231 name=NAK-ADM-0055 polity=4 tactical_factor=1
+
+  ── 2811 ──
+  15 Apr 2811  admiral retired     Shekhari Exchange                         admiral_id=214 name=SHK-ADM-0010 polity=7 tactical_factor=0
+  03 Jun 2811  admiral retired     Kreeth Dominion                           admiral_id=235 name=KRT-ADM-0072 polity=1 tactical_factor=2
+  14 Oct 2811  admiral retired     Eastasia                                  admiral_id=217 name=Chen Yi polity=15 tactical_factor=1
+  11 Nov 2811  admiral retired     Vaelkhi Choth                             admiral_id=219 name=VLK-ADM-0012 polity=6 tactical_factor=1
+
+  ── 2814 ──
+  17 Oct 2814  admiral retired     Nakhavi Reach                             admiral_id=236 name=NAK-ADM-0056 polity=4 tactical_factor=1
+
+  ── 2815 ──
+  22 May 2815  admiral retired     Kreeth Dominion                           admiral_id=238 name=KRT-ADM-0073 polity=1 tactical_factor=2
+
+  ── 2819 ──
+  10 May 2819  admiral retired     Kreeth Dominion                           admiral_id=242 name=KRT-ADM-0074 polity=1 tactical_factor=2
+  13 Dec 2819  admiral retired     Nakhavi Reach                             admiral_id=241 name=NAK-ADM-0057 polity=4 tactical_factor=1
+
+  ── 2823 ──
+  28 Apr 2823  admiral retired     Kreeth Dominion                           admiral_id=243 name=KRT-ADM-0075 polity=1 tactical_factor=2
+
+  ── 2824 ──
+  26 Apr 2824  admiral retired     Vashori Compact                           admiral_id=223 name=VSH-ADM-0010 polity=2 tactical_factor=3
+  27 Dec 2824  admiral retired     Kraathi Crusade                           admiral_id=229 name=KRA-ADM-0013 polity=3 tactical_factor=0
+
+  ── 2825 ──
+  07 Feb 2825  admiral retired     Nakhavi Reach                             admiral_id=244 name=NAK-ADM-0058 polity=4 tactical_factor=1
+
+  ── 2827 ──
+  16 Apr 2827  admiral retired     Kreeth Dominion                           admiral_id=245 name=KRT-ADM-0076 polity=1 tactical_factor=2
+
+  ── 2830 ──
+  05 Apr 2830  admiral retired     Nakhavi Reach                             admiral_id=248 name=NAK-ADM-0059 polity=4 tactical_factor=1
+  17 May 2830  admiral retired     Eurasia                                   admiral_id=232 name=Liu Bocheng polity=14 tactical_factor=3
+
+  ── 2831 ──
+  04 Apr 2831  admiral retired     Kreeth Dominion                           admiral_id=249 name=KRT-ADM-0077 polity=1 tactical_factor=2
+
+  ── 2832 ──
+  23 Jan 2832  admiral retired     Oceania                                   admiral_id=233 name=Zhu De polity=13 tactical_factor=1
+
+  ── 2833 ──
+  12 Aug 2833  admiral retired     Golvhaan Reach                            admiral_id=224 name=GLV-ADM-0008 polity=8 tactical_factor=1
+
+  ── 2835 ──
+  23 Mar 2835  admiral retired     Kreeth Dominion                           admiral_id=252 name=KRT-ADM-0078 polity=1 tactical_factor=2
+  01 Jun 2835  admiral retired     Nakhavi Reach                             admiral_id=250 name=NAK-ADM-0060 polity=4 tactical_factor=1
+  24 Aug 2835  admiral retired     Vaelkhi Choth                             admiral_id=240 name=VLK-ADM-0013 polity=6 tactical_factor=1
+
+  ── 2837 ──
+  18 Dec 2837  admiral retired     Eastasia                                  admiral_id=239 name=Su Yu polity=15 tactical_factor=1
+
+  ── 2839 ──
+  11 Mar 2839  admiral retired     Kreeth Dominion                           admiral_id=255 name=KRT-ADM-0079 polity=1 tactical_factor=2
+  28 Oct 2839  admiral retired     Shekhari Exchange                         admiral_id=237 name=SHK-ADM-0011 polity=7 tactical_factor=0
+
+  ── 2840 ──
+  27 Jul 2840  admiral retired     Nakhavi Reach                             admiral_id=256 name=NAK-ADM-0061 polity=4 tactical_factor=1
+
+  ── 2842 ──
+  28 Feb 2842  admiral retired     Vardhek Roidhunate                        admiral_id=234 name=VRD-ADM-0009 polity=12 tactical_factor=-
+
+  ── 2843 ──
+  27 Feb 2843  admiral retired     Kreeth Dominion                           admiral_id=259 name=KRT-ADM-0080 polity=1 tactical_factor=2
+
+  ── 2845 ──
+  22 Sep 2845  admiral retired     Nakhavi Reach                             admiral_id=261 name=NAK-ADM-0062 polity=4 tactical_factor=1
+
+  ── 2847 ──
+  15 Feb 2847  admiral retired     Kreeth Dominion                           admiral_id=263 name=KRT-ADM-0081 polity=1 tactical_factor=2
+  30 Aug 2847  admiral retired     Kraathi Crusade                           admiral_id=247 name=KRA-ADM-0014 polity=3 tactical_factor=0
+
+  ── 2850 ──
+  18 Nov 2850  admiral retired     Nakhavi Reach                             admiral_id=264 name=NAK-ADM-0063 polity=4 tactical_factor=1
+
+  ── 2851 ──
+  03 Feb 2851  admiral retired     Kreeth Dominion                           admiral_id=265 name=KRT-ADM-0082 polity=1 tactical_factor=2
+
+  ── 2853 ──
+  31 Oct 2853  admiral retired     Vashori Compact                           admiral_id=246 name=VSH-ADM-0011 polity=2 tactical_factor=3
+
+  ── 2855 ──
+  22 Jan 2855  admiral retired     Kreeth Dominion                           admiral_id=268 name=KRT-ADM-0083 polity=1 tactical_factor=2
+  01 Oct 2855  admiral retired     Eurasia                                   admiral_id=251 name=Nie Rongzhen polity=14 tactical_factor=3
+
+  ── 2856 ──
+  14 Jan 2856  admiral retired     Nakhavi Reach                             admiral_id=267 name=NAK-ADM-0064 polity=4 tactical_factor=1
+
+  ── 2857 ──
+  28 Sep 2857  admiral retired     Oceania                                   admiral_id=253 name=He Long polity=13 tactical_factor=1
+
+  ── 2859 ──
+  10 Jan 2859  admiral retired     Kreeth Dominion                           admiral_id=270 name=KRT-ADM-0084 polity=1 tactical_factor=2
+  06 Jun 2859  admiral retired     Vaelkhi Choth                             admiral_id=257 name=VLK-ADM-0014 polity=6 tactical_factor=1
+
+  ── 2861 ──
+  11 Mar 2861  admiral retired     Nakhavi Reach                             admiral_id=272 name=NAK-ADM-0065 polity=4 tactical_factor=1
+
+  ── 2862 ──
+  29 Dec 2862  admiral retired     Kreeth Dominion                           admiral_id=274 name=KRT-ADM-0085 polity=1 tactical_factor=2
+
+  ── 2863 ──
+  23 Mar 2863  admiral retired     Skharri Pride                             admiral_id=226 name=SKH-ADM-0005 polity=5 tactical_factor=-3
+
+  ── 2864 ──
+  22 Feb 2864  admiral retired     Eastasia                                  admiral_id=258 name=Xu Xiangqian polity=15 tactical_factor=1
+
+  ── 2866 ──
+  07 May 2866  admiral retired     Nakhavi Reach                             admiral_id=276 name=NAK-ADM-0066 polity=4 tactical_factor=1
+  17 Dec 2866  admiral retired     Kreeth Dominion                           admiral_id=277 name=KRT-ADM-0086 polity=1 tactical_factor=2
+
+  ── 2868 ──
+  11 May 2868  admiral retired     Shekhari Exchange                         admiral_id=260 name=SHK-ADM-0012 polity=7 tactical_factor=0
+
+  ── 2870 ──
+  02 May 2870  admiral retired     Kraathi Crusade                           admiral_id=266 name=KRA-ADM-0015 polity=3 tactical_factor=0
+  05 Dec 2870  admiral retired     Kreeth Dominion                           admiral_id=281 name=KRT-ADM-0087 polity=1 tactical_factor=2
+
+  ── 2871 ──
+  03 Jul 2871  admiral retired     Nakhavi Reach                             admiral_id=280 name=NAK-ADM-0067 polity=4 tactical_factor=1
+  02 Oct 2871  admiral retired     Golvhaan Reach                            admiral_id=254 name=GLV-ADM-0009 polity=8 tactical_factor=1
+
+  ── 2874 ──
+  23 Nov 2874  admiral retired     Kreeth Dominion                           admiral_id=284 name=KRT-ADM-0088 polity=1 tactical_factor=2
+
+  ── 2876 ──
+  28 Aug 2876  admiral retired     Nakhavi Reach                             admiral_id=285 name=NAK-ADM-0068 polity=4 tactical_factor=1
+
+  ── 2877 ──
+  26 Mar 2877  admiral retired     Vardhek Roidhunate                        admiral_id=262 name=VRD-ADM-0010 polity=12 tactical_factor=-
+
+  ── 2878 ──
+  11 Nov 2878  admiral retired     Kreeth Dominion                           admiral_id=287 name=KRT-ADM-0089 polity=1 tactical_factor=2
+
+  ── 2881 ──
+  14 Feb 2881  admiral retired     Eurasia                                   admiral_id=271 name=Ye Jianying polity=14 tactical_factor=3
+  16 May 2881  admiral retired     Nhaveth Court A                           admiral_id=167 name=NHV-ADM-0002 polity=9 tactical_factor=-3
+  24 Oct 2881  admiral retired     Nakhavi Reach                             admiral_id=288 name=NAK-ADM-0069 polity=4 tactical_factor=1
+
+  ── 2882 ──
+  30 Oct 2882  admiral retired     Kreeth Dominion                           admiral_id=290 name=KRT-ADM-0090 polity=1 tactical_factor=2
+
+  ── 2883 ──
+  19 Mar 2883  admiral retired     Vaelkhi Choth                             admiral_id=275 name=VLK-ADM-0015 polity=6 tactical_factor=1
+  07 May 2883  admiral retired     Vashori Compact                           admiral_id=269 name=VSH-ADM-0012 polity=2 tactical_factor=3
+  04 Jun 2883  admiral retired     Oceania                                   admiral_id=273 name=Wei Lihuang polity=13 tactical_factor=1
+
+  ── 2886 ──
+  18 Oct 2886  admiral retired     Kreeth Dominion                           admiral_id=294 name=KRT-ADM-0091 polity=1 tactical_factor=2
+  20 Dec 2886  admiral retired     Nakhavi Reach                             admiral_id=293 name=NAK-ADM-0070 polity=4 tactical_factor=1
+
+  ── 2890 ──
+  28 Apr 2890  admiral retired     Eastasia                                  admiral_id=279 name=Xue Yue polity=15 tactical_factor=1
+  06 Oct 2890  admiral retired     Kreeth Dominion                           admiral_id=298 name=KRT-ADM-0092 polity=1 tactical_factor=2
+
+  ── 2892 ──
+  15 Feb 2892  admiral retired     Nakhavi Reach                             admiral_id=299 name=NAK-ADM-0071 polity=4 tactical_factor=1
+
+  ── 2893 ──
+  02 Jan 2893  admiral retired     Kraathi Crusade                           admiral_id=283 name=KRA-ADM-0016 polity=3 tactical_factor=0
+
+  ── 2894 ──
+  24 Sep 2894  admiral retired     Kreeth Dominion                           admiral_id=301 name=KRT-ADM-0093 polity=1 tactical_factor=2
+
+  ── 2896 ──
+  23 Nov 2896  admiral retired     Shekhari Exchange                         admiral_id=282 name=SHK-ADM-0013 polity=7 tactical_factor=0
+
+  ── 2897 ──
+  12 Apr 2897  admiral retired     Nakhavi Reach                             admiral_id=302 name=NAK-ADM-0072 polity=4 tactical_factor=1
+
+  ── 2898 ──
+  12 Sep 2898  admiral retired     Kreeth Dominion                           admiral_id=304 name=KRT-ADM-0094 polity=1 tactical_factor=2
+
+  ── 2902 ──
+  09 Jun 2902  admiral retired     Nakhavi Reach                             admiral_id=306 name=NAK-ADM-0073 polity=4 tactical_factor=1
+  01 Sep 2902  admiral retired     Kreeth Dominion                           admiral_id=307 name=KRT-ADM-0095 polity=1 tactical_factor=2
+
+  ── 2906 ──
+  02 Jul 2906  admiral retired     Eurasia                                   admiral_id=291 name=Zhang Xueliang polity=14 tactical_factor
+  20 Aug 2906  admiral retired     Kreeth Dominion                           admiral_id=309 name=KRT-ADM-0096 polity=1 tactical_factor=2
+  31 Dec 2906  admiral retired     Vaelkhi Choth                             admiral_id=295 name=VLK-ADM-0016 polity=6 tactical_factor=1
+
+  ── 2907 ──
+  05 Aug 2907  admiral retired     Nakhavi Reach                             admiral_id=308 name=NAK-ADM-0074 polity=4 tactical_factor=1
+
+  ── 2909 ──
+  08 Feb 2909  admiral retired     Oceania                                   admiral_id=297 name=Bai Chongxi polity=13 tactical_factor=1
+  22 Nov 2909  admiral retired     Golvhaan Reach                            admiral_id=286 name=GLV-ADM-0010 polity=8 tactical_factor=1
+
+  ── 2910 ──
+  08 Aug 2910  admiral retired     Kreeth Dominion                           admiral_id=311 name=KRT-ADM-0097 polity=1 tactical_factor=2
+
+  ── 2912 ──
+  22 Apr 2912  admiral retired     Vardhek Roidhunate                        admiral_id=289 name=VRD-ADM-0011 polity=12 tactical_factor=-
+  30 Sep 2912  admiral retired     Nakhavi Reach                             admiral_id=313 name=NAK-ADM-0075 polity=4 tactical_factor=1
+  11 Nov 2912  admiral retired     Vashori Compact                           admiral_id=296 name=VSH-ADM-0013 polity=2 tactical_factor=3
+
+  ── 2914 ──
+  27 Jul 2914  admiral retired     Kreeth Dominion                           admiral_id=316 name=KRT-ADM-0098 polity=1 tactical_factor=2
+
+  ── 2915 ──
+  06 Sep 2915  admiral retired     Kraathi Crusade                           admiral_id=303 name=KRA-ADM-0017 polity=3 tactical_factor=0
+
+  ── 2916 ──
+  03 Jul 2916  admiral retired     Eastasia                                  admiral_id=300 name=Fu Zuoyi polity=15 tactical_factor=1
+
+  ── 2917 ──
+  26 Nov 2917  admiral retired     Nakhavi Reach                             admiral_id=318 name=NAK-ADM-0076 polity=4 tactical_factor=1
+
+  ── 2918 ──
+  15 Jul 2918  admiral retired     Kreeth Dominion                           admiral_id=320 name=KRT-ADM-0099 polity=1 tactical_factor=2
+
+  ── 2919 ──
+  07 Jul 2919  admiral retired     Nhaveth Court B                           admiral_id=177 name=NHV-ADM-0002 polity=10 tactical_factor=-
+
+  ── 2922 ──
+  03 Jul 2922  admiral retired     Kreeth Dominion                           admiral_id=324 name=KRT-ADM-0100 polity=1 tactical_factor=2
+
+  ── 2923 ──
+  22 Jan 2923  admiral retired     Nakhavi Reach                             admiral_id=323 name=NAK-ADM-0077 polity=4 tactical_factor=1
+
+  ── 2925 ──
+  08 Jun 2925  admiral retired     Shekhari Exchange                         admiral_id=305 name=SHK-ADM-0014 polity=7 tactical_factor=0
+
+  ── 2926 ──
+  21 Jun 2926  admiral retired     Kreeth Dominion                           admiral_id=326 name=KRT-ADM-0101 polity=1 tactical_factor=2
+
+  ── 2928 ──
+  19 Mar 2928  admiral retired     Nakhavi Reach                             admiral_id=327 name=NAK-ADM-0078 polity=4 tactical_factor=1
+
+  ── 2930 ──
+  27 Jan 2930  admiral retired     Skharri Pride                             admiral_id=278 name=SKH-ADM-0006 polity=5 tactical_factor=-3
+  09 Jun 2930  admiral retired     Kreeth Dominion                           admiral_id=329 name=KRT-ADM-0102 polity=1 tactical_factor=2
+  13 Oct 2930  admiral retired     Vaelkhi Choth                             admiral_id=312 name=VLK-ADM-0017 polity=6 tactical_factor=1
+
+  ── 2931 ──
+  16 Nov 2931  admiral retired     Eurasia                                   admiral_id=310 name=HUM-ADM-0016 polity=14 tactical_factor=3
+
+  ── 2933 ──
+  15 May 2933  admiral retired     Nakhavi Reach                             admiral_id=330 name=NAK-ADM-0079 polity=4 tactical_factor=1
+
+  ── 2934 ──
+  28 May 2934  admiral retired     Kreeth Dominion                           admiral_id=332 name=KRT-ADM-0103 polity=1 tactical_factor=2
+  15 Oct 2934  admiral retired     Oceania                                   admiral_id=314 name=HUM-ADM-0016 polity=13 tactical_factor=1
+
+  ── 2938 ──
+  09 May 2938  admiral retired     Kraathi Crusade                           admiral_id=321 name=KRA-ADM-0018 polity=3 tactical_factor=0
+  16 May 2938  admiral retired     Kreeth Dominion                           admiral_id=336 name=KRT-ADM-0104 polity=1 tactical_factor=2
+  11 Jul 2938  admiral retired     Nakhavi Reach                             admiral_id=335 name=NAK-ADM-0080 polity=4 tactical_factor=1
+
+  ── 2942 ──
+  04 May 2942  admiral retired     Kreeth Dominion                           admiral_id=339 name=KRT-ADM-0105 polity=1 tactical_factor=2
+  18 May 2942  admiral retired     Vashori Compact                           admiral_id=319 name=VSH-ADM-0014 polity=2 tactical_factor=3
+  07 Sep 2942  admiral retired     Eastasia                                  admiral_id=322 name=HUM-ADM-0016 polity=15 tactical_factor=1
+
+  ── 2943 ──
+  06 Sep 2943  admiral retired     Nakhavi Reach                             admiral_id=340 name=NAK-ADM-0081 polity=4 tactical_factor=1
+
+  ── 2944 ──
+  07 Feb 2944  admiral retired     Nhaveth Court C                           admiral_id=175 name=NHV-ADM-0002 polity=11 tactical_factor=-
+
+  ── 2946 ──
+  22 Apr 2946  admiral retired     Kreeth Dominion                           admiral_id=341 name=KRT-ADM-0106 polity=1 tactical_factor=2
+
+  ── 2947 ──
+  19 May 2947  admiral retired     Vardhek Roidhunate                        admiral_id=317 name=VRD-ADM-0012 polity=12 tactical_factor=-
+
+  ── 2948 ──
+  12 Jan 2948  admiral retired     Golvhaan Reach                            admiral_id=315 name=GLV-ADM-0011 polity=8 tactical_factor=1
+  01 Nov 2948  admiral retired     Nakhavi Reach                             admiral_id=344 name=NAK-ADM-0082 polity=4 tactical_factor=1
+
+  ── 2950 ──
+  10 Apr 2950  admiral retired     Kreeth Dominion                           admiral_id=346 name=KRT-ADM-0107 polity=1 tactical_factor=2
+
+  ── 2953 ──
+  21 Dec 2953  admiral retired     Shekhari Exchange                         admiral_id=328 name=SHK-ADM-0015 polity=7 tactical_factor=0
+  28 Dec 2953  admiral retired     Nakhavi Reach                             admiral_id=349 name=NAK-ADM-0083 polity=4 tactical_factor=1
+
+  ── 2954 ──
+  29 Mar 2954  admiral retired     Kreeth Dominion                           admiral_id=350 name=KRT-ADM-0108 polity=1 tactical_factor=2
+  26 Jul 2954  admiral retired     Vaelkhi Choth                             admiral_id=333 name=VLK-ADM-0018 polity=6 tactical_factor=1
+
+  ── 2957 ──
+  01 Apr 2957  admiral retired     Eurasia                                   admiral_id=334 name=HUM-ADM-0017 polity=14 tactical_factor=3
+
+  ── 2958 ──
+  17 Mar 2958  admiral retired     Kreeth Dominion                           admiral_id=353 name=KRT-ADM-0109 polity=1 tactical_factor=2
+
+  ── 2959 ──
+  23 Feb 2959  admiral retired     Nakhavi Reach                             admiral_id=352 name=NAK-ADM-0084 polity=4 tactical_factor=1
+
+  ── 2960 ──
+  20 Jun 2960  admiral retired     Oceania                                   admiral_id=337 name=HUM-ADM-0017 polity=13 tactical_factor=1
+
+  ── 2961 ──
+  09 Jan 2961  admiral retired     Kraathi Crusade                           admiral_id=338 name=KRA-ADM-0019 polity=3 tactical_factor=0
+
+  ── 2962 ──
+  05 Mar 2962  admiral retired     Kreeth Dominion                           admiral_id=356 name=KRT-ADM-0110 polity=1 tactical_factor=2
+
+  ── 2964 ──
+  20 Apr 2964  admiral retired     Nakhavi Reach                             admiral_id=357 name=NAK-ADM-0085 polity=4 tactical_factor=1
+
+  ── 2966 ──
+  21 Feb 2966  admiral retired     Kreeth Dominion                           admiral_id=360 name=KRT-ADM-0111 polity=1 tactical_factor=2
+
+  ── 2968 ──
+  11 Nov 2968  admiral retired     Eastasia                                  admiral_id=343 name=HUM-ADM-0017 polity=15 tactical_factor=1
+
+  ── 2969 ──
+  16 Jun 2969  admiral retired     Nakhavi Reach                             admiral_id=361 name=NAK-ADM-0086 polity=4 tactical_factor=1
+
+  ── 2970 ──
+  09 Feb 2970  admiral retired     Kreeth Dominion                           admiral_id=362 name=KRT-ADM-0112 polity=1 tactical_factor=2
+
+  ── 2971 ──
+  22 Nov 2971  admiral retired     Vashori Compact                           admiral_id=342 name=VSH-ADM-0015 polity=2 tactical_factor=3
+
+  ── 2974 ──
+  28 Jan 2974  admiral retired     Kreeth Dominion                           admiral_id=365 name=KRT-ADM-0113 polity=1 tactical_factor=2
+  12 Aug 2974  admiral retired     Nakhavi Reach                             admiral_id=364 name=NAK-ADM-0087 polity=4 tactical_factor=1
+
+  ── 2978 ──
+  16 Jan 2978  admiral retired     Kreeth Dominion                           admiral_id=367 name=KRT-ADM-0114 polity=1 tactical_factor=2
+  08 May 2978  admiral retired     Vaelkhi Choth                             admiral_id=354 name=VLK-ADM-0019 polity=6 tactical_factor=1
+
+  ── 2979 ──
+  08 Oct 2979  admiral retired     Nakhavi Reach                             admiral_id=368 name=NAK-ADM-0088 polity=4 tactical_factor=1
+
+  ── 2982 ──
+  04 Jan 2982  admiral retired     Kreeth Dominion                           admiral_id=369 name=KRT-ADM-0115 polity=1 tactical_factor=2
+  14 Jun 2982  admiral retired     Vardhek Roidhunate                        admiral_id=347 name=VRD-ADM-0013 polity=12 tactical_factor=-
+  05 Jul 2982  admiral retired     Shekhari Exchange                         admiral_id=351 name=SHK-ADM-0016 polity=7 tactical_factor=0
+  16 Aug 2982  admiral retired     Eurasia                                   admiral_id=355 name=HUM-ADM-0018 polity=14 tactical_factor=3
+
+  ── 2983 ──
+  12 Sep 2983  admiral retired     Kraathi Crusade                           admiral_id=359 name=KRA-ADM-0020 polity=3 tactical_factor=0
+
+  ── 2984 ──
+  03 Dec 2984  admiral retired     Nakhavi Reach                             admiral_id=371 name=NAK-ADM-0089 polity=4 tactical_factor=1
+
+  ── 2985 ──
+  23 Dec 2985  admiral retired     Kreeth Dominion                           admiral_id=372 name=KRT-ADM-0116 polity=1 tactical_factor=2
+
+  ── 2986 ──
+  24 Feb 2986  admiral retired     Oceania                                   admiral_id=358 name=HUM-ADM-0018 polity=13 tactical_factor=1
+  03 Mar 2986  admiral retired     Golvhaan Reach                            admiral_id=348 name=GLV-ADM-0012 polity=8 tactical_factor=1
+
+  ── 2989 ──
+  11 Dec 2989  admiral retired     Kreeth Dominion                           admiral_id=378 name=KRT-ADM-0117 polity=1 tactical_factor=2
+
+  ── 2990 ──
+  29 Jan 2990  admiral retired     Nakhavi Reach                             admiral_id=377 name=NAK-ADM-0090 polity=4 tactical_factor=1
+
+  ── 2993 ──
+  29 Nov 2993  admiral retired     Kreeth Dominion                           admiral_id=381 name=KRT-ADM-0118 polity=1 tactical_factor=2
+
+  ── 2995 ──
+  16 Jan 2995  admiral retired     Eastasia                                  admiral_id=363 name=HUM-ADM-0018 polity=15 tactical_factor=1
+  27 Mar 2995  admiral retired     Nakhavi Reach                             admiral_id=382 name=NAK-ADM-0091 polity=4 tactical_factor=1
+
+  ── 2996 ──
+  02 Dec 2996  admiral retired     Skharri Pride                             admiral_id=331 name=SKH-ADM-0007 polity=5 tactical_factor=-3
+
+  ── 2997 ──
+  17 Nov 2997  admiral retired     Kreeth Dominion                           admiral_id=383 name=KRT-ADM-0119 polity=1 tactical_factor=2
+
+  ── 3000 ──
+  23 May 3000  admiral retired     Nakhavi Reach                             admiral_id=385 name=NAK-ADM-0092 polity=4 tactical_factor=1
+
+  ── 3001 ──
+  29 May 3001  admiral retired     Vashori Compact                           admiral_id=366 name=VSH-ADM-0016 polity=2 tactical_factor=3
+  06 Nov 3001  admiral retired     Kreeth Dominion                           admiral_id=387 name=KRT-ADM-0120 polity=1 tactical_factor=2
+
+  ── 3002 ──
+  19 Feb 3002  admiral retired     Vaelkhi Choth                             admiral_id=370 name=VLK-ADM-0020 polity=6 tactical_factor=1
+
+  ── 3005 ──
+  19 Jul 3005  admiral retired     Nakhavi Reach                             admiral_id=388 name=NAK-ADM-0093 polity=4 tactical_factor=1
+  25 Oct 3005  admiral retired     Kreeth Dominion                           admiral_id=390 name=KRT-ADM-0121 polity=1 tactical_factor=2
+
+  ── 3006 ──
+  16 May 3006  admiral retired     Kraathi Crusade                           admiral_id=376 name=KRA-ADM-0021 polity=3 tactical_factor=0
+
+  ── 3008 ──
+  01 Jan 3008  admiral retired     Eurasia                                   admiral_id=375 name=HUM-ADM-0019 polity=14 tactical_factor=3
+
+  ── 3009 ──
+  13 Oct 3009  admiral retired     Kreeth Dominion                           admiral_id=393 name=KRT-ADM-0122 polity=1 tactical_factor=2
+
+  ── 3010 ──
+  14 Sep 3010  admiral retired     Nakhavi Reach                             admiral_id=392 name=NAK-ADM-0094 polity=4 tactical_factor=1
+
+  ── 3011 ──
+  18 Jan 3011  admiral retired     Shekhari Exchange                         admiral_id=374 name=SHK-ADM-0017 polity=7 tactical_factor=0
+  01 Nov 3011  admiral retired     Oceania                                   admiral_id=379 name=HUM-ADM-0019 polity=13 tactical_factor=1
+
+  ── 3013 ──
+  01 Oct 3013  admiral retired     Kreeth Dominion                           admiral_id=396 name=KRT-ADM-0123 polity=1 tactical_factor=2
+
+  ── 3015 ──
+  10 Nov 3015  admiral retired     Nakhavi Reach                             admiral_id=397 name=NAK-ADM-0095 polity=4 tactical_factor=1
+
+  ── 3017 ──
+  11 Jul 3017  admiral retired     Vardhek Roidhunate                        admiral_id=373 name=VRD-ADM-0014 polity=12 tactical_factor=-
+  19 Sep 3017  admiral retired     Kreeth Dominion                           admiral_id=400 name=KRT-ADM-0124 polity=1 tactical_factor=2
+
+  ── 3021 ──
+  05 Jan 3021  admiral retired     Nakhavi Reach                             admiral_id=401 name=NAK-ADM-0096 polity=4 tactical_factor=1
+  23 Mar 3021  admiral retired     Eastasia                                  admiral_id=384 name=HUM-ADM-0019 polity=15 tactical_factor=1
+  07 Sep 3021  admiral retired     Kreeth Dominion                           admiral_id=403 name=KRT-ADM-0125 polity=1 tactical_factor=2
+
+  ── 3024 ──
+  23 Apr 3024  admiral retired     Golvhaan Reach                            admiral_id=380 name=GLV-ADM-0013 polity=8 tactical_factor=1

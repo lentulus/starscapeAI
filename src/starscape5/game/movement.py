@@ -80,7 +80,8 @@ def get_fleet_jump_range(
 ) -> int:
     """Return the effective jump range of fleet (min of all jumping hulls).
 
-    If polity_jump_level is given, scout hulls use max(base_jump, polity_jump_level).
+    All jump-capable hulls use max(base_jump, polity_jump_level) when the
+    polity jump level is provided — the same upgrade rules as scouts.
     Returns 0 if no hull in the fleet has a jump drive.
     """
     hulls = get_hulls_in_fleet(conn, fleet_id)
@@ -89,7 +90,7 @@ def get_fleet_jump_range(
         if h.hull_type not in HULL_STATS or HULL_STATS[h.hull_type].jump == 0:
             continue
         j = HULL_STATS[h.hull_type].jump
-        if h.hull_type == "scout" and polity_jump_level is not None:
+        if polity_jump_level is not None:
             j = max(j, polity_jump_level)
         ranges.append(j)
     return min(ranges) if ranges else 0

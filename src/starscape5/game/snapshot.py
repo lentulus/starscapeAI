@@ -164,7 +164,7 @@ def build_snapshot(
         ).fetchall()
         types = [h["hull_type"] for h in hulls]
         jump_vals = [
-            max(HULL_STATS[t].jump, polity_jump_level) if t == "scout" else HULL_STATS[t].jump
+            max(HULL_STATS[t].jump, polity_jump_level)
             for t in types if t in HULL_STATS and HULL_STATS[t].jump > 0
         ]
         fleets.append(FleetSnapshot(
