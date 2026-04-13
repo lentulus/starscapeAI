@@ -577,12 +577,21 @@ class GameFacadeImpl:
         return hull_ids
 
     def enforce_budget(self, polity_id: int, tick: int) -> list[str]:
-        """Scrap idle logistics hulls until treasury >= 0 or none remain.
+        """Scrap hulls until treasury >= 0 or the polity is completely disarmed.
 
         Called once per polity per Economy phase, after maintenance is paid.
-        Scrap priority: colony_transport first (most numerous), then transport.
-        Within each type, scrap the one with the highest build cost (most
-        scrap value returned).  Scrap value = 30% of build cost.
+        No negative treasury is permitted.
+
+        Scrap order (least to most strategically costly):
+          1. Idle logistics (colony_transport, transport, scout) — at friendly system
+          2. Troop hulls
+          3. Escorts
+          4. Old capitals
+          5. Cruisers
+          6. Capitals
+
+        Within each tier, scrap the oldest hull (lowest hull_id) first.
+        Scrap value = 30% of build cost.
         """
         treasury_row = self._conn.execute(
             "SELECT treasury_ru FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
@@ -596,13 +605,15 @@ class GameFacadeImpl:
             (polity_id,),
         ).fetchone()["name"]
 
-        _LOGISTICS_TYPES = ("colony_transport", "transport")
         _SCRAP_RATIO = 0.30
         summaries: list[str] = []
         logged_event = False
 
+        # Idle logistics query (fleet must be active and at a system)
+        _IDLE_LOGISTICS = ("colony_transport", "transport", "scout")
+        _WARSHIP_ORDER  = ("troop", "escort", "old_capital", "cruiser", "capital")
+
         while True:
-            # Re-check treasury
             treasury = self._conn.execute(
                 "SELECT treasury_ru FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
                 (polity_id,),
@@ -610,9 +621,10 @@ class GameFacadeImpl:
             if treasury >= 0:
                 break
 
-            # Find the most valuable idle logistics hull to scrap
             candidate = None
-            for hull_type in _LOGISTICS_TYPES:
+
+            # Phase 1: idle logistics
+            for hull_type in _IDLE_LOGISTICS:
                 row = self._conn.execute(
                     """
                     SELECT h.hull_id, h.name, h.hull_type
@@ -632,8 +644,27 @@ class GameFacadeImpl:
                     candidate = row
                     break
 
+            # Phase 2: warships (any location) if no idle logistics remain
             if candidate is None:
-                break  # nothing left to scrap
+                for hull_type in _WARSHIP_ORDER:
+                    row = self._conn.execute(
+                        """
+                        SELECT h.hull_id, h.name, h.hull_type
+                        FROM   Hull_head h
+                        WHERE  h.polity_id = ?
+                          AND  h.hull_type = ?
+                          AND  h.status NOT IN ('destroyed')
+                        ORDER  BY h.hull_id ASC
+                        LIMIT  1
+                        """,
+                        (polity_id, hull_type),
+                    ).fetchone()
+                    if row is not None:
+                        candidate = row
+                        break
+
+            if candidate is None:
+                break  # completely disarmed; nothing left
 
             stats = HULL_STATS.get(candidate["hull_type"])
             scrap_value = (stats.build_cost * _SCRAP_RATIO) if stats else 1.0
