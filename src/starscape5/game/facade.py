@@ -210,6 +210,16 @@ class GameFacade(Protocol):
         """Write a monthly_summary event; return summary string."""
         ...
 
+    def enforce_budget(self, polity_id: int, tick: int) -> list[str]:
+        """Prevent treasury going negative by scrapping idle logistics hulls.
+
+        If treasury < 0 after maintenance, scraps the most expensive idle
+        logistics hull (CT or transport) per call, adding scrap value to
+        treasury, until treasury >= 0 or no more hulls remain.  Logs a
+        budget_shortfall event on first scrap.  Returns summary strings.
+        """
+        ...
+
 
 # ---------------------------------------------------------------------------
 # Stub
@@ -380,6 +390,10 @@ class GameFacadeStub:
         self._record("write_monthly_summary", tick, phase)
         return self.returns.get("write_monthly_summary", "")
 
+    def enforce_budget(self, polity_id: int, tick: int) -> list[str]:
+        self._record("enforce_budget", polity_id, tick)
+        return self.returns.get("enforce_budget", [])
+
 
 # ---------------------------------------------------------------------------
 # Real implementation
@@ -423,10 +437,15 @@ class GameFacadeImpl:
 
         # Hull maintenance
         for fleet in get_fleets_by_polity(self._conn, polity_id):
+            idle = fleet.status == "active" and fleet.system_id is not None
             for hull in get_hulls_in_fleet(self._conn, fleet.fleet_id):
                 stats = HULL_STATS.get(hull.hull_type)
                 if stats:
                     maint = stats.maint_per_tick
+                    # Idle colony transports at a friendly system pay reduced
+                    # maintenance — they are dormant, not actively deployed.
+                    if hull.hull_type == "colony_transport" and idle:
+                        maint = 0.1
                     # Supply degradation doubles maintenance (applied separately,
                     # but hulls with status 'damaged' still pay full maint)
                     total_maint += maint
@@ -480,7 +499,8 @@ class GameFacadeImpl:
             system_id = row["system_id"]
             hull_type = row["hull_type"]
 
-            # Determine fleet at this system for this polity (if any).
+            # Assign hull to fleet at build system; if fleet is elsewhere,
+            # fall back to the polity's primary fleet (any location).
             fleet_row = self._conn.execute(
                 """
                 SELECT fleet_id FROM Fleet
@@ -489,13 +509,23 @@ class GameFacadeImpl:
                 """,
                 (polity_id, system_id),
             ).fetchone()
+            if fleet_row is None:
+                fleet_row = self._conn.execute(
+                    """
+                    SELECT fleet_id FROM Fleet
+                    WHERE  polity_id = ? AND status = 'active'
+                    ORDER  BY fleet_id
+                    LIMIT  1
+                    """,
+                    (polity_id,),
+                ).fetchone()
             fleet_id = fleet_row["fleet_id"] if fleet_row else None
 
             polity_row = self._conn.execute(
                 "SELECT species_id, name FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
                 (polity_id,),
             ).fetchone()
-            gen = NameGenerator(species_id=polity_row["species_id"])
+            gen = NameGenerator(species_id=polity_row["species_id"], db_conn=self._conn)
             polity_name = polity_row["name"]
             seq = self._conn.execute(
                 "SELECT COUNT(DISTINCT hull_id) FROM Hull WHERE polity_id = ?", (polity_id,)
@@ -546,6 +576,103 @@ class GameFacadeImpl:
 
         return hull_ids
 
+    def enforce_budget(self, polity_id: int, tick: int) -> list[str]:
+        """Scrap idle logistics hulls until treasury >= 0 or none remain.
+
+        Called once per polity per Economy phase, after maintenance is paid.
+        Scrap priority: colony_transport first (most numerous), then transport.
+        Within each type, scrap the one with the highest build cost (most
+        scrap value returned).  Scrap value = 30% of build cost.
+        """
+        treasury_row = self._conn.execute(
+            "SELECT treasury_ru FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+            (polity_id,),
+        ).fetchone()
+        if treasury_row is None or treasury_row["treasury_ru"] >= 0:
+            return []
+
+        polity_name = self._conn.execute(
+            "SELECT name FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+            (polity_id,),
+        ).fetchone()["name"]
+
+        _LOGISTICS_TYPES = ("colony_transport", "transport")
+        _SCRAP_RATIO = 0.30
+        summaries: list[str] = []
+        logged_event = False
+
+        while True:
+            # Re-check treasury
+            treasury = self._conn.execute(
+                "SELECT treasury_ru FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
+                (polity_id,),
+            ).fetchone()["treasury_ru"]
+            if treasury >= 0:
+                break
+
+            # Find the most valuable idle logistics hull to scrap
+            candidate = None
+            for hull_type in _LOGISTICS_TYPES:
+                row = self._conn.execute(
+                    """
+                    SELECT h.hull_id, h.name, h.hull_type
+                    FROM   Hull_head h
+                    JOIN   Fleet f ON f.fleet_id = h.fleet_id
+                    WHERE  h.polity_id = ?
+                      AND  h.hull_type = ?
+                      AND  h.status NOT IN ('destroyed')
+                      AND  f.status = 'active'
+                      AND  f.system_id IS NOT NULL
+                    ORDER  BY h.hull_id ASC
+                    LIMIT  1
+                    """,
+                    (polity_id, hull_type),
+                ).fetchone()
+                if row is not None:
+                    candidate = row
+                    break
+
+            if candidate is None:
+                break  # nothing left to scrap
+
+            stats = HULL_STATS.get(candidate["hull_type"])
+            scrap_value = (stats.build_cost * _SCRAP_RATIO) if stats else 1.0
+
+            # Destroy the hull (temporal insert — copy current row, set status)
+            self._conn.execute(
+                """
+                INSERT INTO Hull (hull_id, tick, seq, polity_id, name, hull_type,
+                                  squadron_id, fleet_id, system_id,
+                                  destination_system_id, destination_tick,
+                                  status, marine_designated, cargo_type, cargo_id,
+                                  establish_tick, created_tick)
+                SELECT hull_id, ?, 99, polity_id, name, hull_type,
+                       squadron_id, fleet_id, system_id,
+                       destination_system_id, destination_tick,
+                       'destroyed', marine_designated, cargo_type, cargo_id,
+                       establish_tick, created_tick
+                FROM   Hull_head WHERE hull_id = ?
+                """,
+                (tick, candidate["hull_id"]),
+            )
+            update_treasury(self._conn, polity_id, scrap_value, tick=tick, seq=98)
+
+            if not logged_event:
+                write_event(
+                    self._conn, tick=tick, phase=8,
+                    event_type="budget_shortfall",
+                    summary=f"{polity_name}: treasury deficit — scrapping idle logistics hulls",
+                    polity_a_id=polity_id,
+                )
+                logged_event = True
+
+            summaries.append(
+                f"tick={tick} polity={polity_id} scrapped {candidate['hull_type']} "
+                f"hull={candidate['hull_id']} +{scrap_value:.1f}RU"
+            )
+
+        return summaries
+
     def update_passive_scan(
         self, polity_id: int, world: WorldFacade, tick: int
     ) -> int:
@@ -578,7 +705,7 @@ class GameFacadeImpl:
         if polity_row is None:
             return []
         species_data = world.get_species(polity_row["species_id"])
-        name_gen = NameGenerator(species_id=polity_row["species_id"])
+        name_gen = NameGenerator(species_id=polity_row["species_id"], db_conn=self._conn)
         return process_retirements(self._conn, polity_id, tick, species_data, rng, name_gen)
 
     def execute_jump(
@@ -591,20 +718,19 @@ class GameFacadeImpl:
         self, fleet_id: int, polity_id: int, system_id: int,
         world: WorldFacade, tick: int,
     ) -> str | None:
-        """Establish or develop a presence when a colony transport arrives.
+        """Establish a presence when a colony transport arrives; cannibalize the hull for startup RU.
 
+        Each colony transport is a one-way vessel: on arrival it establishes or
+        grows the colony, then the hull is stripped for parts and destroyed.
         Returns a summary string or None if the fleet has no colony transports.
         """
-        has_ct = self._conn.execute(
-            """
-            SELECT 1 FROM Hull_head
-            WHERE fleet_id = ? AND hull_type = 'colony_transport'
-              AND status NOT IN ('destroyed')
-            LIMIT 1
-            """,
-            (fleet_id,),
-        ).fetchone()
-        if not has_ct:
+        from .fleet import get_hulls_in_fleet
+
+        cts = [
+            h for h in get_hulls_in_fleet(self._conn, fleet_id)
+            if h.hull_type == "colony_transport" and h.status not in ("destroyed",)
+        ]
+        if not cts:
             return None
 
         from .presence import (
@@ -612,6 +738,7 @@ class GameFacadeImpl:
             get_presences_in_system,
         )
         from .economy import get_best_body_in_system
+        from .polity import update_treasury
         from .events import write_event
 
         presences = get_presences_in_system(self._conn, system_id)
@@ -638,20 +765,32 @@ class GameFacadeImpl:
                 summary=f"{polity_name} established outpost at system {system_id}",
                 polity_a_id=polity_id, system_id=system_id, body_id=body_id,
             )
-            # Re-fetch so we have the new presence for delivery counting
             presences = get_presences_in_system(self._conn, system_id)
             own = [p for p in presences if p.polity_id == polity_id]
 
-        if own:
-            p = own[0]
-            if p.control_state in ("outpost", "colony"):
-                record_colonist_delivery(self._conn, p.presence_id, tick)
-                return (
-                    f"tick={tick} polity={polity_id} colonist_delivery "
-                    f"system={system_id} deliveries={p.colonist_deliveries + 1}"
-                )
+        if not own:
+            return None
 
-        return None
+        p = own[0]
+        if p.control_state not in ("outpost", "colony"):
+            return None
+
+        # Cannibalize all colony transports in this fleet: destroy hulls, grant startup RU.
+        _CANNIBALIZE_RU = 5.0   # half build cost; colonists strip the ship for parts
+        ru_gained = len(cts) * _CANNIBALIZE_RU
+        for ct in cts:
+            self._conn.execute(
+                "UPDATE Hull SET status = 'destroyed' WHERE hull_id = ?",
+                (ct.hull_id,),
+            )
+        update_treasury(self._conn, polity_id, ru_gained, tick=tick, seq=4)
+
+        record_colonist_delivery(self._conn, p.presence_id, tick)
+        return (
+            f"tick={tick} polity={polity_id} colonist_delivery "
+            f"system={system_id} deliveries={p.colonist_deliveries + 1} "
+            f"cannibalized={len(cts)} hulls ru_gained={ru_gained:.0f}"
+        )
 
     def disembark_troops(
         self, fleet_id: int, polity_id: int, system_id: int, tick: int,
@@ -692,7 +831,7 @@ class GameFacadeImpl:
             "SELECT species_id, name FROM Polity WHERE polity_id = ? ORDER BY row_id DESC LIMIT 1",
             (polity_id,),
         ).fetchone()
-        gen = NameGenerator(species_id=polity_row["species_id"])
+        gen = NameGenerator(species_id=polity_row["species_id"], db_conn=self._conn)
         seq = self._conn.execute(
             "SELECT COUNT(DISTINCT force_id) FROM GroundForce WHERE polity_id = ?", (polity_id,)
         ).fetchone()[0] + 1

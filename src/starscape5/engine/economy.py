@@ -58,6 +58,8 @@ def run_economy_phase(
         produced = game.collect_ru(polity_id, tick)
         paid = game.pay_maintenance(polity_id, tick)
         game.apply_supply_degradation(polity_id, tick)
+        budget_events = game.enforce_budget(polity_id, tick)
+        summaries.extend(budget_events)
         summaries.append(
             f"tick={tick} polity={polity_id} "
             f"produced={produced:.1f} maint={paid:.1f} "

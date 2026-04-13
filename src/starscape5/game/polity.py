@@ -203,12 +203,22 @@ def set_capital(
     )
 
 
-_JUMP_UPGRADE_COST: float = 75.0   # RU per upgrade step
-_JUMP_UPGRADE_STEP: int   = 2      # parsecs added per upgrade
-_JUMP_UPGRADE_MAX: int    = 20     # hard ceiling
+_JUMP_UPGRADE_STEP: int = 2   # parsecs added per upgrade
+_JUMP_UPGRADE_MAX: int  = 20  # hard ceiling
 
-def get_jump_upgrade_cost() -> float:
-    return _JUMP_UPGRADE_COST
+
+def get_jump_upgrade_cost(current_level: int = 10) -> float:
+    """Return RU cost to upgrade from current_level.  Doubles every step.
+
+      J10→J12:  75 RU
+      J12→J14: 150 RU
+      J14→J16: 300 RU
+      J16→J18: 600 RU
+      J18→J20: 1200 RU
+    """
+    steps_taken = (current_level - 10) // 2
+    return 75.0 * (2.0 ** steps_taken)
+
 
 def upgrade_jump_level(
     conn: sqlite3.Connection, polity_id: int,
@@ -223,12 +233,13 @@ def upgrade_jump_level(
     if current >= _JUMP_UPGRADE_MAX:
         return current
     new_level = min(current + _JUMP_UPGRADE_STEP, _JUMP_UPGRADE_MAX)
+    cost = get_jump_upgrade_cost(current)
     _insert_polity_row(
         conn, polity_id,
         species_id=cur["species_id"],
         name=cur["name"],
         capital_system_id=cur["capital_system_id"],
-        treasury_ru=cur["treasury_ru"] - _JUMP_UPGRADE_COST,
+        treasury_ru=cur["treasury_ru"] - cost,
         expansionism=cur["expansionism"],
         aggression=cur["aggression"],
         risk_appetite=cur["risk_appetite"],

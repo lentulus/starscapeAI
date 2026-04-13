@@ -20,6 +20,7 @@ from random import Random
 from .combat import get_fleet_strength_in_system
 from .events import write_event
 from .ground import apply_strength_delta, get_ground_forces_in_system
+from .presence import set_contested
 
 
 # ---------------------------------------------------------------------------
@@ -157,6 +158,31 @@ def run_bombardment_tick(
         apply_strength_delta(conn, target.force_id, -1, tick)
         strength_delta = -1
         total_after = total_before - 1
+
+        if total_after == 0:
+            presence = conn.execute(
+                """
+                SELECT presence_id, control_state FROM SystemPresence_head
+                WHERE  polity_id = ? AND system_id = ?
+                  AND  (? IS NULL OR body_id = ?)
+                LIMIT  1
+                """,
+                (defender_id, system_id, body_id, body_id),
+            ).fetchone()
+            if presence is not None:
+                set_contested(conn, presence["presence_id"], tick)
+                write_event(
+                    conn, tick=tick, phase=5,
+                    event_type="control_change",
+                    summary=(
+                        f"system={system_id} body={body_id}: "
+                        f"{presence['control_state']}→contested "
+                        f"(polity {defender_id} ground forces annihilated "
+                        f"by bombardment from polity {attacker_id})"
+                    ),
+                    polity_a_id=attacker_id, polity_b_id=defender_id,
+                    system_id=system_id, body_id=body_id,
+                )
 
     write_event(
         conn, tick=tick, phase=5,

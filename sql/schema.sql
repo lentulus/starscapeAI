@@ -137,3 +137,12 @@ CREATE TABLE IF NOT EXISTS "BodyMutable" (
     "hydrosphere"      REAL,    -- ocean/ice fraction 0.0–1.0; NULL if corrosive or no atmosphere
     "epoch"            INTEGER NOT NULL DEFAULT 0  -- game tick of last update
 );
+
+-- ---------------------------------------------------------------------------
+-- Indexes on IndexedIntegerDistinctSystems (populated by Hipparcos pipeline,
+-- not generated from this file — apply manually or via compute_metrics.py).
+-- ---------------------------------------------------------------------------
+-- CREATE INDEX IF NOT EXISTS idx_systems_x   ON IndexedIntegerDistinctSystems (x);
+-- CREATE INDEX IF NOT EXISTS idx_systems_xyz ON IndexedIntegerDistinctSystems (x, y, z);
+-- idx_systems_xyz enables efficient bounding-box neighbour queries in
+-- WorldFacadeImpl.get_systems_within_parsecs().

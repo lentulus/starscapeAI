@@ -100,6 +100,8 @@ def init_game(
         has_gg = int(any(b.body_type == "gas_giant" for b in bodies))
         has_ocean = int(any(b.hydrosphere >= 0.5 for b in bodies))
 
+        _HOMEWORLD_POTENTIAL_FLOOR = 25
+
         # Ensure WorldPotential row exists for the homeworld body (for
         # bodyless systems, insert a synthetic row so economy phase works).
         if not bodies:
@@ -107,9 +109,20 @@ def init_game(
                 game_conn,
                 body_id=homeworld_body_id,
                 system_id=homeworld_system,
-                world_potential=20,  # synthetic homeworld default
+                world_potential=_HOMEWORLD_POTENTIAL_FLOOR,
                 has_gas_giant=0,
                 has_ocean=0,
+            )
+        elif best_body is not None and best_body.world_potential < _HOMEWORLD_POTENTIAL_FLOOR:
+            # Civilisations that reached interstellar capability have centuries
+            # of industrial development; enforce a minimum production floor.
+            create_world_potential_cache(
+                game_conn,
+                body_id=homeworld_body_id,
+                system_id=homeworld_system,
+                world_potential=_HOMEWORLD_POTENTIAL_FLOOR,
+                has_gas_giant=has_gg,
+                has_ocean=has_ocean,
             )
 
         # Seed NamePool entries if provided in the OB entry.
@@ -126,7 +139,7 @@ def init_game(
                     )
 
         for i, pdef in enumerate(polity_defs):
-            name_gen = NameGenerator(species_id=species_id)
+            name_gen = NameGenerator(species_id=species_id, db_conn=game_conn)
             polity_id = create_polity(
                 game_conn,
                 species_id=species_id,

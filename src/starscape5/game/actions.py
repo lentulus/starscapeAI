@@ -28,6 +28,24 @@ from .snapshot import (
 
 
 # ---------------------------------------------------------------------------
+# Jump upgrade cost (exponential with level)
+# ---------------------------------------------------------------------------
+
+def _jump_upgrade_cost(current_jump_level: int) -> float:
+    """Return RU cost to upgrade from current_jump_level to the next step.
+
+    Doubles every two levels (one upgrade step = +2 parsecs):
+      J10→J12:  75
+      J12→J14: 150
+      J14→J16: 300
+      J16→J18: 600
+      J18→J20: 1200
+    """
+    steps_taken = (current_jump_level - 10) // 2   # 0 at J10, 1 at J12, ...
+    return 75.0 * (2.0 ** steps_taken)
+
+
+# ---------------------------------------------------------------------------
 # Action dataclasses
 # ---------------------------------------------------------------------------
 
@@ -163,6 +181,12 @@ def _score_build_hull(
     if hull_type == "scout" and snap.n_scouts >= _SCOUT_CAP:
         return -99.0
 
+    # Hard cap on colony transports: one per colony plus one spare.
+    # CTs are consumed on delivery; no need to stockpile a fleet of them.
+    _CT_CAP = max(2, snap.n_colonies)
+    if hull_type == "colony_transport" and snap.n_colony_transports >= _CT_CAP:
+        return -99.0
+
     if posture == Posture.PREPARE:
         if hull_type in ("capital", "old_capital", "cruiser", "escort"):
             return snap.polity.aggression * 2.0 + 1.0
@@ -279,8 +303,8 @@ def generate_candidates(
 
     # -- War initiation actions --
     # (Actual roll handled by war_initiation_roll; here we just score the action)
-    # Gate on having established colonies — young polities cannot afford war.
-    _COLONY_WAR_THRESHOLD = 6
+    # Gate on having at least 1 colony beyond the homeworld (n_colonies >= 2).
+    _COLONY_WAR_THRESHOLD = 2
     if posture in (Posture.PREPARE, Posture.PROSECUTE) and snap.n_colonies >= _COLONY_WAR_THRESHOLD:
         for cid in p.in_contact_with:
             if cid in p.at_war_with:
@@ -317,17 +341,25 @@ def generate_candidates(
         candidates.append(ConsolidateAction(system_id=pr.system_id, score=sc))
 
     # -- Jump upgrade --
-    # Offer when: treasury can cover cost, not yet at max, and has scouts
-    _UPGRADE_COST = 75.0
-    _UPGRADE_MAX  = 20
+    # Only offer when no unvisited system is reachable at current jump level
+    # from any fleet position.  Cost is exponential with current level.
+    _UPGRADE_MAX = 20
     has_scouts = any(f.has_scout for f in snap.fleets)
-    if (has_scouts
-            and p.jump_level < _UPGRADE_MAX
-            and p.treasury_ru >= _UPGRADE_COST):
-        # Score: explorers want range; scale with treasury cushion above cost
-        cushion = (p.treasury_ru - _UPGRADE_COST) / max(p.treasury_ru, 1.0)
-        sc = p.expansionism * 2.5 + cushion * 1.0
-        candidates.append(UpgradeJumpAction(score=sc))
+    if has_scouts and p.jump_level < _UPGRADE_MAX:
+        upgrade_cost = _jump_upgrade_cost(p.jump_level)
+        if p.treasury_ru >= upgrade_cost:
+            # Check: any unvisited system reachable from any fleet right now?
+            any_reachable_unvisited = any(
+                sid
+                for fleet in snap.fleets
+                if fleet.system_id is not None
+                for sid in world_neighbor_fn(fleet.system_id, float(p.jump_level))
+                if sid not in visited_ids
+            )
+            if not any_reachable_unvisited:
+                cushion = (p.treasury_ru - upgrade_cost) / max(p.treasury_ru, 1.0)
+                sc = p.expansionism * 2.5 + cushion * 1.0
+                candidates.append(UpgradeJumpAction(score=sc))
 
     return candidates
 

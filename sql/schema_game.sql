@@ -426,7 +426,8 @@ CREATE TABLE IF NOT EXISTS "GameEvent" (
                         'contact','war_declared','combat','control_change',
                         'fleet_destroyed','disengage','pursuit','bombardment',
                         'colony_established','hull_built','jump_upgrade',
-                        'admiral_commissioned','map_shared','summary','monthly_summary')),
+                        'admiral_commissioned','admiral_retired','map_shared',
+                        'summary','monthly_summary','budget_shortfall')),
     "polity_a_id"   INTEGER,  -- logical ref Polity.polity_id
     "polity_b_id"   INTEGER,  -- logical ref Polity.polity_id
     "system_id"     INTEGER,

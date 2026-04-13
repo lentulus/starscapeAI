@@ -14,10 +14,10 @@ import sqlite3
 # ---------------------------------------------------------------------------
 
 _CONTROL_MULTIPLIERS: dict[str, float] = {
-    "outpost":    0.10,
-    "colony":     0.40,
+    "outpost":    0.20,  # extractive presence, not full development
+    "colony":     0.55,  # growing settlement, active resource flow
     "controlled": 1.00,
-    "contested":  0.10,  # fighting prevents normal production
+    "contested":  0.35,  # disruption, not collapse
 }
 
 _DEV_MULTIPLIERS: dict[int, float] = {

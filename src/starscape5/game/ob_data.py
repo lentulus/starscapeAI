@@ -301,6 +301,20 @@ OB_DATA: list[dict] = [
                 "Red Plain", "Volga Shore", "Steppe Moon", "Ural Rock",
                 "Dragon Moon", "Jade Plain", "Han Shore", "Ming Rock",
             ],
+            "person": [
+                # Oceania — 1984-inflected names
+                "Winston", "Julia", "Goldstein", "Withers", "Ampleforth",
+                "Rutherford", "Aaronson", "Jones", "Tillotson", "Comstock",
+                "Ogilvy", "Bumstead", "Weems", "Fellowes", "Griller",
+                # Eurasia — Russian names
+                "Zhukov", "Rokossovsky", "Konev", "Vatutin", "Chuikov",
+                "Malinovsky", "Yeremenko", "Tolbukhin", "Meretskov", "Govorov",
+                "Bagramyan", "Popov", "Sokolovsky", "Tikhonov", "Volkov",
+                # Eastasia — Chinese names
+                "Lin Biao", "Peng Dehuai", "Chen Yi", "Liu Bocheng", "Zhu De",
+                "Su Yu", "Nie Rongzhen", "He Long", "Xu Xiangqian", "Ye Jianying",
+                "Wei Lihuang", "Xue Yue", "Zhang Xueliang", "Bai Chongxi", "Fu Zuoyi",
+            ],
         },
     },
 ]

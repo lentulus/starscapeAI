@@ -15,10 +15,24 @@ from __future__ import annotations
 import argparse
 import sys
 import time
+import traceback
+from datetime import date, timedelta
 from pathlib import Path
+
+_SIM_EPOCH = date(2526, 4, 12)   # tick 0 = 12 April 2526
+
+def _tick_to_date(tick: int) -> str:
+    return (_SIM_EPOCH + timedelta(weeks=tick)).strftime("%d %b %Y")
+
+# Force line-buffered stdout so output appears immediately when piped to tee
+sys.stdout.reconfigure(line_buffering=True)
 
 # Ensure src/ is on the path when run via uv
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+print(f"[startup] Python {sys.version.split()[0]}, imports starting...", flush=True)
+
+print("[startup] imports loaded", flush=True)
 
 from starscape5.game.db import open_game, init_schema
 from starscape5.game.events import get_events
@@ -62,7 +76,7 @@ def print_summary(conn, ticks_run: int, elapsed: float) -> None:
     if recent:
         print("Last 10 events:")
         for e in recent:
-            print(f"  tick={e.tick:5d}  {e.event_type:<22s}  {e.summary[:70]}")
+            print(f"  {_tick_to_date(e.tick)}  {e.event_type:<22s}  {e.summary[:70]}")
     print()
 
 
@@ -124,4 +138,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        traceback.print_exc()
+        sys.exit(1)

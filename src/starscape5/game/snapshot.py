@@ -75,6 +75,7 @@ class GameStateSnapshot:
     n_scouts: int = 0                 # total non-destroyed scout hulls this polity owns
     n_colonies: int = 0               # presences with control_state in (colony, controlled)
     n_armies: int = 0                 # un-embarked ground armies with strength > 0
+    n_colony_transports: int = 0      # non-destroyed colony transport hulls owned
 
 
 # ---------------------------------------------------------------------------
@@ -224,6 +225,15 @@ def build_snapshot(
         (polity_id,),
     ).fetchone()[0]
 
+    n_colony_transports = conn.execute(
+        """
+        SELECT COUNT(*) FROM Hull_head
+        WHERE polity_id = ? AND hull_type = 'colony_transport'
+          AND status NOT IN ('destroyed')
+        """,
+        (polity_id,),
+    ).fetchone()[0]
+
     n_colonies = sum(
         1 for pr in presences
         if pr.control_state in ("colony", "controlled")
@@ -239,4 +249,5 @@ def build_snapshot(
         n_scouts=n_scouts,
         n_colonies=n_colonies,
         n_armies=n_armies,
+        n_colony_transports=n_colony_transports,
     )

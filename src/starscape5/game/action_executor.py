@@ -209,7 +209,7 @@ def _execute_upgrade_jump(
     ).fetchone()
     if row is None:
         return None
-    cost = get_jump_upgrade_cost()
+    cost = get_jump_upgrade_cost(row["jump_level"])
     if row["treasury_ru"] < cost:
         return None
     old_level = row["jump_level"]

@@ -9,7 +9,12 @@ from __future__ import annotations
 import sqlite3
 import time
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime, timedelta
+
+_SIM_EPOCH = date(2526, 4, 12)  # tick 0 = 12 April 2526
+
+def _game_date(tick: int) -> str:
+    return (_SIM_EPOCH + timedelta(weeks=tick)).strftime("%d %b %Y")
 
 from starscape5.game.facade import GameFacade
 from starscape5.game.polity import get_polity_processing_order
@@ -75,12 +80,22 @@ def run_tick(
         if phase_num <= resume_from_phase:
             continue  # already committed; skip on resume
 
-        print(f"[{_ts()}] tick={tick} phase={phase_num} {phase_fn.__module__.split('.')[-1]} start", flush=True)
+        print(f"[{_ts()}] {_game_date(tick)} tick={tick} phase={phase_num} {phase_fn.__module__.split('.')[-1]} start", flush=True)
         t_phase = time.perf_counter()
         advance_phase(game_conn, tick, phase_num)
         summaries = phase_fn(tick, phase_num, polity_order, game, world)
         commit_phase(game_conn, tick, phase_num)
-        print(f"[{_ts()}] tick={tick} phase={phase_num} done ({time.perf_counter() - t_phase:.2f}s, {len(summaries)} events)", flush=True)
+        print(f"[{_ts()}] {_game_date(tick)} tick={tick} phase={phase_num} done ({time.perf_counter() - t_phase:.2f}s, {len(summaries)} events)", flush=True)
+
+        # Always print notable events with timestamps inline
+        _NOTABLE = ("colony_established", "contact", "war_declared", "combat",
+                    "hull_built", "monthly_summary", "quiet_month", "significant_tick",
+                    "builds_completed", "colonist_delivery", "control_change",
+                    "admiral_commissioned", "admiral_retired", "jump_upgrade",
+                    "budget_shortfall")
+        for s in summaries:
+            if any(kw in s for kw in _NOTABLE):
+                print(f"[{_ts()}]   {s}", flush=True)
 
         result.summaries.extend(summaries)
         result.phases_run += 1
