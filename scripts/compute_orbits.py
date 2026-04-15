@@ -40,7 +40,7 @@ from starscape5.orbits import (
     identify_primary,
 )
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 STARS_TABLE = "IndexedIntegerDistinctStars"
 METRICS_TABLE = "DistinctStarsExtended"
 SYSTEMS_TABLE = "IndexedIntegerDistinctSystems"

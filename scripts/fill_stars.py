@@ -68,7 +68,7 @@ from starscape5.spectral import (
     format_spectral,
 )
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 STARS_TABLE   = "IndexedIntegerDistinctStars"
 SYSTEMS_TABLE = "IndexedIntegerDistinctSystems"
 

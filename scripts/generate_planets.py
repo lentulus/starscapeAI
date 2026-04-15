@@ -45,7 +45,7 @@ from starscape5.planets import (
     world_size_code,
 )
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 SOURCE_TABLE = "IndexedIntegerDistinctStars"
 EXTENDED_TABLE = "DistinctStarsExtended"
 TARGET_TABLE = "Bodies"

@@ -15,7 +15,7 @@ import logging
 import sqlite3
 from pathlib import Path
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)

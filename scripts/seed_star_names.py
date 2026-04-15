@@ -23,7 +23,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CSV_PATH  = REPO_ROOT / "specs" / "sources" / "Famous_sf_stars_20.csv"
-WORLD_DB  = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+WORLD_DB  = Path("/Volumes/Data/starscape4/starscape.db")
 GAME_DB   = REPO_ROOT / "game.db"
 
 SOL_ROW = {

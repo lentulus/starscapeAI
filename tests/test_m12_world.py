@@ -20,7 +20,7 @@ from starscape5.world.impl import WorldFacadeImpl
 from starscape5.game.db import open_game, init_schema
 
 
-STARSCAPE_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+STARSCAPE_DB = Path("/Volumes/Data/starscape4/starscape.db")
 
 _db_available = STARSCAPE_DB.exists()
 skip_no_db = pytest.mark.skipif(

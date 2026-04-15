@@ -40,7 +40,7 @@ from starscape5.atmosphere import (
     t_eq_k,
 )
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 TARGET_TABLE = "BodyMutable"
 DEFAULT_MAX_MINUTES = 120
 DEFAULT_BATCH = 500

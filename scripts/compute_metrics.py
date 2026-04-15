@@ -23,7 +23,7 @@ from pathlib import Path
 
 from starscape5.metrics import MetricsError, compute_metrics
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 SOURCE_TABLE = "IndexedIntegerDistinctStars"
 TARGET_TABLE = "DistinctStarsExtended"
 DEFAULT_BATCH = 1000

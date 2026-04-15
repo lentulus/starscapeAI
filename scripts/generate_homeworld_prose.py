@@ -23,7 +23,7 @@ from pathlib import Path
 
 import anthropic
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 ARTICLES_DIR = Path(__file__).parent.parent / "articles" / "Species"
 MODEL = "claude-sonnet-4-6"
 

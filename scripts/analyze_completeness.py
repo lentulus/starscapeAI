@@ -27,7 +27,7 @@ from pathlib import Path
 
 from starscape5.galaxy import disk_density, disk_profile, eq_to_galactic_mpc
 
-DEFAULT_DB              = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB              = Path("/Volumes/Data/starscape4/starscape.db")
 STARS_TABLE             = "IndexedIntegerDistinctStars"
 SYSTEMS_TABLE           = "IndexedIntegerDistinctSystems"
 DEFAULT_CALIBRATION_PC  = 300

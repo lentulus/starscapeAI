@@ -43,7 +43,7 @@ from starscape5.planets import (
     radius_from_mass,
 )
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 MIN_SEPARATION_PC = 50.0
 PARSEC_TO_MPC = 1000  # DB stores coordinates as integer milliparsecs
 PLANET_HILL_AU = 50.0

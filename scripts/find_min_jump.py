@@ -47,7 +47,7 @@ from pathlib import Path
 
 import numpy as np
 
-_DEFAULT_DB = "/Volumes/Data/starscape4/sqllite_database/starscape.db"
+_DEFAULT_DB = "/Volumes/Data/starscape4/starscape.db"
 _DEFAULT_KNN = 40
 _DEFAULT_MIN_PC = 3.0
 _DEFAULT_MAX_PC = 100.0

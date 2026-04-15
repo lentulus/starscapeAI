@@ -23,7 +23,7 @@ from starscape5.spectral import (
     should_create_multiple,
 )
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 TABLE = "IndexedIntegerDistinctStars"
 DEFAULT_BATCH = 1000
 

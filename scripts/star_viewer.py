@@ -43,8 +43,8 @@ import plotly.graph_objects as go
 # Defaults
 # ---------------------------------------------------------------------------
 
-STARSCAPE_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
-GAME_DB      = Path("/Volumes/Data/starscape4/sqllite_database/games/game.db")
+STARSCAPE_DB = Path("/Volumes/Data/starscape4/starscape.db")
+GAME_DB      = Path("/Volumes/Data/starscape4/game.db")
 
 _MPC_TO_PC = 1.0 / 1000.0
 

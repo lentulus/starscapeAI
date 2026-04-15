@@ -37,8 +37,8 @@ import plotly.graph_objects as go
 # Paths and constants
 # ---------------------------------------------------------------------------
 
-STARSCAPE_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
-GAME_DB      = Path("/Volumes/Data/starscape4/sqllite_database/games/game.db")
+STARSCAPE_DB = Path("/Volumes/Data/starscape4/starscape.db")
+GAME_DB      = Path("/Volumes/Data/starscape4/game.db")
 
 WEEKS_PER_YEAR     = 365.25 / 7.0   # 52.178 weeks per year
 EARTH_TO_SOLAR     = 1.0 / 332946.0  # Earth masses → solar masses
@@ -328,7 +328,13 @@ def _planet_hover(b: dict, M_star: float) -> str:
 
 def _belt_hover(b: dict) -> str:
     lines = [f"<b>body {b['body_id']}</b> (belt)"]
-    lines.append(f"span: {b['span_inner_au']:.2f} – {b['span_outer_au']:.2f} AU")
+    inner = b.get("span_inner_au")
+    outer = b.get("span_outer_au")
+    if inner is not None and outer is not None:
+        lines.append(f"span: {inner:.2f} – {outer:.2f} AU")
+    comp = b.get("composition")
+    if comp:
+        lines.append(f"composition: {comp}")
     lines.append(f"centre a = {b['semi_major_axis']:.2f} AU   e = {b['eccentricity']:.3f}")
     return "<br>".join(lines)
 

@@ -21,7 +21,7 @@ from pathlib import Path
 from starscape5.planets import planet_class as _planet_class
 from starscape5.planets import _belt_composition, _belt_span
 
-DEFAULT_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+DEFAULT_DB = Path("/Volumes/Data/starscape4/starscape.db")
 SOL_STAR_ID = 1
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")

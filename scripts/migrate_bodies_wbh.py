@@ -15,7 +15,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-WORLD_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
+WORLD_DB = Path("/Volumes/Data/starscape4/starscape.db")
 
 # (column_name, column_definition)  — order matters for readability only
 NEW_BODIES_COLUMNS: list[tuple[str, str]] = [
