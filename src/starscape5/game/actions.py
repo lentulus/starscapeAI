@@ -17,6 +17,7 @@ Selection uses softmax-weighted top-k sampling in select_actions().
 from __future__ import annotations
 
 import math
+from collections import deque
 from dataclasses import dataclass
 from random import Random
 from typing import Union
@@ -224,6 +225,68 @@ def _score_assault(
 
 
 # ---------------------------------------------------------------------------
+# Backtracking helper
+# ---------------------------------------------------------------------------
+
+def _frontier_first_hop(
+    current_system_id: int,
+    visited_ids: set[int],
+    jump_range: int,
+    neighbor_fn,
+) -> list[int]:
+    """BFS through visited space; return first-hop system(s) toward the nearest frontier.
+
+    A "frontier" visited system is one that has at least one unvisited neighbor
+    within jump_range.  The BFS explores only visited systems so the scout
+    stays on known ground while repositioning.
+
+    Returns the distinct first-hop destinations (all at the same minimum BFS
+    depth) that lead toward a frontier.  Returns [] if the current position is
+    itself a frontier (caller should not call this) or no frontier is reachable
+    through visited space.
+    """
+    seen: set[int] = {current_system_id}
+    # Queue entries: (system_id, first_hop_taken_from_current)
+    queue: deque[tuple[int, int]] = deque()
+
+    for nb in neighbor_fn(current_system_id, jump_range):
+        if nb == current_system_id or nb in seen:
+            continue
+        seen.add(nb)
+        if nb in visited_ids:
+            queue.append((nb, nb))
+        # Unvisited direct neighbors → caller is responsible for checking
+        # these exist before calling; we ignore them here.
+
+    found_hops: set[int] = set()
+
+    # Process level by level; stop once the first frontier depth is found.
+    while queue and not found_hops:
+        # Drain the current BFS level
+        level_size = len(queue)
+        for _ in range(level_size):
+            node, first_hop = queue.popleft()
+            node_neighbors = neighbor_fn(node, jump_range)
+
+            # Frontier: has at least one unvisited neighbor
+            if any(sid not in visited_ids and sid != node for sid in node_neighbors):
+                found_hops.add(first_hop)
+
+            # Expand into unvisited-BFS visited neighbors
+            for nb in node_neighbors:
+                if nb in visited_ids and nb not in seen:
+                    seen.add(nb)
+                    queue.append((nb, first_hop))
+
+        # found_hops will be checked by the while condition on next iteration;
+        # the explicit break keeps intent clear.
+        if found_hops:
+            break
+
+    return list(found_hops)
+
+
+# ---------------------------------------------------------------------------
 # Candidate generation (pure, given snapshot)
 # ---------------------------------------------------------------------------
 
@@ -240,6 +303,16 @@ def generate_candidates(
     candidates: list[CandidateAction] = []
     p = snap.polity
 
+    # Memoize neighbor lookups for this tick — BFS and upgrade checks can
+    # re-query the same (system_id, parsecs) pair many times.
+    _nb_cache: dict[tuple[int, float], list[int]] = {}
+
+    def neighbor_fn(system_id: int, parsecs: float) -> list[int]:
+        key = (system_id, parsecs)
+        if key not in _nb_cache:
+            _nb_cache[key] = world_neighbor_fn(system_id, parsecs)
+        return _nb_cache[key]
+
     visited_ids = {s.system_id for s in snap.known_systems if s.knowledge_tier == "visited"}
     presence_ids = {pr.system_id for pr in snap.presences}
     intel_by_system = {s.system_id: s for s in snap.known_systems}
@@ -248,23 +321,43 @@ def generate_candidates(
     for fleet in snap.fleets:
         if fleet.status != "active" or not fleet.has_scout or fleet.system_id is None:
             continue
-        neighbors = world_neighbor_fn(fleet.system_id, float(fleet.jump_range))
-        for sid in neighbors:
-            if sid in visited_ids or sid == fleet.system_id:
-                continue
-            intel = intel_by_system.get(sid)
-            if intel is None:
-                intel = IntelSnapshot(
-                    system_id=sid, polity_id=p.polity_id,
-                    knowledge_tier="passive",
-                    world_potential=None, habitable=None,
-                )
-            sc = _score_scout(fleet, intel, snap)
-            candidates.append(ScoutAction(
-                fleet_id=fleet.fleet_id,
-                destination_system_id=sid,
-                score=sc,
-            ))
+        neighbors = neighbor_fn(fleet.system_id, float(fleet.jump_range))
+        unvisited = [
+            sid for sid in neighbors
+            if sid != fleet.system_id and sid not in visited_ids
+        ]
+
+        if unvisited:
+            # Normal scouting: score each unvisited reachable neighbor.
+            for sid in unvisited:
+                intel = intel_by_system.get(sid)
+                if intel is None:
+                    intel = IntelSnapshot(
+                        system_id=sid, polity_id=p.polity_id,
+                        knowledge_tier="passive",
+                        world_potential=None, habitable=None,
+                    )
+                sc = _score_scout(fleet, intel, snap)
+                candidates.append(ScoutAction(
+                    fleet_id=fleet.fleet_id,
+                    destination_system_id=sid,
+                    score=sc,
+                ))
+        else:
+            # Dead end: backtrack through visited space toward the nearest
+            # frontier (a visited system that still has unvisited neighbors).
+            # The scout jumps one hop along the shortest BFS path; it will
+            # continue backtracking each tick until it reaches a frontier.
+            hops = _frontier_first_hop(
+                fleet.system_id, visited_ids, fleet.jump_range, neighbor_fn,
+            )
+            backtrack_score = 1.0 + p.expansionism * 2.0  # same base as normal scouting
+            for sid in hops:
+                candidates.append(ScoutAction(
+                    fleet_id=fleet.fleet_id,
+                    destination_system_id=sid,
+                    score=backtrack_score,
+                ))
 
     # -- Colonise actions --
     for fleet in snap.fleets:
@@ -272,7 +365,7 @@ def generate_candidates(
             continue
         if fleet.system_id is None:
             continue
-        neighbors = world_neighbor_fn(fleet.system_id, float(fleet.jump_range))
+        neighbors = neighbor_fn(fleet.system_id, float(fleet.jump_range))
         for sid in neighbors:
             intel = intel_by_system.get(sid)
             if intel is None or intel.knowledge_tier != "visited":
@@ -325,7 +418,7 @@ def generate_candidates(
                     if s.system_id in snap.enemy_systems
                 ]
                 for es in enemy_sys_rows:
-                    neighbors = world_neighbor_fn(fleet.system_id, float(fleet.jump_range))
+                    neighbors = neighbor_fn(fleet.system_id, float(fleet.jump_range))
                     if es.system_id not in neighbors:
                         continue
                     sc = _score_assault(fleet, es.system_id, snap)
@@ -341,19 +434,20 @@ def generate_candidates(
         candidates.append(ConsolidateAction(system_id=pr.system_id, score=sc))
 
     # -- Jump upgrade --
-    # Only offer when no unvisited system is reachable at current jump level
-    # from any fleet position.  Cost is exponential with current level.
+    # Only offer when ALL visited systems have been exhausted — i.e. no unvisited
+    # system is reachable from ANY visited system at the current polity jump level.
+    # Scouts should backtrack and exhaust every known frontier before upgrading.
     _UPGRADE_MAX = 20
     has_scouts = any(f.has_scout for f in snap.fleets)
     if has_scouts and p.jump_level < _UPGRADE_MAX:
         upgrade_cost = _jump_upgrade_cost(p.jump_level)
         if p.treasury_ru >= upgrade_cost:
-            # Check: any unvisited system reachable from any fleet right now?
+            # Check every visited system, not just current fleet positions.
+            # Short-circuits on the first unvisited neighbor found (fast path).
             any_reachable_unvisited = any(
-                sid
-                for fleet in snap.fleets
-                if fleet.system_id is not None
-                for sid in world_neighbor_fn(fleet.system_id, float(p.jump_level))
+                True
+                for vsid in visited_ids
+                for sid in neighbor_fn(vsid, float(p.jump_level))
                 if sid not in visited_ids
             )
             if not any_reachable_unvisited:

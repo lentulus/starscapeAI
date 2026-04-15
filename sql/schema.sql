@@ -21,8 +21,10 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TABLE IF NOT EXISTS "Bodies" (
     "body_id"          INTEGER PRIMARY KEY,
     "body_type"        TEXT    NOT NULL CHECK(body_type IN ('planet','moon','belt','planetoid')),
-    "mass"             REAL,    -- Earth masses (Mₑ)
-    "radius"           REAL,    -- Earth radii (Rₑ)
+    -- Legacy columns (retained for compatibility; superseded by WBH chain below)
+    "mass"             REAL,    -- Earth masses (Mₑ); superseded by mass_earth
+    "radius"           REAL,    -- Earth radii (Rₑ); superseded by diameter_km
+    -- Orbital elements
     "orbit_star_id"    INTEGER REFERENCES "IndexedIntegerDistinctStars"("star_id"),
     "orbit_body_id"    INTEGER REFERENCES "Bodies"("body_id"),
     "semi_major_axis"  REAL    NOT NULL,  -- AU
@@ -33,21 +35,91 @@ CREATE TABLE IF NOT EXISTS "Bodies" (
     "mean_anomaly"     REAL    NOT NULL,  -- radians at epoch
     "epoch"            INTEGER NOT NULL DEFAULT 0,
     "in_hz"            INTEGER,            -- 1 if in host star HZ, 0 if not, NULL for moons
-    "possible_tidal_lock" INTEGER,         -- 1 if within tidal-lock zone, 0 if not, NULL for belts/planetoids
+    "possible_tidal_lock" INTEGER,         -- legacy; superseded by tidal_lock_status
     "planet_class"     TEXT,               -- 'rocky'|'small_gg'|'medium_gg'|'large_gg'; NULL for moons/belts/planetoids
     "has_rings"        INTEGER,            -- 1 if planet has rings, 0 if not; NULL for non-planets
-    "comp_metallic"    REAL,               -- fraction of belt mass that is metallic; NULL for non-belts
-    "comp_carbonaceous" REAL,              -- fraction of belt mass that is carbonaceous/icy; NULL for non-belts
-    "comp_stony"       REAL,               -- fraction of belt mass that is stony/silicate; NULL for non-belts
-    "span_inner_au"    REAL,               -- inner edge of 80%-mass belt span (AU); NULL for non-belts
-    "span_outer_au"    REAL,               -- outer edge of 80%-mass belt span (AU); NULL for non-belts
-    "surface_gravity"  REAL,               -- g-units (1 = Earth); NULL until generate_atmosphere.py run
-    "escape_velocity_kms" REAL,            -- km/s; NULL until generate_atmosphere.py run
-    "t_eq_k"           REAL,               -- blackbody equilibrium temperature (K); NULL until generate_atmosphere.py run
+    -- Legacy belt composition columns (superseded by BeltProfile table)
+    "comp_metallic"    REAL,
+    "comp_carbonaceous" REAL,
+    "comp_stony"       REAL,
+    "span_inner_au"    REAL,
+    "span_outer_au"    REAL,
+    -- Legacy derived physical columns (superseded by WBH chain below)
+    "surface_gravity"  REAL,
+    "escape_velocity_kms" REAL,
+    "t_eq_k"           REAL,
+    -- -----------------------------------------------------------------------
+    -- WBH generation columns (populated by the new generate_* pipeline)
+    -- -----------------------------------------------------------------------
+    -- Provenance
+    "generation_source" TEXT CHECK(generation_source IN ('procedural','continuation_seed','manual')),
+    -- Orbit system
+    "orbit_num"        REAL,               -- WBH Orbit# (logarithmic AU scale)
+    -- Size and physical properties
+    "size_code"        TEXT,               -- UWP Size code: 0–F, S, GS, GM, GL
+    "diameter_km"      REAL,               -- Actual diameter in km
+    "composition"      TEXT,               -- Exotic Ice / Mostly Ice / Mostly Rock / Rock and Metal / Mostly Metal / Compressed Metal
+    "density"          REAL,               -- Density relative to Terra (5.514 g/cm³ = 1.0)
+    "gravity_g"        REAL,               -- Surface gravity in G (density × diameter_km/12742)
+    "mass_earth"       REAL,               -- Mass in Earth masses (density × (diameter_km/12742)³)
+    "escape_vel_kms"   REAL,               -- Escape velocity km/s
+    -- Atmosphere
+    "albedo"           REAL,               -- Bond albedo
+    "greenhouse_factor" REAL,              -- WBH greenhouse factor
+    "atm_code"         TEXT,               -- UWP atmosphere code 0–H (hex digit string)
+    "pressure_bar"     REAL,               -- Atmospheric pressure in bar
+    "ppo_bar"          REAL,               -- Oxygen partial pressure in bar
+    "gases"            TEXT,               -- Exotic gas composition (e.g., 'CO2:96,N2:4')
+    -- Taint slots (up to 3 concurrent taints; all NULL if no taint)
+    "taint_type_1"     TEXT,               -- Taint subtype: L/R/B/G/P/S/H
+    "taint_severity_1" INTEGER,            -- Taint severity 1–9
+    "taint_persistence_1" INTEGER,         -- Taint persistence 2–9
+    "taint_type_2"     TEXT,
+    "taint_severity_2" INTEGER,
+    "taint_persistence_2" INTEGER,
+    "taint_type_3"     TEXT,
+    "taint_severity_3" INTEGER,
+    "taint_persistence_3" INTEGER,
+    -- Temperature and hydrographics
+    "mean_temp_k"      REAL,               -- WBH mean surface temperature (K)
+    "hydro_code"       INTEGER,            -- Hydrographics code 0–10
+    "hydro_pct"        REAL,               -- Hydrographics percentage 0.0–1.0
+    -- Rotation
+    "sidereal_day_hours" REAL,             -- Rotation period (sidereal day) in hours; negative = retrograde
+    "solar_day_hours"  REAL,               -- Solar day in hours (NULL if 1:1 tidal lock)
+    "axial_tilt_deg"   REAL,               -- Axial tilt in degrees (0–180)
+    "tidal_lock_status" TEXT CHECK(tidal_lock_status IN ('none','3:2','1:1','slow_prograde','slow_retrograde')),
+    -- Seismic
+    "seismic_residual" REAL,               -- Residual seismic stress component
+    "seismic_tidal"    REAL,               -- Tidal stress component
+    "seismic_heating"  REAL,               -- Tidal heating component
+    "seismic_total"    REAL,               -- Total seismic stress
+    "tectonic_plates"  INTEGER,            -- Major tectonic plate count (NULL = geologically dead)
+    -- Biology
+    "biomass_rating"   INTEGER,            -- Native life biomass code (NULL=not checked; 0=absent)
+    -- Moon orbital geometry (moons only)
+    "moon_PD"          REAL,               -- Moon orbital radius in planetary diameters
+    "hill_PD"          REAL,               -- Parent body Hill sphere in planetary diameters
+    "roche_PD"         REAL,               -- Roche limit in planetary diameters
+    -- -----------------------------------------------------------------------
     CHECK (
         (orbit_star_id IS NOT NULL AND orbit_body_id IS NULL) OR
         (orbit_star_id IS NULL     AND orbit_body_id IS NOT NULL)
     )
+);
+
+-- Per-belt resource and composition profile (one row per belt body in Bodies).
+CREATE TABLE IF NOT EXISTS "BeltProfile" (
+    "body_id"          INTEGER PRIMARY KEY REFERENCES "Bodies"("body_id") ON DELETE CASCADE,
+    "span_orbit_num"   REAL,               -- Belt half-width in Orbit# units
+    "m_type_pct"       INTEGER,            -- Metallic body percentage
+    "s_type_pct"       INTEGER,            -- Stony body percentage
+    "c_type_pct"       INTEGER,            -- Carbonaceous body percentage
+    "other_pct"        INTEGER,            -- Other body percentage
+    "bulk"             INTEGER,            -- Belt bulk factor (2D² + DMs)
+    "resource_rating"  INTEGER,            -- Resource rating
+    "size1_bodies"     INTEGER,            -- Significant Size 1 body count
+    "sizeS_bodies"     INTEGER             -- Significant Size S body count
 );
 
 -- Keplerian orbital elements for companion stars in multiple systems.

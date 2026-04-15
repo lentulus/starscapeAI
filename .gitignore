@@ -15,6 +15,12 @@ wheels/
 # Data / local database
 data/
 
+# Simulation databases — stored on external drive, not in repo
+game.db
+game.db-shm
+game.db-wal
+game.db.bak
+
 # Editor
 .vscode/
 .idea/

@@ -21,7 +21,7 @@ from pathlib import Path
 
 _SIM_EPOCH = date(2526, 4, 12)  # tick 0 = 12 April 2526
 
-GAME_DB = Path("game.db")
+GAME_DB = Path("/Volumes/Data/starscape4/sqllite_database/games/game.db")
 
 
 # ---------------------------------------------------------------------------

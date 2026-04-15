@@ -2,11 +2,12 @@
 
 Recording fires after every fleet arrival.  Routes are stored in canonical
 order (from_system_id < to_system_id) so A→B and B→A are the same row.
+INSERT OR IGNORE deduplicates naturally; each unique pair is recorded once
+with the first_tick it was jumped.
 
-Recording stops — and GameState.routes_complete is set to 1 — once every
-distinct polity capital_system_id is reachable from every other via the
-accumulated JumpRoute graph (Union-Find check).  After that the table is
-frozen; dot-file generation reads it at any point.
+GameState.routes_complete is retained as informational metadata (set
+elsewhere) but no longer gates recording — routes accumulate for the full
+lifetime of the simulation.
 """
 
 from __future__ import annotations
@@ -26,22 +27,14 @@ def record_jump_route(
     """Record the route between two systems if not already present.
 
     Skips silently if:
-      - recording is already complete (routes_complete = 1)
       - either system_id is None / 0
-      - the route already exists
+      - the route already exists (INSERT OR IGNORE also deduplicates)
 
     Returns True if a new row was inserted.
     """
     if not from_system_id or not to_system_id:
         return False
     if from_system_id == to_system_id:
-        return False
-
-    # Check completion flag (fast path — avoids graph scan every tick)
-    state = conn.execute(
-        "SELECT routes_complete FROM GameState WHERE state_id = 1"
-    ).fetchone()
-    if state and state["routes_complete"]:
         return False
 
     # Canonical order: lower ID first
@@ -73,12 +66,6 @@ def record_jump_route(
          pos_b.x_mpc, pos_b.y_mpc, pos_b.z_mpc,
          tick),
     )
-
-    # After each new insertion check if homeworlds are now all linked
-    if all_homeworlds_linked(conn):
-        conn.execute(
-            "UPDATE GameState SET routes_complete = 1 WHERE state_id = 1"
-        )
 
     return True
 

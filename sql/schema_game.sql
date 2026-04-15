@@ -468,3 +468,28 @@ CREATE INDEX IF NOT EXISTS "idx_jumproute_from"
     ON "JumpRoute"("from_system_id");
 CREATE INDEX IF NOT EXISTS "idx_jumproute_to"
     ON "JumpRoute"("to_system_id");
+
+-- ---------------------------------------------------------------------------
+-- Real-star names — famous stars from SF literature cross-indexed to the
+-- Hipparcos catalog IDs used in starscape.db.
+-- Seeded by scripts/seed_star_names.py from specs/sources/Famous_sf_stars_20.csv
+-- plus Sol (star_id=1, system_id=1030192) which has no HIP entry.
+-- star_id and system_id are foreign keys by convention only (starscape.db is
+-- a separate file; SQLite cannot enforce cross-file FKs).
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS "StarNames" (
+    "name_id"       INTEGER PRIMARY KEY,
+    "star_id"       INTEGER NOT NULL,       -- IndexedIntegerDistinctStars.star_id
+    "system_id"     INTEGER NOT NULL,       -- IndexedIntegerDistinctSystems.system_id
+    "hip"           TEXT,                   -- Hipparcos catalog number (NULL for Sol)
+    "common_name"   TEXT NOT NULL,          -- e.g. "Alpha Centauri A"
+    "display_name"  TEXT,                   -- e.g. "Rigil Kentaurus / Alpha Centauri A"
+    "sf_notes"      TEXT,                   -- SF works referencing this star
+    UNIQUE(star_id)
+);
+
+CREATE INDEX IF NOT EXISTS "idx_starnames_system"
+    ON "StarNames"("system_id");
+CREATE INDEX IF NOT EXISTS "idx_starnames_hip"
+    ON "StarNames"("hip");

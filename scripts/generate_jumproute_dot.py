@@ -26,7 +26,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 STARSCAPE_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
-GAME_DB      = Path("game.db")
+GAME_DB      = Path("/Volumes/Data/starscape4/sqllite_database/games/game.db")
 
 # Graphviz fillcolors cycled by polity_id (index into list)
 _POLITY_COLORS = [

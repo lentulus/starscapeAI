@@ -44,7 +44,7 @@ from starscape5.world.db import open_world_ro, open_world_rw
 from starscape5.world.impl import WorldFacadeImpl
 
 STARSCAPE_DB = Path("/Volumes/Data/starscape4/sqllite_database/starscape.db")
-GAME_DB      = Path("game.db")
+GAME_DB      = Path("/Volumes/Data/starscape4/sqllite_database/games/game.db")
 
 
 def print_summary(conn, ticks_run: int, elapsed: float) -> None:
