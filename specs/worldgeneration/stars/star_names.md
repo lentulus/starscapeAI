@@ -9,6 +9,9 @@
 -- A bf name will have two parts separated by a space, eg Tau Phe.  If the first part contrains numbers and letter, split them and enter as two names.  For example, "21Alp And" becomes "21 And" and "Alp And"
 -- star_id is sol
 -- this is a separate table related by star_id
+-- include the data in name index.
+-- show me the new table and plans before implementing
+-- I will delete the source tables on completion
 
 ## Scope
 in: Name table initiallization and game database initialization

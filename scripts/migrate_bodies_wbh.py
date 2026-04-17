@@ -44,6 +44,8 @@ NEW_BODIES_COLUMNS: list[tuple[str, str]] = [
     ("taint_severity_3",    "INTEGER"),
     ("taint_persistence_3", "INTEGER"),
     ("mean_temp_k",         "REAL"),
+    ("high_temp_k",         "REAL"),
+    ("low_temp_k",          "REAL"),
     ("hydro_code",          "INTEGER"),
     ("hydro_pct",           "REAL"),
     ("sidereal_day_hours",  "REAL"),
@@ -55,7 +57,12 @@ NEW_BODIES_COLUMNS: list[tuple[str, str]] = [
     ("seismic_heating",     "REAL"),
     ("seismic_total",       "REAL"),
     ("tectonic_plates",     "INTEGER"),
-    ("biomass_rating",      "INTEGER"),
+    ("biomass_rating",       "INTEGER"),
+    ("biocomplexity_rating", "INTEGER"),
+    ("native_sophants",      "TEXT CHECK(native_sophants IN ('none','extinct','current'))"),
+    ("biodiversity_rating",  "INTEGER"),
+    ("compatibility_rating", "INTEGER"),
+    ("resource_rating",      "INTEGER"),
     ("moon_PD",             "REAL"),
     ("hill_PD",             "REAL"),
     ("roche_PD",            "REAL"),
@@ -74,6 +81,15 @@ CREATE TABLE IF NOT EXISTS "BeltProfile" (
     "size1_bodies"     INTEGER,
     "sizeS_bodies"     INTEGER
 );
+"""
+
+SYSTEM_GENERATION_STATUS_DDL = """
+CREATE TABLE IF NOT EXISTS "SystemGenerationStatus" (
+    "system_id"   INTEGER PRIMARY KEY,
+    "dist2_mpc2"  REAL    NOT NULL
+);
+CREATE INDEX IF NOT EXISTS "idx_sgs_dist2"
+    ON "SystemGenerationStatus"("dist2_mpc2");
 """
 
 
@@ -95,10 +111,12 @@ def migrate(conn: sqlite3.Connection) -> None:
             added += 1
 
     conn.executescript(BELT_PROFILE_DDL)
+    conn.executescript(SYSTEM_GENERATION_STATUS_DDL)
 
     conn.commit()
     print(f"\nBodies: {added} column(s) added, {skipped} already present.")
     print("BeltProfile: table created (or already exists).")
+    print("SystemGenerationStatus: table created (or already exists).")
 
 
 def main() -> None:

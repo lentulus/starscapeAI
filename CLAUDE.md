@@ -14,7 +14,7 @@ Key design references: Mongoose Traveller world conventions; *Fifth Frontier War
 
 ## Database
 
-**Location:** `/Volumes/Data/starscape4/sqllite_database/starscape.db` (external 2 TB drive)
+**Location:** `/Volumes/Data/starscape4/starscape.db` (external 2 TB drive)
 
 | Table | Purpose | Status |
 |---|---|---|
@@ -22,8 +22,7 @@ Key design references: Mongoose Traveller world conventions; *Fifth Frontier War
 | `DistinctStarsExtended` | Derived stellar physics: `mass`, `temperature`, `radius`, `luminosity`, `age`, `temp_source` | Populated |
 | `IndexedIntegerDistinctSystems` | System positions in milliparsecs (ICRS Cartesian `x`,`y`,`z`); 1 mpc = 206.265 AU | Populated |
 | `StarOrbits` | Keplerian orbital elements for companion stars; primary star has no row | Populated |
-| `Bodies` | Planets, moons, belts, planetoids; physical + orbital columns; 3 derived cols added by generate_atmosphere.py | Populated |
-| `BodyMutable` | Mutable atm/hydro state per rocky body; updated each tick | Populated (initial) |
+| `Bodies` | Planets, moons, belts, planetoids; all physical, orbital, atmosphere, and surface columns; simulation updates atm/hydro in-place | Populated (Sol only) |
 | `Biosphere` | Native/introduced life domains per body | **Design only** |
 | `SophontPresence` | Sophont presence epochs per body | **Design only** |
 | `TerraformProject` | Terraforming operations | **Design only** |
@@ -97,7 +96,7 @@ scripts/
     compute_metrics.py      — populates DistinctStarsExtended (resumable)
     compute_orbits.py       — populates StarOrbits
     generate_planets.py     — populates Bodies
-    generate_atmosphere.py  — populates BodyMutable; back-fills 3 cols on Bodies
+    generate_atmosphere.py  — (superseded; atm columns now in Bodies, populated by generate_planets_wbh.py)
     analyze_completeness.py — diagnostic pipeline completeness tool
     run_sim.py              — CLI simulation runner (--ticks, --resume, --verbose)
 specs/

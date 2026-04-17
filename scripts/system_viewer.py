@@ -222,13 +222,14 @@ def fetch_system_stars(conn: sqlite3.Connection, system_id: int) -> list[dict]:
     rows = conn.execute(
         """
         SELECT s.star_id, s.spectral,
-               COALESCE(dse.mass, 1.0)        AS mass,
-               COALESCE(dse.luminosity, 1.0)  AS luminosity,
+               COALESCE(dse.mass, 1.0)         AS mass,
+               COALESCE(dse.luminosity, 1.0)   AS luminosity,
                COALESCE(dse.temperature, 5778) AS temperature,
-               COALESCE(dse.radius, 1.0)      AS radius
+               COALESCE(dse.radius, 1.0)       AS radius
         FROM   IndexedIntegerDistinctStars s
         LEFT JOIN DistinctStarsExtended dse ON dse.star_id = s.star_id
         WHERE  s.system_id = ?
+        ORDER BY COALESCE(dse.luminosity, 0.0) DESC, s.star_id ASC
         """,
         (system_id,),
     ).fetchall()
